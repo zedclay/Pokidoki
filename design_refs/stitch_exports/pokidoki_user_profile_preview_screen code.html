@@ -1,0 +1,227 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Pokidoki - Profile Preview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ffb4ab",
+                      "inverse-on-surface": "#2b313a",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "surface": "#0e141c",
+                      "on-secondary-fixed-variant": "#005139",
+                      "inverse-surface": "#dee2ef",
+                      "surface-container-lowest": "#090e17",
+                      "surface-container-highest": "#30353f",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "tertiary-fixed": "#ffdcc0",
+                      "secondary-container": "#00c28e",
+                      "on-error-container": "#ffdad6",
+                      "outline": "#928ea0",
+                      "tertiary": "#ffb875",
+                      "primary-fixed": "#e4dfff",
+                      "on-tertiary": "#4b2800",
+                      "tertiary-container": "#d27c17",
+                      "on-tertiary-fixed": "#2d1600",
+                      "surface-dim": "#0e141c",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "primary": "#c6bfff",
+                      "primary-fixed-dim": "#c6bfff",
+                      "inverse-primary": "#5845d9",
+                      "on-primary": "#2800a0",
+                      "on-surface-variant": "#c8c4d7",
+                      "on-error": "#690005",
+                      "background": "#0e141c",
+                      "on-background": "#dee2ef",
+                      "on-secondary": "#003827",
+                      "on-secondary-container": "#004933",
+                      "on-primary-container": "#22008d",
+                      "surface-tint": "#c6bfff",
+                      "on-tertiary-container": "#412200",
+                      "error-container": "#93000a",
+                      "surface-container": "#1a2029",
+                      "surface-container-low": "#161c25",
+                      "surface-bright": "#343943",
+                      "secondary": "#40dfa8",
+                      "outline-variant": "#474554",
+                      "on-secondary-fixed": "#002115",
+                      "surface-container-high": "#252a34",
+                      "on-primary-fixed": "#160066",
+                      "secondary-fixed": "#64fcc3",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "primary-container": "#8c80ff",
+                      "on-surface": "#dee2ef",
+                      "surface-variant": "#30353f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "xl": "24px",
+                      "md": "12px",
+                      "xs": "4px",
+                      "page-padding": "20px",
+                      "xxl": "32px",
+                      "section": "48px",
+                      "lg": "16px"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "title-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #090B10; /* Level 0 Background */
+            color: #dee2ef;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Glassmorphism utility for high-value info */
+        .glass-panel {
+            background: rgba(18, 21, 28, 0.7); /* Surface matching */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(41, 46, 57, 0.5); /* Subtle border */
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center">
+<!-- Mobile Device Container -->
+<main class="w-full max-w-[390px] min-h-[844px] flex flex-col relative bg-[#090B10] mx-auto pb-32 shadow-2xl overflow-hidden">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-page-padding h-[64px] w-full z-50 bg-transparent shrink-0">
+<button aria-label="Back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors active:opacity-80 text-on-surface-variant">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">Profile</h1>
+<button aria-label="More options" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors active:opacity-80 text-on-surface-variant">
+<span class="material-symbols-outlined text-[24px]">more_vert</span>
+</button>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 overflow-y-auto px-page-padding flex flex-col gap-xl pt-lg pb-xl no-scrollbar">
+<!-- Profile Header -->
+<section class="flex flex-col items-center text-center">
+<!-- Avatar -->
+<div class="w-[112px] h-[112px] rounded-full bg-primary-container flex items-center justify-center mb-md relative">
+<span class="text-display-lg font-display-lg text-on-primary-container">AR</span>
+<!-- Optional online status dot could go here if needed, but omitted for privacy focus -->
+</div>
+<h2 class="font-headline-md text-headline-md text-primary tracking-tight mb-xs">Amira Rahal</h2>
+<p class="font-body-lg text-body-lg text-primary-fixed-dim">@amira.r</p>
+</section>
+<!-- Profile Details / Badges -->
+<section class="flex flex-col gap-sm">
+<!-- Pokidoki ID -->
+<div class="bg-[#12151C] rounded-[14px] p-md flex flex-col items-center justify-center border border-[#292E39] hover:bg-surface-variant transition-colors active:scale-[0.98] cursor-pointer group">
+<div class="flex items-center gap-sm">
+<span class="font-label-md text-label-md text-on-surface tracking-wider">PKD-4N7R-Q81A</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary transition-colors">content_copy</span>
+</div>
+<span class="font-label-md text-[12px] text-on-surface-variant mt-1">Pokidoki ID</span>
+</div>
+<!-- Relationship Status -->
+<div class="flex items-start gap-md p-md rounded-[14px] bg-[#12151C] border border-[#292E39]">
+<span class="material-symbols-outlined text-[24px] text-on-surface-variant shrink-0 mt-0.5">person_off</span>
+<div class="flex flex-col">
+<span class="font-title-md text-[16px] text-on-surface">Not in your contacts</span>
+</div>
+</div>
+<!-- Verification Status -->
+<div class="flex items-start gap-md p-md rounded-[14px] bg-[#12151C] border border-warning/20">
+<span class="material-symbols-outlined text-[24px] text-on-surface-variant shrink-0 mt-0.5">shield_lock</span>
+<div class="flex flex-col gap-xs">
+<span class="font-title-md text-[16px] text-on-surface">Not verified</span>
+<p class="font-body-lg text-[14px] leading-[20px] text-on-surface-variant">Verify this person before sharing sensitive information.</p>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="bg-[#12151C] rounded-[24px] p-[20px] border border-[#292E39]">
+<h3 class="font-title-md text-title-md text-on-surface mb-sm">About</h3>
+<p class="font-body-lg text-[14px] text-on-surface-variant leading-relaxed">
+                    Building meaningful digital products and exploring new places.
+                </p>
+</section>
+<!-- Shared Context Section -->
+<section class="bg-[#12151C] rounded-[24px] p-[20px] border border-[#292E39]">
+<div class="flex items-center gap-sm mb-sm">
+<span class="material-symbols-outlined text-[20px] text-primary">search</span>
+<h3 class="font-title-md text-title-md text-on-surface">Shared context</h3>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-md text-label-md text-on-surface">Found through username search</span>
+<div class="flex items-start gap-sm mt-xs">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant shrink-0 mt-[2px]">info</span>
+<p class="font-body-lg text-[13px] leading-[18px] text-on-surface-variant">
+                            No shared contacts are displayed to protect other users' privacy.
+                        </p>
+</div>
+</div>
+</section>
+<!-- Identity Reminder (Information Card) -->
+<section class="bg-[#161c25] rounded-[16px] p-md border border-primary/20 relative overflow-hidden">
+<!-- Subtle gradient accent -->
+<div class="absolute top-0 left-0 w-1 h-full bg-primary/40"></div>
+<div class="flex items-start gap-md pl-sm">
+<span class="material-symbols-outlined text-[20px] text-primary shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-body-lg text-[13px] leading-[20px] text-on-surface-variant">
+                        A matching name, username, or Pokidoki ID does not confirm someone's identity. Verify in person, by QR code, or through another trusted communication method before sharing sensitive information.
+                    </p>
+</div>
+</section>
+<!-- Bottom spacer to ensure scrolling above fixed actions -->
+<div class="h-6 w-full"></div>
+</div>
+<!-- Fixed Bottom Actions Container -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#090B10] via-[#090B10]/95 to-transparent pt-xl pb-page-padding px-page-padding z-40">
+<div class="flex flex-col gap-sm max-w-md mx-auto">
+<button class="w-full h-[52px] rounded-[14px] bg-[#7C6CFF] hover:bg-[#6554E8] active:bg-[#5845d9] transition-colors flex items-center justify-center font-label-md text-[16px] text-white font-medium shadow-lg shadow-primary/15">
+                    Send contact request
+                </button>
+<button class="w-full h-[52px] rounded-[14px] bg-transparent border-[1.5px] border-[#7C6CFF] hover:bg-[#7C6CFF]/10 active:bg-[#7C6CFF]/20 transition-colors flex items-center justify-center gap-sm font-label-md text-[16px] text-[#7C6CFF] font-medium">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+                    Verify with QR code
+                </button>
+</div>
+</div>
+</main>
+<style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</body></html>

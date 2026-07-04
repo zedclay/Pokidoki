@@ -1,0 +1,185 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#c8c4d7",
+                      "surface-container-high": "#252a34",
+                      "surface-container-lowest": "#090e17",
+                      "primary-container": "#8c80ff",
+                      "secondary": "#40dfa8",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#c6bfff",
+                      "surface-container-low": "#161c25",
+                      "outline-variant": "#474554",
+                      "on-background": "#dee2ef",
+                      "on-surface": "#dee2ef",
+                      "surface": "#0e141c",
+                      "primary-fixed-dim": "#c6bfff",
+                      "on-primary-container": "#22008d",
+                      "primary-fixed": "#e4dfff",
+                      "inverse-on-surface": "#2b313a",
+                      "surface-variant": "#30353f",
+                      "tertiary": "#ffb875",
+                      "tertiary-container": "#d27c17",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#ffdcc0",
+                      "secondary-fixed": "#64fcc3",
+                      "on-secondary": "#003827",
+                      "on-secondary-fixed-variant": "#005139",
+                      "error-container": "#93000a",
+                      "surface-container": "#1a2029",
+                      "inverse-surface": "#dee2ef",
+                      "on-tertiary-container": "#412200",
+                      "background": "#0e141c",
+                      "on-secondary-container": "#004933",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#00c28e",
+                      "on-tertiary-fixed": "#2d1600",
+                      "on-secondary-fixed": "#002115",
+                      "outline": "#928ea0",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "surface-dim": "#0e141c",
+                      "surface-bright": "#343943",
+                      "surface-container-highest": "#30353f",
+                      "primary": "#c6bfff",
+                      "on-primary-fixed": "#160066",
+                      "on-tertiary": "#4b2800",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "on-primary": "#2800a0",
+                      "inverse-primary": "#5845d9"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "24px",
+                      "xxl": "32px",
+                      "page-padding": "20px",
+                      "lg": "16px",
+                      "md": "12px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "section": "48px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface h-screen w-full flex flex-col font-body-lg overflow-hidden max-w-md mx-auto relative">
+<header class="flex justify-between items-center w-full px-page-padding h-16 bg-surface-container-lowest z-10 shrink-0 mt-2">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Pokidoki</span>
+</div>
+<button class="h-12 min-w-[48px] flex items-center justify-center font-label-md text-label-md text-primary hover:bg-surface-variant/20 rounded-full transition-colors active:scale-95">
+            Skip
+        </button>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-page-padding pb-section overflow-y-auto">
+<div class="w-full max-w-[320px] aspect-square flex items-center justify-center mb-xl relative">
+<img class="w-full h-full object-contain drop-shadow-2xl opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDHbaCYTkGLffbsBc3IApc8VGH8VoB94tJJOFKAjJ5k9pnyIeuoSQejMDpuNiRGaWtQII66egcyztNzQaqA4IjbcaX_khtJO0QwlNHrJSe15aAJP5CFgxcQ_4yfKVJrQLmQ0HXn4eeAD2GFY2rU7rY9ol--CbcmF4Az97gzDp9KTg2RbU_8oPEEUh9FPK3Ckux-GMQzNDbcGyG7hZufsL8XdpsDGQi76hLgyqsI1tQ2l89mwJbMqUSv7xzYg4NJDsdDlRLd7th9Vc">
+<div class="absolute inset-0 bg-primary-container opacity-5 blur-3xl rounded-full -z-10 mix-blend-screen"></div>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface text-center mb-sm w-full tracking-tight">
+            Your conversations stay private
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-[300px]">
+            Messages are protected on your device and can only be read by conversation participants.
+        </p>
+</main>
+<footer class="w-full px-page-padding pb-xl pt-lg shrink-0 flex flex-col gap-lg bg-surface-container-lowest">
+<div class="flex justify-center items-center gap-sm w-full">
+<span class="material-symbols-outlined text-primary-container scale-125" style="font-size: 12px; font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+<span class="material-symbols-outlined text-outline-variant opacity-50" style="font-size: 12px; font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+<span class="material-symbols-outlined text-outline-variant opacity-50" style="font-size: 12px; font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+</div>
+<button class="w-full h-[52px] rounded-[14px] bg-primary-container text-on-primary-container font-label-md text-label-md flex items-center justify-center active:scale-95 transition-transform duration-150 ease-in-out shadow-lg shadow-primary-container/15">
+            Continue
+        </button>
+</footer>
+</body></html>

@@ -1,0 +1,906 @@
+{
+  "@@locale": "en",
+  "appName": "Pokidoki",
+  "@appName": {
+    "description": "Application display name"
+  },
+  "splashTagline": "Private conversations, protected.",
+  "@splashTagline": {
+    "description": "Supporting line shown on the splash screen"
+  },
+  "splashPreparing": "Securing your space",
+  "@splashPreparing": {
+    "description": "Initialization status line on the splash screen"
+  },
+  "splashLoadingSemantic": "Pokidoki is starting",
+  "@splashLoadingSemantic": {
+    "description": "Screen-reader announcement while splash initializes"
+  },
+  "splashReadySemantic": "Pokidoki is ready",
+  "@splashReadySemantic": {
+    "description": "Screen-reader announcement when splash bootstrap completes"
+  },
+  "actionContinue": "Continue",
+  "@actionContinue": {
+    "description": "Primary continue action"
+  },
+  "actionContinueUpper": "CONTINUE",
+  "@actionContinueUpper": {
+    "description": "Uppercase continue action for onboarding page 2"
+  },
+  "actionGetStarted": "GET STARTED",
+  "@actionGetStarted": {
+    "description": "Final onboarding primary action"
+  },
+  "actionSkip": "Skip",
+  "@actionSkip": {
+    "description": "Skip onboarding action"
+  },
+  "actionRetry": "Try again",
+  "@actionRetry": {
+    "description": "Generic retry action label"
+  },
+  "actionCreateAccount": "CREATE ACCOUNT",
+  "@actionCreateAccount": {
+    "description": "Welcome primary action"
+  },
+  "actionSignIn": "Sign in",
+  "@actionSignIn": {
+    "description": "Welcome secondary action"
+  },
+  "onboardingPageSemantic": "Onboarding page {current} of {total}",
+  "@onboardingPageSemantic": {
+    "description": "Screen-reader announcement for onboarding progress",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboarding1Title": "Your conversations stay private",
+  "@onboarding1Title": {
+    "description": "Onboarding page 1 title"
+  },
+  "onboarding1Body": "Messages are protected on your device and can only be read by conversation participants.",
+  "@onboarding1Body": {
+    "description": "Onboarding page 1 body"
+  },
+  "onboarding1IllustrationSemantic": "Illustration of private conversation between two people",
+  "@onboarding1IllustrationSemantic": {
+    "description": "Accessibility label for onboarding page 1 illustration"
+  },
+  "onboarding2Title": "Know who you are talking to",
+  "@onboarding2Title": {
+    "description": "Onboarding page 2 title"
+  },
+  "onboarding2Body": "Verify trusted contacts using a QR code or safety number before sharing sensitive information.",
+  "@onboarding2Body": {
+    "description": "Onboarding page 2 body"
+  },
+  "onboarding2IllustrationSemantic": "Illustration of contact verification with a QR code and checkmark",
+  "@onboarding2IllustrationSemantic": {
+    "description": "Accessibility label for onboarding page 2 illustration"
+  },
+  "onboarding3Title": "Your private space stays locked",
+  "@onboarding3Title": {
+    "description": "Onboarding page 3 title"
+  },
+  "onboarding3Body": "Protect Pokidoki with an app PIN and your device biometrics, so only you can access your conversations.",
+  "@onboarding3Body": {
+    "description": "Onboarding page 3 body"
+  },
+  "onboarding3IllustrationSemantic": "Illustration of app lock with PIN and biometrics",
+  "@onboarding3IllustrationSemantic": {
+    "description": "Accessibility label for onboarding page 3 illustration"
+  },
+  "welcomeTitle": "Welcome to your private space",
+  "@welcomeTitle": {
+    "description": "Welcome screen headline"
+  },
+  "welcomeBody": "Connect with the people you trust and keep your conversations protected.",
+  "@welcomeBody": {
+    "description": "Welcome screen supporting text"
+  },
+  "welcomeFeaturePrivate": "Private conversations",
+  "@welcomeFeaturePrivate": {
+    "description": "Welcome reassurance row for private conversations"
+  },
+  "welcomeFeatureVerification": "Contact verification",
+  "@welcomeFeatureVerification": {
+    "description": "Welcome reassurance row for contact verification"
+  },
+  "welcomeFeatureAppLock": "App lock protection",
+  "@welcomeFeatureAppLock": {
+    "description": "Welcome reassurance row for app lock"
+  },
+  "welcomeTermsPrefix": "By continuing, you agree to the ",
+  "@welcomeTermsPrefix": {
+    "description": "Terms disclaimer prefix"
+  },
+  "welcomeTermsOfService": "Terms of Service",
+  "@welcomeTermsOfService": {
+    "description": "Terms of Service link label"
+  },
+  "welcomeTermsMiddle": " and ",
+  "@welcomeTermsMiddle": {
+    "description": "Terms disclaimer conjunction"
+  },
+  "welcomePrivacyPolicy": "Privacy Policy",
+  "@welcomePrivacyPolicy": {
+    "description": "Privacy Policy link label"
+  },
+  "welcomeTermsSuffix": ".",
+  "@welcomeTermsSuffix": {
+    "description": "Terms disclaimer suffix"
+  },
+  "welcomePrivacyNote": "Pokidoki cannot read your private messages.",
+  "@welcomePrivacyNote": {
+    "description": "Welcome footer privacy reassurance"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language label"
+  },
+  "languageArabic": "العربية",
+  "@languageArabic": {
+    "description": "Arabic language label"
+  },
+  "languageFrench": "Français",
+  "@languageFrench": {
+    "description": "French language label"
+  },
+  "languageSelectorSemantic": "Language, currently {language}",
+  "@languageSelectorSemantic": {
+    "description": "Accessibility label for language selector",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "devPlaceholderTitle": "Screen not implemented yet",
+  "@devPlaceholderTitle": {
+    "description": "Temporary development placeholder title"
+  },
+  "devPlaceholderBody": "This destination is reserved for a later implementation batch.",
+  "@devPlaceholderBody": {
+    "description": "Temporary development placeholder body"
+  },
+  "devPlaceholderBadge": "Temporary development screen",
+  "@devPlaceholderBadge": {
+    "description": "Badge marking the placeholder as non-production"
+  },
+  "devScreenCreateAccount": "Create Account is not implemented yet.",
+  "@devScreenCreateAccount": {
+    "description": "Placeholder message for create account"
+  },
+  "devScreenSignIn": "Sign In is not implemented yet.",
+  "@devScreenSignIn": {
+    "description": "Placeholder message for sign in"
+  },
+  "devConversationsHome": "Conversations Home will be implemented in a later batch.",
+  "devAccountRecovery": "Account Recovery will be implemented in the next batch.",
+  "devAccountRecoveryNextBatch": "Account Recovery will be implemented in the next batch.",
+  "devPinRecovery": "App PIN recovery will be implemented in a later batch.",
+  "devSettings": "Settings will be implemented in a later batch.",
+  "devOneToOneChat": "One-to-One Chat will be implemented in a later batch.",
+  "devQrScanner": "QR Scanner will be implemented in a later batch.",
+  "devReportUser": "Report User will be implemented in the next batch.",
+  "devChangePassword": "Change Password will be implemented in the next batch.",
+  "devEmailManagement": "Email Management will be implemented in the next batch.",
+  "actionTryAgain": "Try again",
+  "routeNotFoundTitle": "Page not found",
+  "routeNotFoundBody": "This link is not available in the app.",
+  "routeNotFoundAction": "Go to Welcome",
+  "actionCancel": "Cancel",
+  "chatsYouPrefix": "You: ",
+  "chatsYesterday": "Yesterday",
+  "chatsUnreadCount": "{count} unread messages",
+  "@chatsUnreadCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "chatsSearchHint": "Search conversations",
+  "chatsProtectedBanner": "Your conversations are protected with end-to-end encryption.",
+  "chatsPinned": "Pinned",
+  "chatsRecent": "Recent",
+  "chatsRecentContacts": "Recent contacts",
+  "chatsNewConversation": "New conversation",
+  "chatsEmptyTitle": "No conversations yet",
+  "chatsEmptyBody": "Start a private conversation with one of your contacts.",
+  "contactsSearchHint": "Search contacts",
+  "contactsRequestsTitle": "Contact requests",
+  "contactsRequestsWaiting": "{count} requests are waiting for your review.",
+  "@contactsRequestsWaiting": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "contactsVerifiedSection": "Verified contacts",
+  "contactsAllContacts": "All contacts",
+  "contactsEmptyTitle": "No contacts yet",
+  "contactsEmptyBody": "Search for someone or accept a contact request.",
+  "contactsReviewRequests": "Review requests",
+  "contactsRequestsInfo": "Accepting a request adds the account to your contacts. It does not verify the person’s identity. Verify the contact before sharing sensitive information.",
+  "contactsReceived": "Received",
+  "contactsSent": "Sent",
+  "contactsAccept": "ACCEPT",
+  "contactsDecline": "DECLINE",
+  "contactsCancelRequest": "Cancel",
+  "contactsRequestAccepted": "Contact request accepted.",
+  "contactsRequestDeclined": "Contact request declined.",
+  "contactsNoReceivedRequests": "No received requests.",
+  "contactsNoSentRequests": "No sent requests.",
+  "usersFindSomeone": "Find someone",
+  "usersFindPeople": "Find people",
+  "usersSearchByUsernameOrId": "Search by username or Pokidoki ID",
+  "usersSearchInitial": "Search by username or Pokidoki ID.",
+  "usersNoResultsTitle": "No users found",
+  "usersNoResultsBody": "Try another username or Pokidoki ID.",
+  "usersScanQr": "Scan QR code",
+  "usersScanQrSubtitle": "Add or verify someone nearby",
+  "usersNewGroup": "New group",
+  "usersNewGroupSubtitle": "Create a private conversation...",
+  "usersComingLater": "Coming later",
+  "usersProfileTitle": "Profile",
+  "usersSendRequest": "Send contact request",
+  "usersRequestSent": "Contact request sent.",
+  "usersRequestPending": "Request sent",
+  "usersMessage": "Message",
+  "usersNotInContacts": "Not in your contacts",
+  "usersInContacts": "In your contacts",
+  "usersNotVerified": "Not verified",
+  "usersVerifyBeforeSensitive": "Verify this person before sharing sensitive information.",
+  "usersAbout": "About",
+  "usersSharedContext": "Shared context",
+  "usersCopyId": "Copy Pokidoki ID",
+  "usersBlockAction": "Block",
+  "usersReportAction": "Report",
+  "usersBlockTitle": "Block {name}?",
+  "@usersBlockTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "usersBlockBody": "{name} will not be able to send you new contact requests or messages.",
+  "@usersBlockBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "usersBlocked": "User blocked.",
+  "qrScanTitle": "Scan QR Code",
+  "qrScanHeading": "Scan a Pokidoki QR code",
+  "qrScanBody": "Place the code inside the frame to add or verify someone",
+  "qrLookingForCode": "Looking for a Pokidoki code...",
+  "qrFrameSemantic": "QR scanning frame",
+  "qrSimulateScan": "Simulate scan",
+  "qrInvalidCode": "This QR code is not a valid Pokidoki contact code.",
+  "qrFlash": "Flash",
+  "qrGallery": "Gallery",
+  "qrMyCodeAction": "My QR Code",
+  "qrMyCodeTitle": "My Pokidoki QR",
+  "qrHelp": "Help",
+  "qrBrightness": "Brightness",
+  "qrCodeSemantic": "Your Pokidoki contact QR code",
+  "qrPublicIdentity": "Your public Pokidoki identity",
+  "qrPublicIdHelp": "People can use this ID to find your account.",
+  "qrShareExplanation": "Your Pokidoki QR code helps people find or verify your account without typing your username or ID.",
+  "qrShareAction": "Share",
+  "qrShareReady": "Your Pokidoki contact code is ready to share.",
+  "qrRefreshAction": "Refresh",
+  "qrRefreshTitle": "Create a new QR code?",
+  "qrRefreshBody": "The previous contact code will no longer be used for new scans.",
+  "verifyContactTitle": "Verify contact",
+  "verifyNotVerified": "Not verified",
+  "verifyQrRecognized": "QR code recognized",
+  "verifyQrRecognizedBody": "This code belongs to {name}’s Pokidoki profile.",
+  "@verifyQrRecognizedBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "verifyConfirmInPerson": "Confirm that you are talking to the right person",
+  "verifyScanQrMethod": "Scan QR code",
+  "verifyScanQrMethodBody": "Recommended when you are together",
+  "verifyCompareSafetyNumber": "Compare safety number",
+  "verifyCompareSafetyNumberBody": "Useful when you are not in the same place",
+  "verifyWhatItConfirms": "What verification confirms",
+  "verifyBulletSameIdentity": "You are comparing the same contact identity",
+  "verifyBulletNotReplaced": "The contact’s security identity has not been unexpectedly replaced",
+  "verifyBulletMarkedOnDevice": "Pokidoki can mark this contact as verified on your device",
+  "verifyMarkTitle": "Verify {name}?",
+  "@verifyMarkTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "verifyMarkBody": "Only continue if you confirmed this profile with {name} in person or through another trusted channel.",
+  "@verifyMarkBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "verifyMarkAction": "Mark as verified",
+  "verifySafetyConfirmed": "Safety number confirmed.",
+  "verifyResetTitle": "Reset verification?",
+  "verifyResetBody": "{name} will appear unverified until you compare the identity again.",
+  "@verifyResetBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "verifyResetAction": "Reset",
+  "safetyNumberTitle": "Safety number",
+  "safetyCompareHeading": "Compare this number with {name}",
+  "@safetyCompareHeading": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "safetyCompareBody": "Both devices should display the same safety number. Compare it in person or through another communication method you already trust.",
+  "safetyNumberSemantic": "Safety number digit groups",
+  "safetyNumberCopied": "Safety number copied.",
+  "safetyDoNotCompareOnlyInChat": "Do not compare this number only inside the conversation you are verifying.",
+  "chatTypeMessage": "Type a message",
+  "chatSend": "Send",
+  "chatAttach": "Attachment",
+  "chatReply": "Reply",
+  "chatCopy": "Copy",
+  "chatDelete": "Delete",
+  "chatDeleteForMe": "Delete for me",
+  "chatDeleteTitle": "Delete this message?",
+  "chatDeleteBody": "This removes the message from this device.",
+  "chatMessageInfo": "Message info",
+  "chatMessageCopied": "Message copied.",
+  "chatSearchInConversation": "Search",
+  "chatConversationInfo": "Conversation info",
+  "chatProtectedBanner": "Messages in this conversation are protected with end-to-end encryption.",
+  "chatToday": "Today",
+  "chatAttachmentLater": "Attachment selection will be connected in a later phase.",
+  "chatBlockedNotice": "You blocked {name}.",
+  "@chatBlockedNotice": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "chatSent": "Sent",
+  "chatDelivered": "Delivered",
+  "chatRead": "Read",
+  "chatMuteNotifications": "Notifications",
+  "chatDisappearingMessages": "Disappearing messages",
+  "chatDisappearingOff": "Off",
+  "chatDisappearingOffHelp": "Messages stay until deleted",
+  "chatDisappearingOneHour": "1 hour",
+  "chatDisappearingOneHourHelp": "Standard temporary chat",
+  "chatDisappearingOneDay": "1 day",
+  "chatDisappearingOneDayHelp": "Default privacy setting",
+  "chatDisappearingOneWeek": "1 week",
+  "chatDisappearingOneWeekHelp": "Extended conversation history",
+  "chatDisappearingAppliesFuture": "The new timer applies to future messages. Previous messages will keep their original timer.",
+  "chatDisappearingScreenshotWarning": "Disappearing does not prevent copying. Recipients can still take screenshots, copy text, or forward messages before they disappear.",
+  "chatSharedContent": "Shared content",
+  "chatSharedWith": "Shared with {name}",
+  "@chatSharedWith": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "chatPhotosAndVideos": "Photos and videos",
+  "chatFiles": "Files",
+  "chatLinks": "Links",
+  "chatMedia": "Media",
+  "chatNoMedia": "No media yet",
+  "chatNoFiles": "No files yet",
+  "chatNoLinks": "No links yet",
+  "chatFilePreviewLater": "File preview will be connected in a later phase.",
+  "chatSearchHint": "Search messages",
+  "chatSearchInitial": "Search messages in this conversation.",
+  "chatSearchResultCount": "{count} results",
+  "@chatSearchResultCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "chatNoMessagesFound": "No messages found",
+  "chatNoMessagesFoundBody": "Try another word or phrase.",
+  "chatDeleteConversation": "Delete conversation",
+  "chatDeleteConversationTitle": "Delete this conversation?",
+  "chatDeleteConversationBody": "This removes the local mock conversation history from this device.",
+
+
+
+  "authCreateAccountTitle": "Create account",
+  "authCreateAccountHeading": "Create your private account",
+  "authCreateAccountBody": "Set up your Pokidoki account to start connecting with people you trust.",
+  "authCreateAccountAction": "Create account",
+  "authCreateAccountLink": "Create an account",
+  "authEmailLabel": "Email address",
+  "authEmailOrUsernameLabel": "Email or username",
+  "authPasswordLabel": "Password",
+  "authConfirmPasswordLabel": "Confirm password",
+  "authPasswordRequirements": "Your password must include:",
+  "authPasswordMinLength": "At least 10 characters",
+  "authPasswordUppercase": "One uppercase letter",
+  "authPasswordLowercase": "One lowercase letter",
+  "authPasswordNumber": "One number",
+  "authPasswordSymbol": "One symbol",
+  "authAgreePrefix": "I agree to the ",
+  "authPasswordPrivacyNote": "Your login password protects your account. Your private message keys remain on your device.",
+  "authAlreadyHaveAccount": "Already have an account? ",
+  "authInvalidEmail": "Enter a valid email address.",
+  "authPasswordMismatch": "Passwords do not match.",
+  "authGenericError": "Something went wrong. Try again.",
+  "authSignInTitle": "Sign in",
+  "authSignInHeading": "Welcome back",
+  "authSignInBody": "Sign in to access your private conversations.",
+  "authSignInAction": "SIGN IN",
+  "authRememberDevice": "Remember this device",
+  "authForgotPassword": "Forgot password?",
+  "authOrContinueSecurely": "Or continue securely",
+  "authUseFingerprint": "Use fingerprint",
+  "authFingerprintAfterSignIn": "Fingerprint unlock is available after you sign in.",
+  "authNewToPokidoki": "New to Pokidoki? ",
+  "authSignInError": "We could not sign you in. Check your information and try again.",
+  "authInvalidCredentialsForm": "Enter your email or username and password.",
+  "authVerifyEmailTitle": "Verify email",
+  "authCheckYourEmail": "Check your email",
+  "authVerificationBody": "Enter the six-digit verification code we sent to your email address.",
+  "authVerificationCodeSemantic": "Verification code",
+  "authVerifyEmailAction": "VERIFY EMAIL",
+  "authResendCode": "Resend code",
+  "authResendReady": "You can resend a code now.",
+  "authResendCountdown": "Resend available in 00:{seconds}",
+  "@authResendCountdown": {
+    "placeholders": {
+      "seconds": {"type": "String"}
+    }
+  },
+  "authChangeEmail": "Change email",
+  "authCodeResent": "A new verification code was sent.",
+  "authVerificationError": "That code is not valid. Try again.",
+  "authProfileStep1": "Profile setup · Step 1 of 2",
+  "authProfileStep2": "Profile setup · Step 2 of 2",
+  "authUsernameHeading": "Create your Pokidoki username",
+  "authUsernameBody": "People can use your username to find you and send a contact request.",
+  "authUsernameAvailable": "@{username} is available",
+  "@authUsernameAvailable": {
+    "placeholders": {
+      "username": {"type": "String"}
+    }
+  },
+  "authUsernameUnavailable": "That username is not available.",
+  "authUsernameRequirements": "Username requirements",
+  "authUsernameLength": "3 to 24 characters",
+  "authUsernameCharset": "Lowercase letters, numbers, periods, and underscores",
+  "authUsernameStartsWithLetter": "Must begin with a letter",
+  "authUsernameNoSpaces": "No spaces",
+  "authUsernameUnique": "Must be unique",
+  "authCreateProfileTitle": "Create profile",
+  "authProfileHeading": "Make Pokidoki feel like yours",
+  "authProfileBody": "Add the name and photo that trusted contacts will recognize.",
+  "authDisplayNameLabel": "Display name",
+  "authAboutYouLabel": "About you (optional)",
+  "authSkipOptionalDetails": "Skip optional details",
+  "authChoosePhoto": "Choose photo",
+  "authTakePhoto": "Take photo",
+  "authRemovePhoto": "Remove photo",
+  "authCreatePinTitle": "Create app PIN",
+  "authCreatePinHeading": "Create an app PIN",
+  "authCreatePinBody": "Choose a six-digit PIN to protect access to Pokidoki on this device.",
+  "authPinDifferentFromPassword": "This PIN is different from your account password.",
+  "authPinLocalProtectionNote": "Your app PIN protects local access. It is not your message-encryption key.",
+  "authPinDigitsEntered": "{count} of 6 digits entered",
+  "@authPinDigitsEntered": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "authConfirmPinTitle": "Confirm app PIN",
+  "authConfirmPinHeading": "Confirm your app PIN",
+  "authConfirmPinBody": "Enter the same six-digit PIN again to make sure you remember it.",
+  "authConfirmPinAction": "Confirm PIN",
+  "authChooseDifferentPin": "Choose a different PIN",
+  "authEnterAllSixDigits": "Enter all six digits to continue",
+  "authPinMismatch": "The PINs do not match. Try again.",
+  "authBiometricsHeading": "Unlock Pokidoki more quickly",
+  "authBiometricsBody": "Your app PIN will remain available as a fallback.",
+  "authBiometricsFasterTitle": "Faster access",
+  "authBiometricsFasterBody": "Open Pokidoki without typing your PIN each time.",
+  "authBiometricsDeviceTitle": "Protected by your device",
+  "authBiometricsDeviceBody": "Authentication is handled by your phone's security system.",
+  "authBiometricsPinTitle": "PIN remains available",
+  "authBiometricsPinBody": "You can still unlock Pokidoki with your six-digit app PIN.",
+  "authBiometricsPrivacyNote": "Your biometric data is managed by your device and is not stored by Pokidoki.",
+  "authEnableBiometricsAction": "Enable biometric unlock",
+  "authNotNow": "Not now",
+  "authAppLockHeading": "Pokidoki is locked",
+  "authAppLockBody": "Enter your six-digit app PIN or use biometrics to access your conversations.",
+  "authEnterAppPin": "Enter your app PIN",
+  "authAppLockError": "That PIN is incorrect. Try again.",
+  "authForgotPin": "Forgot your app PIN?",
+  "authUseBiometrics": "Use biometrics",
+  "authDeleteDigit": "Delete digit",
+  "authBiometricsUnavailable": "Biometric unlock is not enabled for this session.",
+
+  "stateLoading": "Loading",
+  "@stateLoading": {
+    "description": "Generic loading state label"
+  },
+  "stateEmpty": "Nothing here yet",
+  "@stateEmpty": {
+    "description": "Generic empty state label"
+  },
+  "stateError": "Something went wrong",
+  "@stateError": {
+    "description": "Generic recoverable error label"
+  },
+  "stateOffline": "You appear to be offline",
+  "@stateOffline": {
+    "description": "Generic offline banner label"
+  },
+  "navChats": "Chats",
+  "@navChats": {
+    "description": "Primary tab label for conversations"
+  },
+  "navContacts": "Contacts",
+  "@navContacts": {
+    "description": "Primary tab label for contacts"
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Primary tab label for settings"
+  },
+  "semanticVerified": "Verified",
+  "@semanticVerified": {
+    "description": "Accessibility label for verified badge"
+  },
+  "semanticClose": "Close",
+  "@semanticClose": {
+    "description": "Accessibility label for close actions"
+  },
+  "semanticBack": "Back",
+  "@semanticBack": {
+    "description": "Accessibility label for back navigation"
+  },
+  "semanticSearch": "Search",
+  "@semanticSearch": {
+    "description": "Accessibility label for search fields"
+  },
+  "settingsTitle": "Settings",
+  "settingsAccount": "Account",
+  "settingsAccountProtected": "Account protected",
+  "settingsPrivacySecurity": "Privacy & Security",
+  "settingsPreferences": "Preferences",
+  "settingsAppLock": "App lock",
+  "settingsAppLockSubtitle": "PIN and biometrics",
+  "settingsBiometricUnlock": "Biometric unlock",
+  "settingsAutomaticallyLock": "Automatically lock",
+  "settingsScreenPrivacy": "Screen privacy",
+  "settingsScreenPrivacySubtitle": "Hide content in app switcher",
+  "settingsReadReceipts": "Read receipts",
+  "settingsTypingIndicators": "Typing indicators",
+  "settingsBlockedUsers": "Blocked users",
+  "settingsLinkedDevices": "Linked devices",
+  "settingsActiveDevices": "{count} active",
+  "@settingsActiveDevices": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "settingsSecurityActivity": "Security activity",
+  "settingsSecurityActivitySubtitle": "Review important changes",
+  "settingsAppearance": "Appearance",
+  "settingsLanguage": "Language",
+  "settingsStorageUsage": "Storage usage",
+  "settingsNotifications": "Notifications",
+  "settingsMessageNotifications": "Message notifications",
+  "settingsNotificationPreviews": "Notification previews",
+  "settingsNotificationPreviewsSubtitle": "Show message text",
+  "settingsNotificationSound": "Notification sound",
+  "settingsNotificationSoundDefault": "Pokidoki Default",
+  "settingsVibration": "Vibration",
+  "settingsHelpInformation": "Help & Information",
+  "settingsHelpCenter": "Help center",
+  "settingsHelpPlaceholder": "Help content will be available in a later release.",
+  "settingsPokidokiVersion": "Pokidoki version",
+  "settingsSignOutTitle": "Sign out of Pokidoki?",
+  "settingsSignOutBody": "You will need to sign in again to access this account.",
+  "settingsSignOutAction": "Sign out",
+  "settingsPublicIdentity": "Public identity",
+  "settingsDisplayName": "Display name",
+  "settingsUsername": "Username",
+  "settingsPokidokiId": "Pokidoki ID",
+  "settingsCopyId": "Copy Pokidoki ID",
+  "settingsIdCopied": "Pokidoki ID copied.",
+  "settingsSharePublicIdentity": "Share your public Pokidoki identity",
+  "settingsPreviewPublicProfile": "Preview public profile",
+  "settingsPreviewPublicProfileBody": "See what other Pokidoki users can view",
+  "settingsSignInRecovery": "Sign-in and recovery",
+  "settingsEmailAddress": "Email address",
+  "settingsVerified": "Verified",
+  "settingsPassword": "Password",
+  "settingsPasswordChangedAgo": "Changed 3 months ago",
+  "settingsAccountRecovery": "Account recovery",
+  "settingsAccountRecoverySubtitle": "Review recovery and verification options",
+  "settingsDeleteAccount": "Delete Account",
+  "settingsDeleteAccountUnavailable": "Delete Account is not available in this UI batch.",
+  "settingsLinkedDevicesInfo": "Review this list regularly and remove any device you do not recognize.",
+  "settingsLinkedDevicesError": "We could not load linked devices.",
+  "settingsDeviceLinkedRecently": "A device was linked recently",
+  "settingsDeviceLinkedRecentlyBody": "Review the device below and remove it if you do not recognize it.",
+  "settingsThisDevice": "This device",
+  "settingsOtherDevices": "Other devices",
+  "settingsCurrentDevice": "Current",
+  "settingsNeedsReview": "Needs review",
+  "settingsActiveNow": "Active now",
+  "settingsLastActiveRecently": "Last active recently",
+  "settingsNoOtherDevices": "No other linked devices",
+  "settingsNoOtherDevicesBody": "Only this phone is currently linked to your account.",
+  "settingsRemoveDeviceTitle": "Remove {name}?",
+  "@settingsRemoveDeviceTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsRemoveDeviceBody": "This device will need to sign in again.",
+  "settingsRemoveDeviceAction": "Remove device",
+  "settingsDeviceRemoved": "Device removed.",
+  "settingsSecurityActivityError": "We could not load security activity.",
+  "settingsSecurityHistoryTitle": "Your account security history",
+  "settingsSecurityHistoryBody": "Review recent security events like new sign-ins, password changes, and device additions.",
+  "settingsEventsNeedReview": "{count} event needs your review",
+  "@settingsEventsNeedReview": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "settingsFilterAll": "All",
+  "settingsFilterDevices": "Devices",
+  "settingsFilterIdentity": "Identity",
+  "settingsFilterSignIn": "Sign-in",
+  "settingsNoSecurityEvents": "No security events to show.",
+  "settingsReviewLinkedDevices": "Review linked devices",
+  "settingsReviewLinkedDevicesHint": "If you do not recognize this device, review your linked devices.",
+  "settingsBlockedUsersInfo": "Blocked accounts cannot contact you",
+  "settingsBlockedUsersError": "We could not load blocked users.",
+  "settingsBlockedUsersCount": "{count} blocked users",
+  "@settingsBlockedUsersCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "settingsNoBlockedUsers": "No blocked users",
+  "settingsNoBlockedUsersBody": "People you block will appear here.",
+  "settingsUnblockTitle": "Unblock {name}?",
+  "@settingsUnblockTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsUnblockBody": "{name} may be able to send you messages or contact requests again.",
+  "@settingsUnblockBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsUnblockAction": "Unblock",
+  "settingsUnblockedSnack": "{name} was unblocked.",
+  "@settingsUnblockedSnack": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsProtected": "Protected",
+  "settingsUseAppLock": "Use App Lock",
+  "settingsTurnOffAppLockTitle": "Turn off App Lock?",
+  "settingsTurnOffAppLockBody": "Pokidoki will no longer require your app PIN when opening the app.",
+  "settingsTurnOffAppLockAction": "Turn off",
+  "settingsUnlockMethods": "Unlock Methods",
+  "settingsChangeAppPin": "Change app PIN",
+  "settingsPinLength": "PIN length",
+  "settingsPinLengthValue": "6 digits",
+  "settingsAutomaticLocking": "Automatic Locking",
+  "settingsLockImmediately": "Immediately",
+  "settingsLockAfter1Minute": "After 1 minute",
+  "settingsLockAfter5Minutes": "After 5 minutes",
+  "settingsLockAfter30Minutes": "After 30 minutes",
+  "settingsLockAfterRestart": "Require PIN after device restart",
+  "settingsAlwaysRequired": "Always required",
+  "settingsPrivacyWhileLocked": "Privacy While Locked",
+  "settingsHideContentInAppSwitcher": "Hide content in app switcher",
+  "settingsPinNotPassword": "The app PIN is not your account password",
+  "settingsTheme": "Theme",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+  "settingsThemeSystem": "Use device setting",
+  "settingsThemeSystemBody": "Matches system theme automatically",
+  "settingsDarkActive": "Dark appearance is active",
+  "settingsDarkActiveBody": "Saves battery and reduces eye strain in low light.",
+  "settingsLightActive": "Light appearance is active",
+  "settingsLightActiveBody": "Uses a brighter surface palette for daytime use.",
+  "settingsSystemActive": "System appearance is active",
+  "settingsAppearanceSecurityNote": "Appearance does not change your security",
+  "settingsLanguageActive": "{name} is active",
+  "@settingsLanguageActive": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsLanguageActiveBody": "Pokidoki menus, settings, and system messages are displayed in {name}.",
+  "@settingsLanguageActiveBody": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "settingsAppLanguage": "App language",
+  "settingsLeftToRight": "Left to right",
+  "settingsRightToLeft": "Right to left",
+  "settingsLanguageMessagesNote": "Changing language does not translate messages",
+  "settingsStorageError": "We could not calculate storage usage.",
+  "settingsStorageUsedOnDevice": "Used by Pokidoki on this device",
+  "settingsStorageSummarySemantic": "Total storage used: {total}",
+  "@settingsStorageSummarySemantic": {
+    "placeholders": {
+      "total": {"type": "String"}
+    }
+  },
+  "settingsCategories": "Categories",
+  "settingsStorageMedia": "Photos and videos",
+  "settingsStorageFiles": "Files",
+  "settingsStorageVoice": "Voice messages",
+  "settingsStorageCache": "Cache",
+  "settingsStorageOther": "Other local data",
+  "settingsClear": "Clear",
+  "settingsClearCache": "Clear cache",
+  "settingsClearCacheSubtitle": "Safely remove temp data",
+  "settingsClearCacheTitle": "Clear cached files?",
+  "settingsClearCacheBody": "Downloaded media can be retrieved again when needed.",
+  "settingsClearCacheAction": "Clear cache",
+  "settingsCacheCleared": "Cache cleared.",
+  "accountChangePassword": "Change Password",
+  "accountProtectAccount": "Protect your Pokidoki account",
+  "accountCurrentPassword": "Current password",
+  "accountForgotCurrentPassword": "Forgot current password?",
+  "accountNewPassword": "New password",
+  "accountConfirmNewPassword": "Confirm new password",
+  "accountPasswordRequirements": "Requirements:",
+  "accountPasswordMinLength": "At least 12 characters",
+  "accountPasswordUpperLower": "Upper and lowercase letters",
+  "accountPasswordNumber": "At least one number",
+  "accountPasswordSymbol": "At least one symbol (!@#$%^&*)",
+  "accountPasswordDifferent": "Different from current password",
+  "accountPasswordMismatch": "Passwords do not match.",
+  "accountSignOutOtherDevices": "Sign out other devices",
+  "accountSignOutOtherDevicesRecommended": "Recommended for security",
+  "accountPasswordPinDifferent": "Your password and app PIN are different",
+  "accountUpdatePassword": "Update Password",
+  "accountPasswordUpdated": "Password updated.",
+  "accountPasswordUpdateFailed": "We could not update your password. Check your current password and try again.",
+  "accountSecurityGenericError": "We could not complete this action. Your account remains unchanged.",
+  "accountShowPassword": "Show password",
+  "accountHidePassword": "Hide password",
+  "accountEmailTitle": "Email",
+  "accountEmailVerifiedTitle": "Your email is verified",
+  "accountEmailRecoveryHelp": "This email can be used for account recovery and important security alerts.",
+  "accountVerifiedOn": "Verified on {date}",
+  "@accountVerifiedOn": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "accountEmailSection": "Account email",
+  "accountLastVerified": "Last verified",
+  "accountRecoveryAvailable": "Available",
+  "accountChangeEmail": "Change email address",
+  "accountChangeEmailSubtitle": "Replace the verified email associated with this account",
+  "accountSecurityEmails": "Security emails",
+  "accountSecurityAlerts": "Security alerts",
+  "accountSecurityAlertsBody": "Receive important account and device security notifications.",
+  "accountAlwaysOn": "Always on",
+  "accountNewDeviceAlerts": "New device alerts",
+  "accountNewDeviceAlertsBody": "Receive an email when a new device is linked or signs in.",
+  "accountRecoveryAlerts": "Recovery alerts",
+  "accountRecoveryAlertsBody": "Receive an email when account recovery is started.",
+  "accountOptionalCommunications": "Optional communications",
+  "accountProductUpdates": "Product news and tips",
+  "accountResearchInvitations": "Research invitations",
+  "accountEmailNotPublic": "Your verified email helps recover your account and is not shown to contacts.",
+  "accountReauthenticateTitle": "Confirm your password",
+  "accountReauthenticateBody": "Enter your current password to continue changing your email.",
+  "accountEnterNewEmailBody": "Enter the new email address for this account.",
+  "accountEmailInvalid": "Enter a valid email address.",
+  "accountEmailConflict": "This email cannot be used for this account.",
+  "accountVerifyEmailTitle": "Verify your email",
+  "accountVerifyEmailBody": "Enter the six-digit code sent to {email}.",
+  "@accountVerifyEmailBody": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "accountVerificationCode": "Verification code",
+  "accountVerifyAction": "Verify",
+  "accountCodeInvalid": "The verification code is incorrect or has expired.",
+  "accountEmailUpdated": "Your email address was updated.",
+  "accountRecoveryTitle": "Account Recovery",
+  "accountRecoveryAvailableTitle": "Account recovery is available",
+  "accountRecoveryMethod": "Recovery method",
+  "accountVerifiedEmail": "Verified email",
+  "accountThisPhone": "This phone",
+  "accountRecognized": "Recognized",
+  "accountWhatHappensNext": "What happens next",
+  "accountRecoveryStep1": "Receive a verification code",
+  "accountRecoveryStep1Body": "Sent to your verified email address.",
+  "accountRecoveryStep2": "Confirm this device",
+  "accountRecoveryStep2Body": "Verify that you are using a recognized device.",
+  "accountRecoveryStep3": "Create a new password",
+  "accountRecoveryStep3Body": "Choose a strong account password.",
+  "accountRecoveryStep4": "Review account security",
+  "accountRecoveryStep4Body": "Review linked devices and recent activity.",
+  "accountLocalDataWarning": "Some protected local data may be unavailable. Recovery confirms account ownership and does not create a backdoor into encrypted conversations.",
+  "accountStartRecoveryTitle": "Start account recovery?",
+  "accountStartRecoveryBody": "A verification code will be sent to {email}.",
+  "@accountStartRecoveryBody": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "accountStartRecoveryAction": "Start Recovery",
+  "accountCancelRecovery": "Cancel Recovery",
+  "accountCannotAccessEmail": "I cannot access this email",
+  "accountSupportNeverasks": "Support will never ask for your password, app PIN, or verification code.",
+  "accountRecoveryCodeInvalid": "The verification code is incorrect or has expired.",
+  "accountCreateNewPassword": "Create a new password",
+  "accountRestoreAccess": "Restore access",
+  "accountRecoveryCompleted": "Account access restored.",
+  "accountRecoveryCompletedBody": "You can continue using Pokidoki with your new password. Your app PIN was not changed.",
+  "reportUserTitle": "Report user",
+  "reportBlockedBadge": "Blocked",
+  "reportHelpReview": "Reports help Pokidoki review possible abuse",
+  "reportWhyTitle": "Why are you reporting this account?",
+  "reportReasonSpam": "Spam",
+  "reportReasonHarassment": "Harassment",
+  "reportReasonImpersonation": "Impersonation",
+  "reportReasonThreats": "Threats or violence",
+  "reportReasonInappropriate": "Sexual or inappropriate content",
+  "reportReasonScam": "Scam or fraud",
+  "reportReasonOther": "Other",
+  "reportAdditionalDetails": "Additional details (Optional)",
+  "reportDetailsHelper": "Do not enter passwords, PINs, verification codes, or private keys.",
+  "reportEvidence": "Evidence",
+  "reportIncludeEvidence": "Include selected conversation evidence",
+  "reportEvidenceDefaultOff": "Nothing is included by default. Select messages from the chat to include them as evidence.",
+  "reportSelectedEvidenceCount": "{count} selected",
+  "@reportSelectedEvidenceCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "reportSelectEvidence": "Select evidence",
+  "reportNotBlocking": "Reporting is not blocking. Reporting sends information for review. Blocking prevents new contact requests or messages.",
+  "reportWhatWillBeSent": "What will be sent",
+  "reportAccountIdentifier": "Account identifier",
+  "reportReasonLabel": "Reason",
+  "reportDetailsLabel": "Details",
+  "reportNotSelected": "Not selected",
+  "reportNone": "None",
+  "reportDetailsIncluded": "Included",
+  "reportNotIncluded": "Not included",
+  "reportReviewData": "Review report data",
+  "reportSubmitTitle": "Submit this report?",
+  "reportSubmitBody": "Pokidoki will receive the selected reason, your optional details, and only the evidence you reviewed.",
+  "reportRemainsBlocked": "{name} will remain blocked.",
+  "@reportRemainsBlocked": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "reportSubmitAction": "Submit Report",
+  "reportSubmitted": "Report submitted.",
+  "reportSubmitFailed": "Your report has not been sent.",
+  "reportNotEmergency": "Pokidoki reports are not an emergency service."
+}

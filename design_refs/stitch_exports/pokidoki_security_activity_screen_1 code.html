@@ -1,0 +1,312 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Security Activity</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#c6bfff",
+                        "outline-variant": "#474554",
+                        "on-tertiary-container": "#412200",
+                        "secondary-container": "#00c28e",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-secondary-fixed": "#002115",
+                        "on-background": "#dee2ef",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-surface": "#dee2ef",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#d27c17",
+                        "on-secondary": "#003827",
+                        "secondary-fixed": "#64fcc3",
+                        "on-primary-fixed": "#160066",
+                        "secondary": "#40dfa8",
+                        "outline": "#928ea0",
+                        "on-secondary-container": "#004933",
+                        "on-error": "#690005",
+                        "primary-container": "#8c80ff",
+                        "primary": "#c6bfff",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-surface-variant": "#c8c4d7",
+                        "surface-container-low": "#161c25",
+                        "inverse-primary": "#5845d9",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#e4dfff",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "surface": "#0e141c",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005139",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "inverse-surface": "#dee2ef",
+                        "inverse-on-surface": "#2b313a",
+                        "surface-container-lowest": "#090e17",
+                        "tertiary": "#ffb875",
+                        "tertiary-fixed": "#ffdcc0",
+                        "surface-container-highest": "#30353f",
+                        "surface-container": "#1a2029",
+                        "surface-variant": "#30353f",
+                        "background": "#0e141c",
+                        "surface-bright": "#343943",
+                        "on-primary": "#2800a0",
+                        "surface-dim": "#0e141c",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-primary-container": "#22008d",
+                        "surface-container-high": "#252a34",
+                        "on-tertiary": "#4b2800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section": "48px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "sm": "8px",
+                        "xxl": "32px",
+                        "xs": "4px",
+                        "xl": "24px",
+                        "page-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "title-md": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(37, 42, 52, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen antialiased flex flex-col md:items-center">
+<div class="w-full md:max-w-md bg-background min-h-screen relative shadow-2xl overflow-hidden pb-section flex flex-col">
+<!-- Top App Bar (Contextual Sub-page Header) -->
+<header class="flex justify-between items-center w-full px-page-padding h-[64px] z-50 sticky top-0 bg-background/80 backdrop-blur-md">
+<button aria-label="Go back" class="w-[48px] h-[48px] flex items-center justify-start rounded-full active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-on-surface flex-1 text-center">Security activity</h1>
+<button aria-label="Information" class="w-[48px] h-[48px] flex items-center justify-end rounded-full active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-on-surface-variant">info</span>
+</button>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar">
+<!-- Security Summary Card -->
+<section class="px-page-padding pt-md pb-lg">
+<div class="rounded-[24px] bg-tertiary-container/10 border border-tertiary/20 p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/10 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-start gap-md relative z-10">
+<div class="w-10 h-10 rounded-full bg-tertiary/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1 pt-1">
+<h2 class="font-title-md text-title-md text-on-surface">1 event needs your review</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-xs text-[14px]">A MacBook Pro was linked to your account today.</p>
+</div>
+</div>
+<button class="mt-sm h-[52px] rounded-[14px] bg-tertiary text-on-tertiary font-label-md text-label-md w-full active:scale-[0.98] transition-transform">
+                        Review device
+                    </button>
+</div>
+</section>
+<!-- Filter Chips -->
+<section class="px-page-padding py-sm overflow-x-auto hide-scrollbar flex gap-sm items-center">
+<button class="px-lg h-[40px] rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md shrink-0 flex items-center justify-center">
+                    All
+                </button>
+<button class="px-lg h-[40px] rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md shrink-0 flex items-center justify-center hover:bg-surface-container transition-colors">
+                    Devices
+                </button>
+<button class="px-lg h-[40px] rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md shrink-0 flex items-center justify-center hover:bg-surface-container transition-colors">
+                    Account
+                </button>
+<button class="px-lg h-[40px] rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md shrink-0 flex items-center justify-center hover:bg-surface-container transition-colors">
+                    Contacts
+                </button>
+</section>
+<!-- Timeline -->
+<section class="px-page-padding py-lg relative">
+<!-- Section: Today -->
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-lg uppercase tracking-wider">Today</h3>
+<div class="relative pl-sm">
+<!-- Global Timeline Line -->
+<div class="absolute left-[27px] top-6 bottom-0 w-[2px] bg-surface-container-high z-0"></div>
+<!-- Item 1: New device linked -->
+<div class="relative flex gap-md mb-xl z-10 group">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border-[4px] border-background flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-tertiary text-[20px]" style="font-variation-settings: 'FILL' 1;">laptop_mac</span>
+</div>
+<div class="flex-1 glass-panel rounded-xl p-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">New device linked</h4>
+<span class="text-[12px] text-on-surface-variant">14:32</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-md">MacBook Pro was linked to your Pokidoki account</p>
+<div class="flex flex-wrap items-center gap-sm mb-md">
+<div class="flex items-center gap-xs px-2 py-1 rounded-md bg-surface-container-lowest border border-surface-container-highest text-[12px] text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                                    Algeria
+                                </div>
+<div class="flex items-center gap-xs px-2 py-1 rounded-md bg-tertiary-container/20 text-tertiary text-[12px] font-medium border border-tertiary/20">
+                                    Needs review
+                                </div>
+</div>
+<button class="w-full h-[44px] rounded-lg border-[1.5px] border-outline-variant text-on-surface font-label-md text-label-md active:bg-surface-container transition-colors">
+                                Review device
+                            </button>
+</div>
+</div>
+<!-- Item 2: Pokidoki unlocked -->
+<div class="relative flex gap-md mb-xl z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 z-10 border-[4px] border-background">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">fingerprint</span>
+</div>
+<div class="flex-1 pb-md border-b border-surface-container-high/50">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">Pokidoki unlocked</h4>
+<span class="text-[12px] text-on-surface-variant">13:08</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-sm">The app was unlocked using biometric authentication on this device</p>
+<span class="text-[13px] text-primary font-medium">This device</span>
+</div>
+</div>
+<!-- Item 3: Contact verified -->
+<div class="relative flex gap-md mb-xl z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 z-10 border-[4px] border-background">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex-1 pb-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">Contact verified</h4>
+<span class="text-[12px] text-on-surface-variant">11:46</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-sm">You verified Amira Mansouri’s Pokidoki security identity</p>
+<div class="flex items-center gap-xs px-2 py-1 rounded-md bg-secondary-container/10 text-secondary text-[12px] font-medium border border-secondary/20 inline-flex mb-md">
+                                Completed
+                            </div>
+<button class="flex items-center gap-sm text-primary font-label-md text-label-md hover:opacity-80 transition-opacity">
+                                View contact
+                                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section: Earlier -->
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-lg mt-md uppercase tracking-wider">Earlier</h3>
+<div class="relative pl-sm">
+<!-- Global Timeline Line continuation -->
+<div class="absolute left-[27px] top-6 bottom-10 w-[2px] bg-surface-container-high z-0"></div>
+<!-- Item 4: Account password changed -->
+<div class="relative flex gap-md mb-xl z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 z-10 border-[4px] border-background">
+<span class="material-symbols-outlined text-on-surface text-[20px]">key</span>
+</div>
+<div class="flex-1 pb-md border-b border-surface-container-high/50">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">Account password changed</h4>
+<span class="text-[12px] text-on-surface-variant">3 Apr</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-sm">Your Pokidoki account password was updated</p>
+<div class="flex items-center justify-between mt-sm">
+<span class="text-[13px] text-secondary font-medium">Completed</span>
+<button class="text-[13px] text-primary font-medium hover:underline">Review account</button>
+</div>
+</div>
+</div>
+<!-- Item 5: Screen privacy enabled -->
+<div class="relative flex gap-md mb-xl z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 z-10 border-[4px] border-background">
+<span class="material-symbols-outlined text-on-surface text-[20px]">visibility_off</span>
+</div>
+<div class="flex-1 pb-md border-b border-surface-container-high/50">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">Screen privacy enabled</h4>
+<span class="text-[12px] text-on-surface-variant">28 Mar</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-sm">Pokidoki content is hidden in app-switcher previews</p>
+<span class="text-[13px] text-primary font-medium">Active</span>
+</div>
+</div>
+<!-- Item 6: Device removed -->
+<div class="relative flex gap-md mb-xs z-10 group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 z-10 border-[4px] border-background">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">desktop_windows</span>
+</div>
+<div class="flex-1 pb-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-title-md text-title-md text-on-surface text-[16px]">Device removed</h4>
+<span class="text-[12px] text-on-surface-variant">16 Mar</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] leading-snug mb-sm">Windows PC was signed out from your account</p>
+<span class="text-[13px] text-outline-variant font-medium">Removed</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Section -->
+<section class="px-page-padding py-xl mt-lg bg-surface-container-low rounded-t-[32px] border-t border-surface-container-high">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">shield_person</span>
+<h3 class="font-title-md text-title-md text-on-surface">Protect your account</h3>
+</div>
+<ul class="space-y-sm mb-xl">
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-[2px]">check_circle</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-[14px]">Review unfamiliar devices immediately</span>
+</li>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-[2px]">check_circle</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-[14px]">Use a unique account password</span>
+</li>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-[2px]">check_circle</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-[14px]">Keep app lock and screen privacy enabled</span>
+</li>
+</ul>
+<button class="w-full h-[52px] rounded-[14px] bg-surface-container-highest text-on-surface font-label-md text-label-md active:scale-[0.98] transition-transform mb-lg flex items-center justify-center gap-sm">
+                    Open security settings
+                    <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+<p class="text-[12px] text-outline text-center px-4 leading-relaxed">
+                    Locations are approximate and may be affected by your network or privacy settings.
+                </p>
+</section>
+<!-- Bottom spacing to ensure scrolling clears fab/nav areas if they were present -->
+<div class="h-8"></div>
+</main>
+</div>
+</body></html>

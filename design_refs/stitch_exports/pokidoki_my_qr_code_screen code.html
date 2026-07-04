@@ -1,0 +1,186 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>My Pokidoki QR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "tertiary-fixed": "#ffdcc0",
+                            "secondary-container": "#00c28e",
+                            "on-error-container": "#ffdad6",
+                            "surface-container-highest": "#30353f",
+                            "on-primary-fixed-variant": "#3f25c1",
+                            "tertiary": "#ffb875",
+                            "primary-fixed": "#e4dfff",
+                            "on-tertiary": "#4b2800",
+                            "outline": "#928ea0",
+                            "inverse-on-surface": "#2b313a",
+                            "on-tertiary-fixed-variant": "#6b3b00",
+                            "error": "#ffb4ab",
+                            "surface": "#0e141c",
+                            "on-secondary-fixed-variant": "#005139",
+                            "inverse-surface": "#dee2ef",
+                            "surface-container-lowest": "#090e17",
+                            "primary-fixed-dim": "#c6bfff",
+                            "inverse-primary": "#5845d9",
+                            "on-surface-variant": "#c8c4d7",
+                            "on-error": "#690005",
+                            "on-primary": "#2800a0",
+                            "tertiary-fixed-dim": "#ffb875",
+                            "primary": "#c6bfff",
+                            "tertiary-container": "#d27c17",
+                            "on-tertiary-fixed": "#2d1600",
+                            "surface-dim": "#0e141c",
+                            "error-container": "#93000a",
+                            "surface-tint": "#c6bfff",
+                            "on-tertiary-container": "#412200",
+                            "surface-container-low": "#161c25",
+                            "surface-bright": "#343943",
+                            "secondary": "#40dfa8",
+                            "surface-container": "#1a2029",
+                            "on-secondary": "#003827",
+                            "background": "#0e141c",
+                            "on-background": "#dee2ef",
+                            "on-secondary-container": "#004933",
+                            "on-primary-container": "#22008d",
+                            "surface-variant": "#30353f",
+                            "primary-container": "#8c80ff",
+                            "on-surface": "#dee2ef",
+                            "surface-container-high": "#252a34",
+                            "outline-variant": "#474554",
+                            "on-secondary-fixed": "#002115",
+                            "secondary-fixed-dim": "#40dfa8",
+                            "on-primary-fixed": "#160066",
+                            "secondary-fixed": "#64fcc3"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "xl": "24px",
+                            "sm": "8px",
+                            "md": "12px",
+                            "xs": "4px",
+                            "page-padding": "20px",
+                            "xxl": "32px",
+                            "section": "48px",
+                            "lg": "16px"
+                    },
+                    "fontFamily": {
+                            "label-md": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "headline-sm": ["Inter"],
+                            "display-lg": ["Inter"],
+                            "title-md": ["Inter"],
+                            "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                            "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                            "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                            "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                            "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-lg min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-page-padding h-[64px] w-full sticky top-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md">
+<button aria-label="Go back" class="w-[48px] h-[48px] flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95 text-on-surface">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-on-surface">My Pokidoki QR</h1>
+<button aria-label="Toggle brightness" class="w-[48px] h-[48px] flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95 text-on-surface">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col px-page-padding py-xl gap-xxl overflow-y-auto w-full max-w-md mx-auto">
+<!-- Identity Header -->
+<section class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest border-[1.5px] border-surface-container-lowest flex items-center justify-center shadow-sm relative">
+<span class="font-headline-sm text-headline-sm text-primary">ZC</span>
+<div class="absolute -bottom-1 -right-1 w-5 h-5 bg-secondary-container rounded-full border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[12px] text-on-secondary-container" data-icon="check" data-weight="fill">check</span>
+</div>
+</div>
+<h2 class="mt-md font-title-md text-title-md text-on-surface">Zed Clay</h2>
+<p class="font-label-md text-label-md text-primary mt-xs">@zedclay</p>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-[14px] mt-xs">Your public Pokidoki identity</p>
+</section>
+<!-- Main QR Card -->
+<section class="flex justify-center">
+<div class="bg-surface-container rounded-[24px] p-xl border border-primary/20 shadow-[0_8px_32px_-12px_rgba(198,191,255,0.15)] w-full max-w-[280px] aspect-square flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Subtle background glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<div class="bg-white p-sm rounded-xl shadow-inner relative z-10 w-full h-full flex items-center justify-center">
+<img class="w-full h-full object-contain mix-blend-multiply opacity-90" data-alt="A highly detailed, starkly contrasting black and white QR code centrally positioned. The QR pattern is strictly geometric with clear alignment squares in the corners, set against a pristine, bright white background to ensure optimal scanning visibility. The aesthetic is purely functional, secure, and sharply defined, evoking a sense of modern digital verification." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6_itFQNHxpeHBKPtIBjYJJc7RTKsCVnde1_7AxXKvgERPtlG6pX25WqQ7ewSUEkwtQ2TTj7fVmUW_-hjGn_kbV-2yMbrBwYljTvHAxONFHEqpEaPJ0gdSLQWIOVclcDg_kqyfT8itWPkZR1nv8qnOYhuI76KYUFbT4n32v-t-YsKO7guvUo-2qo0B1AGuGHnuDx9lJTv29t5otpWgmo97HJH0wEpIZJ5Imu1idqT693SxxQOJ_BSoq6HuxI9ljCNNua8sBtPVCQc">
+</div>
+</div>
+</section>
+<!-- Pokidoki ID Field -->
+<section class="flex flex-col gap-sm">
+<div class="bg-surface-container-high rounded-[16px] p-lg flex items-center justify-between group active:scale-[0.98] transition-transform duration-200">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-[11px] mb-xs">Public ID</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-wide">PKD-84A7-19ZX</span>
+</div>
+<button aria-label="Copy ID" class="w-[48px] h-[48px] flex items-center justify-center rounded-full text-on-surface-variant group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant text-center px-sm">People can use this ID to find your account.</p>
+</section>
+<!-- Explanation -->
+<section class="flex flex-col gap-sm text-center px-sm">
+<h3 class="font-title-md text-title-md text-on-surface">Let trusted people scan this code</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Your Pokidoki QR code helps people find or verify your account without typing your username or ID.</p>
+</section>
+<!-- Primary Actions -->
+<section class="flex flex-col gap-md">
+<button class="w-full h-[52px] rounded-[14px] bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-sm hover:bg-primary-fixed-dim transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+                Share QR code
+            </button>
+<button class="w-full h-[52px] rounded-[14px] border-[1.5px] border-outline text-primary font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-sm hover:bg-surface-container transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                Save image
+            </button>
+</section>
+<!-- Privacy & Security Notes -->
+<section class="flex flex-col gap-xl pb-xl">
+<div class="bg-surface-container-low rounded-[16px] p-md flex items-start gap-md border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary shrink-0 mt-xs" data-icon="info">info</span>
+<p class="font-label-md text-label-md text-on-surface-variant leading-relaxed text-[13px]">
+                    Anyone who receives this code may be able to find your public Pokidoki profile. Share it only with people you intend to connect with.
+                </p>
+</div>
+<p class="font-label-md text-label-md text-outline-variant text-center px-xl text-[12px] leading-relaxed">
+<span class="material-symbols-outlined text-[14px] inline-block align-text-bottom mr-xs text-secondary" data-icon="lock" data-weight="fill">lock</span>
+                This QR code does not contain your password, app PIN, private messages, or secret keys.
+            </p>
+</section>
+</main>
+</body></html>

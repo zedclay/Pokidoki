@@ -1,0 +1,272 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Appearance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for clean UI but keep functionality */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#0e141c",
+                        "primary-fixed-dim": "#c6bfff",
+                        "outline-variant": "#474554",
+                        "surface-container": "#1a2029",
+                        "secondary-container": "#00c28e",
+                        "on-tertiary": "#4b2800",
+                        "on-primary-container": "#22008d",
+                        "inverse-surface": "#dee2ef",
+                        "tertiary": "#ffb875",
+                        "error": "#ffb4ab",
+                        "surface-container-low": "#161c25",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "surface-bright": "#343943",
+                        "primary-container": "#8c80ff",
+                        "surface-variant": "#30353f",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "inverse-primary": "#5845d9",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-primary-fixed": "#160066",
+                        "on-tertiary-container": "#412200",
+                        "secondary": "#40dfa8",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-secondary-fixed-variant": "#005139",
+                        "on-background": "#dee2ef",
+                        "on-surface": "#dee2ef",
+                        "surface-dim": "#0e141c",
+                        "tertiary-container": "#d27c17",
+                        "surface-container-high": "#252a34",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "inverse-on-surface": "#2b313a",
+                        "on-secondary": "#003827",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "background": "#0e141c",
+                        "secondary-fixed": "#64fcc3",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#2800a0",
+                        "on-surface-variant": "#c8c4d7",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#002115",
+                        "outline": "#928ea0",
+                        "surface-tint": "#c6bfff",
+                        "surface-container-lowest": "#090e17",
+                        "surface-container-highest": "#30353f",
+                        "primary-fixed": "#e4dfff",
+                        "error-container": "#93000a",
+                        "primary": "#c6bfff",
+                        "on-secondary-container": "#004933"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "page-padding": "20px",
+                        "lg": "16px",
+                        "xs": "4px",
+                        "md": "12px",
+                        "sm": "8px",
+                        "section": "48px",
+                        "xxl": "32px",
+                        "xl": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background h-screen flex flex-col font-sans overflow-hidden">
+<!-- TopAppBar from JSON Blueprint -->
+<header class="flex items-center w-full px-page-padding h-16 bg-surface dark:bg-surface flex-shrink-0 z-10 sticky top-0">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center -ml-3 text-primary dark:text-primary active:scale-95 transition-transform duration-200 hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm flex-1 text-center pr-9 font-bold text-on-surface dark:text-on-surface">Appearance</h1>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto px-page-padding py-6 flex flex-col gap-xl pb-section">
+<!-- Summary Card -->
+<section class="bg-surface-container rounded-xl p-4 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined icon-fill" data-icon="dark_mode">dark_mode</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">Dark appearance is active</p>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm mt-1">Saves battery and reduces eye strain in low light.</p>
+</div>
+</section>
+<!-- Theme Selection -->
+<section class="flex flex-col gap-md">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider ml-2">Theme</h2>
+<div class="flex flex-col gap-3">
+<!-- Dark (Selected) -->
+<button class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-primary bg-primary/5 active:scale-[0.98] transition-transform min-h-[52px]">
+<span class="font-body-lg text-body-lg text-on-surface">Dark</span>
+<span class="material-symbols-outlined text-primary icon-fill" data-icon="radio_button_checked">radio_button_checked</span>
+</button>
+<!-- Light -->
+<button class="w-full flex items-center justify-between p-4 rounded-xl border border-outline-variant/30 bg-surface-container-low hover:bg-surface-variant/30 active:scale-[0.98] transition-transform min-h-[52px]">
+<span class="font-body-lg text-body-lg text-on-surface">Light</span>
+<span class="material-symbols-outlined text-outline" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</button>
+<!-- Device Setting -->
+<button class="w-full flex items-center justify-between p-4 rounded-xl border border-outline-variant/30 bg-surface-container-low hover:bg-surface-variant/30 active:scale-[0.98] transition-transform min-h-[52px]">
+<div class="flex flex-col items-start text-left">
+<span class="font-body-lg text-body-lg text-on-surface">Use device setting</span>
+<span class="font-label-md text-label-md text-on-surface-variant text-xs mt-1">Matches system theme automatically</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</button>
+</div>
+</section>
+<!-- Chat Preview -->
+<section class="flex flex-col gap-md">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider ml-2">Chat Preview</h2>
+<div class="bg-surface-container rounded-[24px] p-4 flex flex-col gap-4 border border-outline-variant/20 shadow-sm relative overflow-hidden">
+<!-- Subtle Glassmorphism highlight top edge -->
+<div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+<!-- Preview Header -->
+<div class="flex items-center gap-3 pb-3 border-b border-outline-variant/20">
+<img class="w-10 h-10 rounded-full object-cover bg-surface-variant" data-alt="A close up, high quality profile photo of a young professional woman with dark hair in a well-lit modern office setting. The lighting is soft and flattering, creating a premium and trustworthy aesthetic suited for a secure messaging app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp1N0-KOWsbYwpGqT0IiOTW5zYE8QQ0BY66pjkZh1OR7jGokgBiC8_15nT9HoRa8l-Bd0V32u9cm9cImiZc8DoRmaL5I-ROfB3JxPeS2KB7Y2iU-f-80YOo3i16N4mGK9w25vLlzoTfx1j8s3M5egBkwOBFgQB1pfkgeD78033zQRrHelWxWkGNeygQi6DcI4Qh_uXNobEMimfqx5-MdASsYOQwYsq4xt6Jw_rI9Ry22eX92yEiQYBkc7iq_eatVuz_KJDCs483Hw">
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-title-md text-title-md text-on-surface text-base">Amira</span>
+<span class="material-symbols-outlined text-secondary icon-fill text-[16px]" data-icon="verified">verified</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant text-xs">Online</span>
+</div>
+</div>
+<!-- Messages -->
+<div class="flex flex-col gap-3 py-2">
+<!-- Incoming -->
+<div class="self-start max-w-[80%] bg-surface-variant text-on-surface rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+<p class="font-body-lg text-body-lg text-sm">See you tomorrow.</p>
+<span class="text-[10px] text-on-surface-variant mt-1 block text-right">09:41</span>
+</div>
+<!-- Outgoing -->
+<div class="self-end max-w-[80%] bg-primary text-on-primary rounded-2xl rounded-tr-sm px-4 py-3 shadow-sm relative">
+<!-- Subtle ambient shadow for primary element -->
+<div class="absolute inset-0 bg-primary/20 blur-md rounded-2xl -z-10 translate-y-1"></div>
+<p class="font-body-lg text-body-lg text-sm">Perfect, talk to you then.</p>
+<div class="flex items-center justify-end gap-1 mt-1">
+<span class="text-[10px] text-primary-fixed-dim/70">09:42</span>
+<span class="material-symbols-outlined text-[12px] text-primary-fixed-dim icon-fill" data-icon="done_all">done_all</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Accessibility Options -->
+<section class="flex flex-col gap-md">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider ml-2">Accessibility</h2>
+<div class="bg-surface-container rounded-xl flex flex-col overflow-hidden border border-outline-variant/20">
+<!-- Toggle Row 1 -->
+<div class="flex justify-between items-center p-4 border-b border-outline-variant/20 min-h-[64px]">
+<span class="font-body-lg text-body-lg text-on-surface">Increase contrast</span>
+<button aria-label="Toggle increase contrast" aria-pressed="false" class="w-12 h-6 rounded-full bg-surface-variant relative transition-colors duration-300">
+<div class="absolute left-1 top-1 w-4 h-4 rounded-full bg-outline transition-transform duration-300"></div>
+</button>
+</div>
+<!-- Toggle Row 2 -->
+<div class="flex justify-between items-center p-4 border-b border-outline-variant/20 min-h-[64px]">
+<span class="font-body-lg text-body-lg text-on-surface">Reduce transparency</span>
+<button aria-label="Toggle reduce transparency" aria-pressed="true" class="w-12 h-6 rounded-full bg-primary relative transition-colors duration-300">
+<div class="absolute left-1 top-1 w-4 h-4 rounded-full bg-on-primary translate-x-6 transition-transform duration-300"></div>
+</button>
+</div>
+<!-- Toggle Row 3 -->
+<div class="flex justify-between items-center p-4 border-b border-outline-variant/20 min-h-[64px]">
+<span class="font-body-lg text-body-lg text-on-surface">Reduce visual effects</span>
+<button aria-label="Toggle reduce visual effects" aria-pressed="false" class="w-12 h-6 rounded-full bg-surface-variant relative transition-colors duration-300">
+<div class="absolute left-1 top-1 w-4 h-4 rounded-full bg-outline transition-transform duration-300"></div>
+</button>
+</div>
+<!-- Toggle Row 4 -->
+<div class="flex justify-between items-center p-4 min-h-[64px]">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface">Use device motion setting</span>
+<span class="font-label-md text-label-md text-on-surface-variant text-[11px] mt-0.5">Respects OS reduced motion</span>
+</div>
+<button aria-label="Toggle device motion setting" aria-pressed="true" class="w-12 h-6 rounded-full bg-primary relative transition-colors duration-300 flex-shrink-0">
+<div class="absolute left-1 top-1 w-4 h-4 rounded-full bg-on-primary translate-x-6 transition-transform duration-300"></div>
+</button>
+</div>
+</div>
+</section>
+<!-- Information / Security Card -->
+<section class="bg-surface-container-low border border-secondary/20 rounded-xl p-4 flex gap-4 items-start relative overflow-hidden mt-4">
+<!-- Glassmorphism accent -->
+<div class="absolute inset-0 bg-secondary/5 backdrop-blur-sm pointer-events-none"></div>
+<span class="material-symbols-outlined text-secondary mt-1 relative z-10" data-icon="encrypted">encrypted</span>
+<div class="relative z-10">
+<h3 class="font-title-md text-title-md text-on-surface text-sm mb-1">Appearance does not change your security</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-xs leading-relaxed">
+                    Visual themes are applied locally on your device. Your messages remain end-to-end encrypted and completely private regardless of your appearance settings.
+                </p>
+</div>
+</section>
+</main>
+<script>
+        // Simple script to handle visual toggle states for demonstration
+        document.querySelectorAll('button[aria-pressed]').forEach(button => {
+            button.addEventListener('click', function() {
+                const isPressed = this.getAttribute('aria-pressed') === 'true';
+                this.setAttribute('aria-pressed', !isPressed);
+                
+                const indicator = this.querySelector('div');
+                
+                if (!isPressed) {
+                    // Turn ON
+                    this.classList.remove('bg-surface-variant');
+                    this.classList.add('bg-primary');
+                    indicator.classList.remove('bg-outline', 'translate-x-0');
+                    indicator.classList.add('bg-on-primary', 'translate-x-6');
+                } else {
+                    // Turn OFF
+                    this.classList.remove('bg-primary');
+                    this.classList.add('bg-surface-variant');
+                    indicator.classList.remove('bg-on-primary', 'translate-x-6');
+                    indicator.classList.add('bg-outline', 'translate-x-0');
+                }
+            });
+        });
+    </script>
+</body></html>

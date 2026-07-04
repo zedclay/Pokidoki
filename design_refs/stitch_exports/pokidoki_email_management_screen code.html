@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pokidoki - Email Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ffb4ab",
+                        "background": "#0e141c",
+                        "surface-bright": "#343943",
+                        "secondary-container": "#00c28e",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-primary": "#2800a0",
+                        "surface-container-highest": "#30353f",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-secondary": "#003827",
+                        "outline-variant": "#474554",
+                        "on-secondary-fixed": "#002115",
+                        "on-primary-fixed": "#160066",
+                        "surface-container-high": "#252a34",
+                        "surface": "#0e141c",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#2b313a",
+                        "primary-fixed": "#e4dfff",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#d27c17",
+                        "on-surface": "#dee2ef",
+                        "primary-fixed-dim": "#c6bfff",
+                        "surface-container-low": "#161c25",
+                        "on-tertiary-fixed": "#2d1600",
+                        "tertiary-fixed": "#ffdcc0",
+                        "tertiary": "#ffb875",
+                        "on-secondary-container": "#004933",
+                        "on-surface-variant": "#c8c4d7",
+                        "surface-container-lowest": "#090e17",
+                        "on-primary-container": "#22008d",
+                        "outline": "#928ea0",
+                        "inverse-primary": "#5845d9",
+                        "surface-dim": "#0e141c",
+                        "on-tertiary": "#4b2800",
+                        "on-tertiary-container": "#412200",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "surface-tint": "#c6bfff",
+                        "secondary-fixed": "#64fcc3",
+                        "surface-container": "#1a2029",
+                        "secondary": "#40dfa8",
+                        "on-secondary-fixed-variant": "#005139",
+                        "on-background": "#dee2ef",
+                        "surface-variant": "#30353f",
+                        "primary": "#c6bfff",
+                        "inverse-surface": "#dee2ef",
+                        "primary-container": "#8c80ff",
+                        "secondary-fixed-dim": "#40dfa8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section": "48px",
+                        "xl": "24px",
+                        "xxl": "32px",
+                        "xs": "4px",
+                        "page-padding": "20px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(48, 53, 63, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #8c80ff;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #8c80ff;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 1;
+            border-color: #474554;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            width: 48px;
+            height: 24px;
+            background-color: #30353f;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(24px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen pb-section">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-background flex items-center justify-between px-page-padding h-16 flat no shadows">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center -ml-3 text-primary hover:bg-surface-variant/20 rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-primary flex-1 text-center">Email</h1>
+<button aria-label="Email account help" class="w-12 h-12 flex items-center justify-center -mr-3 text-on-surface-variant hover:bg-surface-variant/20 rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined">help</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-page-padding flex flex-col gap-xl max-w-md mx-auto w-full">
+<!-- Status Card -->
+<section class="glass-card rounded-[24px] p-lg flex flex-col items-center text-center gap-sm relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-secondary/10 to-transparent opacity-50 pointer-events-none"></div>
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center mb-sm z-10 relative">
+<span class="material-symbols-outlined text-[32px] text-secondary-container" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+<div class="absolute -bottom-1 -right-1 bg-surface rounded-full p-0.5">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface z-10">Your email is verified</h2>
+<p class="font-display-lg text-[24px] text-primary tracking-tight z-10">z••••••@example.com</p>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm mt-xs z-10">This email can be used for account recovery and important security alerts.</p>
+<div class="inline-flex items-center gap-xs mt-md bg-surface-container py-xs px-md rounded-full border border-secondary/20 z-10">
+<span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
+<span class="font-label-md text-label-md text-secondary text-xs">Verified on 18 June 2026</span>
+</div>
+</section>
+<!-- Account Email Section -->
+<section class="flex flex-col gap-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-sm">Account email</h3>
+<div class="bg-surface-container-high rounded-[20px] overflow-hidden flex flex-col divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<div class="p-lg flex items-center justify-between hover:bg-surface-variant/30 transition-colors">
+<div class="flex flex-col gap-xs">
+<span class="font-body-lg text-body-lg text-on-surface">Email address</span>
+<span class="font-label-md text-label-md text-on-surface-variant">z••••••@example.com</span>
+</div>
+<div class="flex items-center gap-xs text-secondary bg-secondary/10 px-md py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-label-md text-label-md text-sm">Verified</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="p-lg flex items-center justify-between hover:bg-surface-variant/30 transition-colors">
+<span class="font-body-lg text-body-lg text-on-surface">Last verified</span>
+<span class="font-label-md text-label-md text-on-surface-variant">18 June 2026</span>
+</div>
+<!-- Row 3 -->
+<button class="p-lg flex items-center justify-between hover:bg-surface-variant/30 transition-colors text-left w-full group">
+<div class="flex flex-col gap-xs pr-md">
+<span class="font-body-lg text-body-lg text-on-surface">Account recovery</span>
+<span class="font-label-md text-label-md text-secondary">Available</span>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm mt-1">Recovery instructions can be sent to your verified email.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Change Email Action -->
+<section>
+<button class="w-full bg-surface-container-high rounded-[20px] p-lg flex items-center justify-between hover:bg-surface-variant/50 transition-colors active:scale-[0.98] group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</div>
+<div class="flex flex-col gap-xs text-left">
+<span class="font-title-md text-title-md text-on-surface">Change email address</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Replace the verified email associated with this account</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</button>
+</section>
+<!-- Security Emails Section -->
+<section class="flex flex-col gap-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-sm">Security emails</h3>
+<div class="bg-surface-container-high rounded-[20px] overflow-hidden flex flex-col divide-y divide-outline-variant/30">
+<!-- Alerts Row -->
+<div class="p-lg flex items-center justify-between">
+<div class="flex flex-col gap-xs pr-md">
+<span class="font-body-lg text-body-lg text-on-surface">Security alerts</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Receive important account and device security notifications.</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant whitespace-nowrap opacity-60">Always on</span>
+</div>
+<!-- New Device Row -->
+<div class="p-lg flex items-center justify-between hover:bg-surface-variant/30 transition-colors">
+<div class="flex flex-col gap-xs pr-md">
+<span class="font-body-lg text-body-lg text-on-surface">New device alerts</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Receive an email when a new device is linked or signs in.</span>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in flex-shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer opacity-0" id="toggle-device" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer" for="toggle-device"></label>
+</div>
+</div>
+<!-- Recovery Alerts Row -->
+<div class="p-lg flex items-center justify-between">
+<div class="flex flex-col gap-xs pr-md">
+<span class="font-body-lg text-body-lg text-on-surface">Recovery alerts</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Receive an email when account recovery is started.</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant whitespace-nowrap opacity-60">Always on</span>
+</div>
+</div>
+</section>
+<!-- Information Card -->
+<section class="bg-surface-container-low rounded-[20px] border border-outline-variant/20 p-lg flex gap-md">
+<span class="material-symbols-outlined text-primary-container shrink-0 mt-1">info</span>
+<div class="flex flex-col gap-sm">
+<h4 class="font-title-md text-title-md text-on-surface">Your verified email helps recover your account</h4>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm leading-relaxed">
+                    Pokidoki may send recovery instructions and important security notices to this address. Your email is not shown to other users. Changing your email does not change your password or app PIN.
+                </p>
+</div>
+</section>
+</main>
+</body></html>

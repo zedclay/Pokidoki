@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pokidoki - Disappearing Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#343943",
+                      "error": "#ffb4ab",
+                      "on-secondary-container": "#004933",
+                      "on-tertiary-fixed": "#2d1600",
+                      "on-secondary-fixed": "#002115",
+                      "primary-container": "#8c80ff",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "surface-container-highest": "#30353f",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "inverse-primary": "#5845d9",
+                      "outline": "#928ea0",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "tertiary-fixed": "#ffdcc0",
+                      "tertiary": "#ffb875",
+                      "secondary-fixed": "#64fcc3",
+                      "on-tertiary": "#4b2800",
+                      "outline-variant": "#474554",
+                      "surface-container-high": "#252a34",
+                      "surface-dim": "#0e141c",
+                      "inverse-surface": "#dee2ef",
+                      "error-container": "#93000a",
+                      "on-tertiary-container": "#412200",
+                      "on-error": "#690005",
+                      "tertiary-container": "#d27c17",
+                      "on-secondary": "#003827",
+                      "surface-container-low": "#161c25",
+                      "primary-fixed-dim": "#c6bfff",
+                      "on-surface-variant": "#c8c4d7",
+                      "primary-fixed": "#e4dfff",
+                      "on-primary": "#2800a0",
+                      "on-surface": "#dee2ef",
+                      "surface": "#0e141c",
+                      "background": "#090B10",
+                      "on-background": "#dee2ef",
+                      "on-secondary-fixed-variant": "#005139",
+                      "surface-tint": "#c6bfff",
+                      "surface-container-lowest": "#090e17",
+                      "surface-container": "#12151C",
+                      "on-primary-container": "#22008d",
+                      "secondary-container": "#32D6A0",
+                      "primary": "#7C6CFF",
+                      "on-primary-fixed": "#160066",
+                      "inverse-on-surface": "#2b313a",
+                      "surface-variant": "#30353f",
+                      "secondary": "#40dfa8",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "on-error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "sm": "8px",
+                      "page-padding": "20px",
+                      "md": "12px",
+                      "section": "48px",
+                      "xxl": "32px",
+                      "lg": "16px",
+                      "xl": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #090B10;
+            color: #dee2ef;
+        }
+        /* Custom Toggle Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #7C6CFF;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #7C6CFF;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 1;
+            border-color: #474554;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            background-color: #30353f;
+            transition: all 0.3s;
+        }
+        
+        /* Custom Radio Styles */
+        .radio-custom:checked + label .radio-outer {
+            border-color: #7C6CFF;
+        }
+        .radio-custom:checked + label .radio-inner {
+            transform: scale(1);
+            background-color: #7C6CFF;
+        }
+        
+        /* Glassmorphism subtle overlay */
+        .glass-panel {
+            background: rgba(18, 21, 28, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col">
+<!-- TopAppBar JSON Component -->
+<header class="bg-surface dark:bg-surface shadow-sm docked full-width top-0 bg-surface-container-low dark:bg-surface-container-low z-50 sticky top-0">
+<div class="flex items-center justify-between px-page-padding h-[64px] w-full z-50">
+<button aria-label="Go back" class="text-primary dark:text-primary hover:bg-surface-bright/10 dark:hover:bg-surface-bright/20 p-2 rounded-full Active: scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary">Disappearing Messages</h1>
+<button aria-label="More options" class="text-primary dark:text-primary hover:bg-surface-bright/10 dark:hover:bg-surface-bright/20 p-2 rounded-full Active: scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">info</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto px-page-padding py-xl pb-section space-y-xl max-w-2xl mx-auto w-full">
+<!-- Conversation Identity -->
+<div class="flex items-center space-x-md glass-panel p-md rounded-xl">
+<div class="w-14 h-14 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-title-md text-title-md flex-shrink-0">
+                AM
+            </div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Amira</span>
+<div class="flex items-center space-x-xs mt-1">
+<span class="material-symbols-outlined text-[16px] text-secondary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-label-md text-secondary-container">Verified Contact</span>
+</div>
+</div>
+</div>
+<!-- Status Card -->
+<div class="bg-surface-container rounded-xl p-lg border border-primary/20 relative overflow-hidden flex flex-col items-center text-center space-y-sm">
+<!-- Subtle gradient background effect -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none"></div>
+<div class="bg-primary/10 p-3 rounded-full mb-2">
+<span class="material-symbols-outlined text-primary text-3xl">timer</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface relative z-10">Messages disappear after 1 day</h2>
+<div class="inline-flex items-center space-x-xs bg-primary/10 px-3 py-1 rounded-full relative z-10">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="font-label-md text-label-md text-primary uppercase tracking-wider text-xs">Active</span>
+</div>
+</div>
+<!-- Primary Toggle -->
+<div class="bg-surface-container rounded-xl p-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Use disappearing messages</span>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle"></label>
+</div>
+</div>
+<!-- Timer Logic -->
+<div class="space-y-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">When the timer starts</h3>
+<div class="bg-surface-container rounded-xl p-lg flex items-start space-x-md">
+<span class="material-symbols-outlined text-on-surface-variant mt-1">visibility</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">After the message is viewed</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-1 text-sm">The timer begins when Amira opens the message in this conversation.</span>
+</div>
+</div>
+</div>
+<!-- Duration Options -->
+<div class="space-y-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Message duration</h3>
+<div class="bg-surface-container rounded-xl overflow-hidden flex flex-col divide-y divide-surface-variant">
+<!-- Option 1 -->
+<div class="relative">
+<input class="radio-custom hidden" id="dur-30s" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer hover:bg-surface-bright/10 transition-colors" for="dur-30s">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">30 seconds</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Best for highly sensitive info</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center radio-outer transition-colors">
+<div class="w-3 h-3 rounded-full bg-transparent scale-0 transition-transform radio-inner"></div>
+</div>
+</label>
+</div>
+<!-- Option 2 -->
+<div class="relative">
+<input class="radio-custom hidden" id="dur-5m" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer hover:bg-surface-bright/10 transition-colors" for="dur-5m">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">5 minutes</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Good for quick updates</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center radio-outer transition-colors">
+<div class="w-3 h-3 rounded-full bg-transparent scale-0 transition-transform radio-inner"></div>
+</div>
+</label>
+</div>
+<!-- Option 3 -->
+<div class="relative">
+<input class="radio-custom hidden" id="dur-1h" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer hover:bg-surface-bright/10 transition-colors" for="dur-1h">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">1 hour</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Standard temporary chat</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center radio-outer transition-colors">
+<div class="w-3 h-3 rounded-full bg-transparent scale-0 transition-transform radio-inner"></div>
+</div>
+</label>
+</div>
+<!-- Option 4 (Selected) -->
+<div class="relative bg-primary/5">
+<input checked="" class="radio-custom hidden" id="dur-1d" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer border-l-4 border-primary" for="dur-1d">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="font-title-md text-title-md text-primary">1 day</span>
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded-sm uppercase tracking-wider font-semibold">Selected</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Default privacy setting</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center radio-outer transition-colors border-primary">
+<div class="w-3 h-3 rounded-full bg-transparent scale-0 transition-transform radio-inner scale-100 bg-primary"></div>
+</div>
+</label>
+</div>
+<!-- Option 5 -->
+<div class="relative">
+<input class="radio-custom hidden" id="dur-1w" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer hover:bg-surface-bright/10 transition-colors" for="dur-1w">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">1 week</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Extended conversation history</span>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center radio-outer transition-colors">
+<div class="w-3 h-3 rounded-full bg-transparent scale-0 transition-transform radio-inner"></div>
+</div>
+</label>
+</div>
+<!-- Option 6 -->
+<div class="relative">
+<input class="radio-custom hidden" id="dur-custom" name="duration" type="radio"/>
+<label class="flex items-center justify-between p-lg cursor-pointer hover:bg-surface-bright/10 transition-colors" for="dur-custom">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Custom</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Set your own duration</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Info & Warning Cards -->
+<div class="space-y-md">
+<div class="bg-surface-container-highest rounded-xl p-md flex items-start space-x-md text-sm">
+<span class="material-symbols-outlined text-on-surface-variant">info</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant">The new timer applies to future messages. Previous messages will keep their original timer.</span>
+</div>
+<div class="bg-surface-container-highest rounded-xl p-md flex items-start space-x-md text-sm">
+<span class="material-symbols-outlined text-tertiary-container mt-1">shield_person</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface mb-1 text-sm">Disappearing does not prevent copying</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant">Recipients can still take screenshots, copy text, or forward messages before they disappear.</span>
+</div>
+</div>
+</div>
+<!-- Activity Information -->
+<div class="flex flex-col items-center justify-center pt-md pb-lg text-center opacity-70">
+<span class="font-label-md text-label-md text-on-surface-variant">Last changed by You</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-xs mt-1">Today at 20:19</span>
+</div>
+</main>
+</body></html>

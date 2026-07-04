@@ -1,0 +1,234 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki Profile Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#d27c17",
+                    "on-tertiary-fixed": "#2d1600",
+                    "surface-dim": "#0e141c",
+                    "tertiary-fixed-dim": "#ffb875",
+                    "primary": "#c6bfff",
+                    "primary-fixed-dim": "#c6bfff",
+                    "inverse-primary": "#5845d9",
+                    "on-primary": "#2800a0",
+                    "on-surface-variant": "#c8c4d7",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "inverse-on-surface": "#2b313a",
+                    "on-tertiary-fixed-variant": "#6b3b00",
+                    "surface": "#0e141c",
+                    "on-secondary-fixed-variant": "#005139",
+                    "inverse-surface": "#dee2ef",
+                    "surface-container-lowest": "#090e17",
+                    "surface-container-highest": "#30353f",
+                    "on-primary-fixed-variant": "#3f25c1",
+                    "tertiary-fixed": "#ffdcc0",
+                    "secondary-container": "#00c28e",
+                    "on-error-container": "#ffdad6",
+                    "outline": "#928ea0",
+                    "tertiary": "#ffb875",
+                    "primary-fixed": "#e4dfff",
+                    "on-tertiary": "#4b2800",
+                    "outline-variant": "#474554",
+                    "on-secondary-fixed": "#002115",
+                    "surface-container-high": "#252a34",
+                    "on-primary-fixed": "#160066",
+                    "secondary-fixed": "#64fcc3",
+                    "secondary-fixed-dim": "#40dfa8",
+                    "primary-container": "#8c80ff",
+                    "on-surface": "#dee2ef",
+                    "surface-variant": "#30353f",
+                    "background": "#090B10",
+                    "on-background": "#dee2ef",
+                    "on-secondary": "#003827",
+                    "on-secondary-container": "#004933",
+                    "on-primary-container": "#22008d",
+                    "surface-tint": "#c6bfff",
+                    "on-tertiary-container": "#412200",
+                    "error-container": "#93000a",
+                    "surface-container": "#12151C",
+                    "surface-container-low": "#161c25",
+                    "surface-bright": "#343943",
+                    "secondary": "#40dfa8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xxl": "32px",
+                    "section": "48px",
+                    "lg": "16px",
+                    "xs": "4px",
+                    "page-padding": "20px",
+                    "md": "12px",
+                    "xl": "24px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "title-md": [
+                            "Inter"
+                    ],
+                    "headline-sm": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-md": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-sm": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .custom-button { background-color: #7C6CFF; border-radius: 14px; height: 52px; }
+        .custom-button-secondary { border: 1.5px solid #474554; border-radius: 14px; height: 52px; }
+        .custom-input { background-color: #12151C; border: 1px solid #292E39; border-radius: 14px; height: 52px; color: #dee2ef; }
+        .custom-input:focus { outline: none; border-color: #7C6CFF; ring: 1px solid #7C6CFF; }
+        .custom-textarea { background-color: #12151C; border: 1px solid #292E39; border-radius: 24px; min-height: 120px; color: #dee2ef; resize: none; padding: 16px; }
+        .custom-textarea:focus { outline: none; border-color: #7C6CFF; ring: 1px solid #7C6CFF; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col antialiased">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-page-padding w-full h-[64px] bg-background">
+<button class="w-[48px] h-[48px] rounded-full flex items-center justify-center text-on-background hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-[20px] font-bold text-on-background tracking-tight">Create profile</h1>
+<div class="w-[48px] h-[48px]"></div> <!-- Spacer to center title -->
+</header>
+<!-- Progress Bar -->
+<div class="px-page-padding pb-lg">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Profile setup · Step 2 of 2</span>
+</div>
+<div class="w-full bg-surface-variant h-[4px] rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-grow px-page-padding flex flex-col gap-xl">
+<!-- Header Text -->
+<div class="flex flex-col gap-sm mt-md">
+<h2 class="font-headline-sm text-headline-sm text-on-background">Make Pokidoki feel like yours</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Add the name and photo that trusted contacts will recognize.</p>
+</div>
+<!-- Avatar Selector -->
+<div class="flex justify-center mt-md">
+<div class="relative w-[100px] h-[100px]">
+<div class="w-full h-full bg-surface-container-high rounded-full flex items-center justify-center text-display-lg text-primary bg-primary/10">
+                    ZC
+                </div>
+<button class="absolute bottom-0 right-0 w-[36px] h-[36px] bg-primary text-on-primary rounded-full flex items-center justify-center border-4 border-background hover:bg-primary-container transition-colors active:scale-95 shadow-sm">
+<span class="material-symbols-outlined" style="font-size: 18px;">edit</span>
+</button>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="flex flex-col gap-lg">
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-background ml-1" for="display-name">Display name <span class="text-error">*</span></label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<input class="custom-input w-full pl-12 pr-4 font-body-lg" id="display-name" placeholder="Enter your display name" type="text" value="Zed Clay">
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center ml-1">
+<label class="font-label-md text-label-md text-on-background" for="about-you">About you <span class="text-on-surface-variant font-normal">(optional)</span></label>
+<span class="font-label-md text-label-md text-on-surface-variant">67 / 120</span>
+</div>
+<textarea class="custom-textarea w-full font-body-lg" id="about-you" placeholder="Write a short introduction">Building ideas and keeping the important conversations private.</textarea>
+</div>
+</div>
+<!-- Privacy Card -->
+<div class="bg-surface-container rounded-[14px] p-lg flex flex-col gap-md border border-surface-variant mt-sm">
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-primary mt-1">visibility</span>
+<div class="flex flex-col gap-sm">
+<p class="font-body-lg text-[14px] leading-relaxed text-on-surface-variant">Your display name, profile picture, username, and biography may be visible to people who find you or receive your contact request.</p>
+<p class="font-body-lg text-[14px] leading-relaxed text-on-background font-medium flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">lock</span>
+                        Your private messages are not part of your public profile.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="mt-auto pt-xl pb-page-padding flex flex-col gap-lg">
+<button class="custom-button w-full flex items-center justify-center font-label-md text-label-md text-[#ffffff] uppercase tracking-wider hover:bg-inverse-primary transition-colors active:scale-[0.98]">
+                Continue
+            </button>
+<button class="w-full flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-on-background transition-colors active:scale-[0.98] py-xs">
+                Skip optional details
+            </button>
+</div>
+</main>
+</body></html>

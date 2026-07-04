@@ -1,0 +1,170 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Pokidoki - Username Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#474554",
+                        "on-secondary-container": "#004933",
+                        "on-tertiary": "#4b2800",
+                        "surface-container": "#1a2029",
+                        "on-secondary-fixed": "#002115",
+                        "on-secondary": "#003827",
+                        "secondary-container": "#00c28e",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-surface": "#dee2ef",
+                        "tertiary-fixed": "#ffdcc0",
+                        "outline": "#928ea0",
+                        "primary-fixed": "#e4dfff",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "surface-container-high": "#252a34",
+                        "secondary-fixed": "#64fcc3",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-primary-container": "#22008d",
+                        "tertiary-container": "#d27c17",
+                        "inverse-surface": "#dee2ef",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-surface-variant": "#c8c4d7",
+                        "surface-tint": "#c6bfff",
+                        "surface-container-highest": "#30353f",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb875",
+                        "secondary": "#40dfa8",
+                        "surface-container-lowest": "#090e17",
+                        "primary-container": "#8c80ff",
+                        "on-background": "#dee2ef",
+                        "primary": "#c6bfff",
+                        "surface-bright": "#343943",
+                        "inverse-on-surface": "#2b313a",
+                        "on-primary": "#2800a0",
+                        "surface": "#0e141c",
+                        "surface-container-low": "#161c25",
+                        "on-secondary-fixed-variant": "#005139",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "on-error": "#690005",
+                        "background": "#0e141c",
+                        "surface-variant": "#30353f",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "on-primary-fixed": "#160066",
+                        "inverse-primary": "#5845d9",
+                        "surface-dim": "#0e141c",
+                        "on-tertiary-container": "#412200"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section": "48px",
+                        "lg": "16px",
+                        "sm": "8px",
+                        "md": "12px",
+                        "page-padding": "20px",
+                        "xs": "4px",
+                        "xl": "24px",
+                        "xxl": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg antialiased">
+<!-- Top App Bar -->
+<header class="w-full top-0 bg-surface dark:bg-surface flex items-center h-16 px-page-padding shrink-0" style="z-index: 10;">
+<button aria-label="Back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-200 -ml-2">
+<span class="material-symbols-outlined text-primary dark:text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="ml-2 font-headline-sm text-headline-sm text-primary dark:text-primary flex-1 truncate">Pokidoki</h1>
+</header>
+<!-- Progress Indicator -->
+<div class="w-full px-page-padding py-2 shrink-0">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Profile setup · Step 1 of 2</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 50%;"></div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col px-page-padding py-xl overflow-y-auto">
+<h2 class="font-headline-md text-headline-md text-on-background mb-sm">Create your Pokidoki username</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl">People can use your username to find you and send a contact request.</p>
+<!-- Username Input -->
+<div class="mb-sm">
+<div class="relative flex items-center bg-surface-container-low rounded-[14px] h-[52px] border border-surface-variant focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant" data-icon="person">person</span>
+<span class="absolute left-12 text-on-surface-variant select-none">@</span>
+<input class="w-full h-full bg-transparent border-none focus:ring-0 text-on-background font-body-lg text-body-lg pl-16 pr-4 rounded-[14px]" placeholder="username" type="text" value="zedclay">
+</div>
+<div class="flex items-center mt-2 px-1">
+<span class="material-symbols-outlined text-[16px] text-[#32D6A0] mr-1.5" data-icon="check_circle">check_circle</span>
+<span class="font-label-md text-label-md text-[#32D6A0]">@zedclay is available</span>
+</div>
+</div>
+<!-- Requirements List -->
+<div class="bg-surface-container rounded-xl p-md mb-xl mt-md">
+<h3 class="font-label-md text-label-md text-on-surface mb-2">Username requirements</h3>
+<ul class="space-y-1.5">
+<li class="flex items-start">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 mr-2" data-icon="check">check</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">3 to 24 characters</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 mr-2" data-icon="check">check</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Lowercase letters, numbers, periods, and underscores</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 mr-2" data-icon="check">check</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Must begin with a letter</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 mr-2" data-icon="check">check</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">No spaces</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 mr-2" data-icon="check">check</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Must be unique</span>
+</li>
+</ul>
+</div>
+<!-- Privacy Card -->
+<div class="bg-surface-container-high rounded-xl p-4 flex items-start mb-section shadow-sm">
+<span class="material-symbols-outlined text-primary mr-3 shrink-0" data-icon="info">info</span>
+<p class="font-body-lg text-body-lg text-sm text-on-surface-variant">Your username is public and helps people find you. It is not your encryption key, and it cannot be used to read your private messages.</p>
+</div>
+<div class="mt-auto pt-xl">
+<button class="w-full h-[52px] bg-primary text-on-primary font-title-md text-title-md rounded-[14px] flex items-center justify-center hover:bg-primary-fixed transition-colors active:scale-[0.98]">
+                Continue
+            </button>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pokidoki - Account Recovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#30353f",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "on-secondary": "#003827",
+                      "outline-variant": "#474554",
+                      "on-secondary-fixed": "#002115",
+                      "secondary-container": "#00c28e",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "on-primary": "#2800a0",
+                      "surface-bright": "#343943",
+                      "error": "#ffb4ab",
+                      "background": "#0e141c",
+                      "on-surface": "#dee2ef",
+                      "primary-fixed-dim": "#c6bfff",
+                      "primary-fixed": "#e4dfff",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-container": "#d27c17",
+                      "surface": "#0e141c",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "inverse-on-surface": "#2b313a",
+                      "on-primary-fixed": "#160066",
+                      "surface-container-high": "#252a34",
+                      "on-tertiary": "#4b2800",
+                      "on-tertiary-container": "#412200",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "surface-tint": "#c6bfff",
+                      "outline": "#928ea0",
+                      "inverse-primary": "#5845d9",
+                      "surface-dim": "#0e141c",
+                      "on-surface-variant": "#c8c4d7",
+                      "surface-container-lowest": "#090e17",
+                      "on-primary-container": "#22008d",
+                      "surface-container-low": "#161c25",
+                      "on-tertiary-fixed": "#2d1600",
+                      "tertiary-fixed": "#ffdcc0",
+                      "tertiary": "#ffb875",
+                      "on-secondary-container": "#004933",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "primary": "#c6bfff",
+                      "inverse-surface": "#dee2ef",
+                      "primary-container": "#8c80ff",
+                      "surface-variant": "#30353f",
+                      "secondary-fixed": "#64fcc3",
+                      "surface-container": "#1a2029",
+                      "secondary": "#40dfa8",
+                      "on-secondary-fixed-variant": "#005139",
+                      "on-background": "#dee2ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "xxl": "32px",
+                      "xs": "4px",
+                      "page-padding": "20px",
+                      "md": "12px",
+                      "lg": "16px",
+                      "xl": "24px",
+                      "section": "48px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { background-color: #090B10; }
+        .glass-panel { background: rgba(18, 21, 28, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background font-body-lg antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-primary font-title-md text-title-md fixed top-0 w-full flat no shadows transition-colors duration-200 flex items-center justify-between px-page-padding h-16 w-full z-50">
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high text-on-surface transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-on-surface truncate px-4">Account Recovery</h1>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">info</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[80px] pb-section px-page-padding flex flex-col gap-xl">
+<!-- Recovery Status Card (Bento Style) -->
+<section class="glass-panel rounded-2xl p-lg relative overflow-hidden flex flex-col gap-md">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+<h2 class="font-title-md text-title-md text-on-surface">Account recovery is available</h2>
+</div>
+<span class="bg-primary-container/20 text-primary-container font-label-md text-label-md px-3 py-1 rounded-full border border-primary-container/30">Available</span>
+</div>
+<p class="text-on-surface-variant font-body-lg text-sm mt-1">
+                We can send a verification code to your verified email to help confirm that this account belongs to you.
+            </p>
+</section>
+<!-- Recovery Method Section -->
+<section class="flex flex-col gap-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-2">Recovery method</h3>
+<div class="bg-surface-container rounded-2xl overflow-hidden divide-y divide-outline-variant/30 border border-outline-variant/20">
+<!-- Email Row -->
+<div class="p-lg flex items-center gap-lg hover:bg-surface-container-high transition-colors cursor-default">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant">mail</span>
+</div>
+<div class="flex-grow min-w-0">
+<p class="font-title-md text-sm text-on-surface truncate">Verified email</p>
+<p class="font-body-lg text-sm text-on-surface-variant truncate">z••••••@example.com</p>
+</div>
+<div class="shrink-0 flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-xs">Verified</span>
+</div>
+</div>
+<!-- Device Row -->
+<div class="p-lg flex items-center gap-lg hover:bg-surface-container-high transition-colors cursor-default">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant">smartphone</span>
+</div>
+<div class="flex-grow min-w-0">
+<p class="font-title-md text-sm text-on-surface truncate">Current device</p>
+<p class="font-body-lg text-sm text-on-surface-variant truncate">This phone</p>
+</div>
+<div class="shrink-0 flex items-center gap-xs text-secondary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-xs">Recognized</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Process Section -->
+<section class="flex flex-col gap-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-2">What happens next</h3>
+<div class="bg-surface-container rounded-2xl p-lg border border-outline-variant/20">
+<ol class="relative border-l border-outline-variant/30 ml-4 py-2 space-y-6">
+<li class="pl-6 relative">
+<div class="absolute w-3 h-3 bg-primary rounded-full mt-1.5 -left-1.5 border border-surface-container"></div>
+<p class="font-title-md text-sm text-on-surface">1. Receive a verification code</p>
+<p class="font-body-lg text-xs text-on-surface-variant mt-1">Sent to your verified email address.</p>
+</li>
+<li class="pl-6 relative">
+<div class="absolute w-3 h-3 bg-surface-container-highest rounded-full mt-1.5 -left-1.5 border border-surface-container"></div>
+<p class="font-title-md text-sm text-on-surface">2. Confirm this device</p>
+</li>
+<li class="pl-6 relative">
+<div class="absolute w-3 h-3 bg-surface-container-highest rounded-full mt-1.5 -left-1.5 border border-surface-container"></div>
+<p class="font-title-md text-sm text-on-surface">3. Create a new password</p>
+</li>
+<li class="pl-6 relative">
+<div class="absolute w-3 h-3 bg-surface-container-highest rounded-full mt-1.5 -left-1.5 border border-surface-container"></div>
+<p class="font-title-md text-sm text-on-surface">4. Review account security</p>
+</li>
+</ol>
+</div>
+</section>
+<!-- Warnings & Security Section -->
+<section class="flex flex-col gap-lg">
+<!-- Warning Card -->
+<div class="bg-tertiary-container/10 border border-tertiary-container/30 rounded-2xl p-lg flex items-start gap-md">
+<span class="material-symbols-outlined text-tertiary-container shrink-0 mt-0.5">warning</span>
+<div>
+<h4 class="font-title-md text-sm text-on-surface">Some protected local data may be unavailable</h4>
+<p class="font-body-lg text-xs text-on-surface-variant mt-1 leading-relaxed">
+                        Account recovery restores your access, but data secured with device-specific encryption keys may not be recoverable until those devices are authorized again.
+                    </p>
+</div>
+</div>
+<!-- Linked Devices Toggle -->
+<div class="bg-surface-container rounded-2xl p-lg flex items-center justify-between border border-outline-variant/20">
+<div class="pr-4">
+<p class="font-title-md text-sm text-on-surface">Sign out other devices</p>
+<p class="font-body-lg text-xs text-on-surface-variant mt-0.5">Recommended for security</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-primary after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Security Notice -->
+<div class="flex items-center gap-md px-2 opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">lock</span>
+<p class="font-body-lg text-xs text-on-surface-variant">
+                    Recovery attempts are protected by rate limits and verified against unusual request patterns.
+                </p>
+</div>
+</section>
+<!-- Actions -->
+<div class="mt-auto pt-lg flex flex-col gap-md sticky bottom-6 bg-background/80 backdrop-blur-md pb-4 z-10 -mx-page-padding px-page-padding">
+<button class="w-full h-[52px] bg-primary text-on-primary font-title-md text-label-md rounded-[14px] hover:bg-primary-fixed transition-colors flex items-center justify-center shadow-[0_0_15px_rgba(198,191,255,0.15)]">
+                Start recovery
+            </button>
+<div class="flex justify-between items-center px-2">
+<button class="font-label-md text-label-md text-on-surface hover:text-primary transition-colors">
+                    Cancel
+                </button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">
+                    I can't access this email
+                </button>
+</div>
+</div>
+</main>
+</body></html>

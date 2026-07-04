@@ -1,0 +1,271 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Verify Contact</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-background": "#dee2ef",
+                            "tertiary-container": "#d27c17",
+                            "on-error": "#690005",
+                            "secondary": "#40dfa8",
+                            "tertiary-fixed": "#ffdcc0",
+                            "on-surface": "#dee2ef",
+                            "on-error-container": "#ffdad6",
+                            "secondary-fixed": "#64fcc3",
+                            "surface-tint": "#c6bfff",
+                            "on-tertiary-container": "#412200",
+                            "surface-variant": "#30353f",
+                            "outline-variant": "#474554",
+                            "outline": "#928ea0",
+                            "error-container": "#93000a",
+                            "surface": "#0e141c",
+                            "primary-container": "#8c80ff",
+                            "on-secondary-container": "#004933",
+                            "surface-dim": "#0e141c",
+                            "on-secondary-fixed": "#002115",
+                            "tertiary-fixed-dim": "#ffb875",
+                            "primary-fixed": "#e4dfff",
+                            "on-secondary": "#003827",
+                            "on-primary": "#2800a0",
+                            "inverse-surface": "#dee2ef",
+                            "surface-container-lowest": "#090e17",
+                            "surface-container": "#1a2029",
+                            "on-tertiary-fixed": "#2d1600",
+                            "primary-fixed-dim": "#c6bfff",
+                            "on-tertiary-fixed-variant": "#6b3b00",
+                            "on-tertiary": "#4b2800",
+                            "on-primary-fixed-variant": "#3f25c1",
+                            "inverse-primary": "#5845d9",
+                            "on-secondary-fixed-variant": "#005139",
+                            "background": "#0e141c",
+                            "surface-container-low": "#161c25",
+                            "surface-container-highest": "#30353f",
+                            "secondary-container": "#00c28e",
+                            "surface-bright": "#343943",
+                            "tertiary": "#ffb875",
+                            "secondary-fixed-dim": "#40dfa8",
+                            "on-surface-variant": "#c8c4d7",
+                            "error": "#ffb4ab",
+                            "on-primary-fixed": "#160066",
+                            "on-primary-container": "#22008d",
+                            "surface-container-high": "#252a34",
+                            "primary": "#c6bfff",
+                            "inverse-on-surface": "#2b313a"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "md": "12px",
+                            "lg": "16px",
+                            "xxl": "32px",
+                            "xl": "24px",
+                            "page-padding": "20px",
+                            "xs": "4px",
+                            "sm": "8px",
+                            "section": "48px"
+                    },
+                    "fontFamily": {
+                            "title-md": ["Inter"],
+                            "label-md": ["Inter"],
+                            "headline-sm": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                            "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                            "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                            "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #090B10; /* Enforced dark mode background from specs */
+            color: #F7F7FA; /* Enforced primary text color */
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30353f;
+            border-radius: 4px;
+        }
+        
+        /* Specific overrides for requested colors */
+        .bg-custom-surface { background-color: #12151C; }
+        .text-custom-secondary { color: #A7ACB8; }
+        .text-custom-primary { color: #F7F7FA; }
+        .bg-custom-primary-brand { background-color: #7C6CFF; }
+        .text-custom-primary-brand { color: #7C6CFF; }
+        .border-custom-primary-brand { border-color: #7C6CFF; }
+        .bg-warning-neutral { background-color: rgba(245, 185, 66, 0.1); }
+        .text-warning-neutral { color: #F5B942; }
+    </style>
+</head>
+<body class="min-h-screen flex justify-center">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-[#090B10] min-h-screen flex flex-col relative shadow-2xl">
+<!-- TopAppBar (JSON Sourced with Help Trailing Icon requested) -->
+<header class="w-full top-0 sticky flex items-center px-page-padding h-[64px] bg-surface dark:bg-surface text-primary dark:text-primary justify-between z-50">
+<button class="w-12 h-12 flex items-center justify-center -ml-3 hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm flex-1 text-center truncate px-4">Verify contact</h1>
+<button class="w-12 h-12 flex items-center justify-center -mr-3 hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 rounded-full active:scale-95 transition-transform text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+</button>
+</header>
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 overflow-y-auto px-page-padding pb-[100px] pt-md space-y-xl">
+<!-- Contact Header -->
+<section class="flex flex-col items-center text-center">
+<div class="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mb-md border-2 border-surface-variant">
+<span class="font-headline-sm text-headline-sm text-custom-primary">AM</span>
+</div>
+<h2 class="font-title-md text-title-md text-custom-primary mb-xs">Amira Mansouri</h2>
+<div class="flex items-center gap-2 text-custom-secondary font-label-md text-label-md">
+<span>@amira</span>
+<span class="w-1 h-1 rounded-full bg-outline"></span>
+<span>Pokidoki contact</span>
+</div>
+</section>
+<!-- Verification Status Card -->
+<section class="bg-warning-neutral rounded-[16px] p-lg flex gap-md items-start">
+<span class="material-symbols-outlined text-warning-neutral mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<h3 class="font-title-md text-title-md text-warning-neutral mb-xs text-[16px]">Not verified</h3>
+<p class="font-body-lg text-body-lg text-warning-neutral/80 text-[14px] leading-relaxed">
+                        You have not yet confirmed this contact’s security identity.
+                    </p>
+</div>
+</section>
+<!-- Headline & Supporting Text -->
+<section class="space-y-sm">
+<h2 class="font-headline-sm text-headline-sm text-custom-primary text-[22px] leading-tight">Confirm that you are talking to the right person</h2>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[15px] leading-relaxed">
+                    Verify this contact in person or through another trusted communication method before sharing sensitive information.
+                </p>
+</section>
+<!-- Verification Methods -->
+<section class="space-y-md">
+<!-- Method 1: Scan QR Code -->
+<div class="bg-custom-surface rounded-[16px] p-lg border border-surface-variant/50 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-variant/10 to-transparent pointer-events-none"></div>
+<div class="relative z-10 space-y-md">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-custom-primary-brand" style="font-variation-settings: 'FILL' 0;">qr_code_scanner</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-custom-primary mb-xs text-[16px]">Scan QR code</h3>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-snug">
+                                    Scan the verification code shown on Amira’s device.
+                                </p>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 w-max">
+<span class="material-symbols-outlined text-outline text-[16px]" style="font-variation-settings: 'FILL' 0;">group</span>
+<span class="font-label-md text-label-md text-outline text-[12px]">Recommended when you are together</span>
+</div>
+<button class="w-full h-[52px] bg-custom-primary-brand text-custom-primary font-label-md text-label-md rounded-[14px] flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all">
+                            Open scanner
+                        </button>
+</div>
+</div>
+<!-- Method 2: Compare Safety Number -->
+<div class="bg-custom-surface rounded-[16px] p-lg border border-surface-variant/50 relative overflow-hidden group">
+<div class="relative z-10 space-y-md">
+<div class="flex items-start gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-custom-primary-brand" style="font-variation-settings: 'FILL' 0;">pin</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-custom-primary mb-xs text-[16px]">Compare safety number</h3>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-snug">
+                                    Check that both devices display the same grouped number.
+                                </p>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 w-max">
+<span class="material-symbols-outlined text-outline text-[16px]" style="font-variation-settings: 'FILL' 0;">location_off</span>
+<span class="font-label-md text-label-md text-outline text-[12px]">Useful when you are not in the same place</span>
+</div>
+<button class="w-full h-[52px] bg-transparent border-[1.5px] border-custom-primary-brand text-custom-primary-brand font-label-md text-label-md rounded-[14px] flex items-center justify-center hover:bg-custom-primary-brand/10 active:scale-[0.98] transition-all">
+                            View safety number
+                        </button>
+</div>
+</div>
+</section>
+<!-- Trusted Channel Reminder -->
+<section class="bg-surface-container-low rounded-[16px] p-lg border-l-4 border-l-warning-neutral">
+<div class="flex items-start gap-sm mb-sm">
+<span class="material-symbols-outlined text-warning-neutral text-[20px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h3 class="font-title-md text-title-md text-custom-primary text-[15px]">Verify through a trusted method</h3>
+</div>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-relaxed ml-7">
+                    Do not compare verification information inside the same unverified conversation. Meet in person, make a trusted call, or use another communication method you already trust.
+                </p>
+</section>
+<!-- Educational Section -->
+<section class="space-y-lg pt-sm border-t border-surface-variant/30">
+<h3 class="font-title-md text-title-md text-custom-primary text-[16px]">What verification confirms</h3>
+<ul class="space-y-md">
+<li class="flex items-start gap-md">
+<div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-secondary-container text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-snug">You are comparing the same contact identity</p>
+</li>
+<li class="flex items-start gap-md">
+<div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-secondary-container text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-snug">The contact’s security identity has not been unexpectedly replaced</p>
+</li>
+<li class="flex items-start gap-md">
+<div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-secondary-container text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<p class="font-body-lg text-body-lg text-custom-secondary text-[14px] leading-snug">Pokidoki can mark this contact as verified on your device</p>
+</li>
+</ul>
+</section>
+<!-- Limitations Note -->
+<section class="pt-sm pb-xl">
+<p class="font-body-lg text-body-lg text-outline text-[13px] leading-relaxed">
+                    Verification confirms the Pokidoki identity shown on both devices. It does not verify someone’s legal name or guarantee that their device is uncompromised.
+                </p>
+</section>
+</main>
+<!-- Footer Action (Sticky to bottom context, inside scroll or floating based on preference, placing inside container bottom) -->
+<footer class="w-full bg-[#090B10]/90 backdrop-blur-md pb-8 pt-4 px-page-padding border-t border-surface-variant/30 mt-auto">
+<button class="w-full flex items-center justify-center gap-2 text-custom-primary-brand font-label-md text-label-md hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">info</span>
+                How contact verification works
+            </button>
+</footer>
+</div>
+</body></html>

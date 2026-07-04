@@ -1,0 +1,218 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Create Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#412200",
+                        "secondary-fixed": "#64fcc3",
+                        "surface-variant": "#30353f",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "surface-dim": "#0e141c",
+                        "on-error": "#690005",
+                        "surface-bright": "#343943",
+                        "on-background": "#dee2ef",
+                        "error": "#ffb4ab",
+                        "outline": "#928ea0",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "on-surface-variant": "#c8c4d7",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#c6bfff",
+                        "inverse-on-surface": "#2b313a",
+                        "inverse-surface": "#dee2ef",
+                        "surface-container": "#1a2029",
+                        "outline-variant": "#474554",
+                        "primary-fixed": "#e4dfff",
+                        "tertiary-container": "#d27c17",
+                        "primary-container": "#8c80ff",
+                        "on-surface": "#dee2ef",
+                        "surface-tint": "#c6bfff",
+                        "surface-container-high": "#252a34",
+                        "on-primary-fixed": "#160066",
+                        "tertiary-fixed": "#ffdcc0",
+                        "inverse-primary": "#5845d9",
+                        "on-secondary-container": "#004933",
+                        "on-secondary-fixed-variant": "#005139",
+                        "surface-container-low": "#161c25",
+                        "surface-container-highest": "#30353f",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "on-secondary": "#003827",
+                        "surface-container-lowest": "#090e17",
+                        "secondary-container": "#00c28e",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-primary-container": "#22008d",
+                        "primary-fixed-dim": "#c6bfff",
+                        "surface": "#0e141c",
+                        "background": "#0e141c",
+                        "on-tertiary": "#4b2800",
+                        "on-primary": "#2800a0",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "tertiary": "#ffb875",
+                        "on-secondary-fixed": "#002115",
+                        "secondary": "#40dfa8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "section": "48px",
+                        "page-padding": "20px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "xxl": "32px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg antialiased">
+<!-- TopAppBar -->
+<header class="bg-surface-container dark:bg-surface-container text-primary font-title-md text-title-md w-full top-0 sticky shadow-sm flex items-center justify-between px-page-padding h-16 w-full max-w-screen-xl mx-auto z-50">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center -ml-3 text-on-surface hover:bg-surface-variant transition-colors rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center font-headline-sm text-headline-sm font-bold text-primary mr-12">Create account</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-page-padding py-xl pb-section w-full max-w-screen-md mx-auto">
+<!-- Intro -->
+<div class="mb-xxl">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-sm">Create your private account</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Set up your Pokidoki account to start connecting with people you trust.</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-lg">
+<!-- Email Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="email">Email address</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">email</span>
+</div>
+<input class="w-full h-[52px] bg-surface rounded-xl border border-secondary-container text-on-surface pl-12 pr-4 focus:ring-2 focus:ring-secondary-container focus:border-transparent transition-all outline-none" id="email" placeholder="name@example.com" type="email" value="zedclay@example.com">
+<div class="absolute inset-y-0 right-0 pr-md flex items-center pointer-events-none text-secondary-container">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="password">Password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">lock</span>
+</div>
+<input class="w-full h-[52px] bg-surface rounded-xl border border-surface-container-highest text-on-surface pl-12 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="password" placeholder="Password" type="password" value="Zeds123">
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-md flex items-center text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="confirm-password">Confirm password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">lock</span>
+</div>
+<input class="w-full h-[52px] bg-surface rounded-xl border border-surface-container-highest text-on-surface pl-12 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="confirm-password" placeholder="Confirm password" type="password">
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-md flex items-center text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Password Requirements -->
+<div class="bg-surface-container-low rounded-xl p-lg mt-sm border border-surface-container-highest">
+<p class="font-label-md text-label-md text-on-surface mb-md">Your password must include:</p>
+<ul class="flex flex-col gap-sm">
+<li class="flex items-center gap-sm font-body-lg text-body-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-[20px]">circle</span>
+                        At least 10 characters
+                    </li>
+<li class="flex items-center gap-sm font-body-lg text-body-lg text-secondary-container">
+<span class="material-symbols-outlined fill text-[20px]">check_circle</span>
+                        One uppercase letter
+                    </li>
+<li class="flex items-center gap-sm font-body-lg text-body-lg text-secondary-container">
+<span class="material-symbols-outlined fill text-[20px]">check_circle</span>
+                        One lowercase letter
+                    </li>
+<li class="flex items-center gap-sm font-body-lg text-body-lg text-secondary-container">
+<span class="material-symbols-outlined fill text-[20px]">check_circle</span>
+                        One number
+                    </li>
+<li class="flex items-center gap-sm font-body-lg text-body-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-[20px]">circle</span>
+                        One symbol
+                    </li>
+</ul>
+</div>
+<!-- Terms -->
+<label class="flex items-start gap-sm mt-md cursor-pointer group">
+<div class="relative flex items-center justify-center w-6 h-6 mt-0.5">
+<input class="peer appearance-none w-5 h-5 border border-outline rounded bg-transparent checked:bg-primary checked:border-primary transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background outline-none" type="checkbox">
+<span class="material-symbols-outlined text-on-primary absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-[18px]">check</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface-variant">
+                    I agree to the <a class="text-primary hover:underline transition-all" href="#">Terms of Service</a> and <a class="text-primary hover:underline transition-all" href="#">Privacy Policy</a>
+</span>
+</label>
+<!-- Privacy Note -->
+<div class="bg-surface-container rounded-xl p-lg flex items-start gap-md mt-sm border border-surface-container-highest shadow-sm relative overflow-hidden backdrop-blur-md bg-opacity-80">
+<span class="material-symbols-outlined text-secondary-container mt-0.5">shield</span>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">
+                    Your login password protects your account. Your private message keys remain on your device.
+                </p>
+</div>
+<!-- Actions -->
+<div class="mt-xl flex flex-col gap-lg">
+<button class="w-full h-[52px] bg-[#7C6CFF] text-white font-label-md text-label-md rounded-xl flex items-center justify-center hover:bg-opacity-90 active:scale-95 transition-all shadow-lg shadow-[#7C6CFF]/15" type="button">
+                    Create account
+                </button>
+<div class="text-center font-body-lg text-body-lg text-on-surface-variant">
+                    Already have an account? <a class="text-[#7C6CFF] font-label-md text-label-md hover:underline transition-all" href="#">Sign in</a>
+</div>
+</div>
+</form>
+</main>
+</body></html>

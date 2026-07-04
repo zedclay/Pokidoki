@@ -1,0 +1,352 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Settings - Pokidoki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#005139",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-low": "#161c25",
+                      "surface-container-high": "#252a34",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#30353f",
+                      "surface-bright": "#343943",
+                      "secondary-fixed": "#64fcc3",
+                      "surface-container": "#1a2029",
+                      "outline-variant": "#474554",
+                      "tertiary-container": "#d27c17",
+                      "tertiary": "#ffb875",
+                      "secondary-container": "#00c28e",
+                      "secondary": "#32D6A0", 
+                      "tertiary-fixed": "#ffdcc0",
+                      "on-primary-fixed": "#160066",
+                      "outline": "#928ea0",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "surface-tint": "#c6bfff",
+                      "on-surface-variant": "#c8c4d7",
+                      "on-background": "#dee2ef",
+                      "inverse-primary": "#5845d9",
+                      "background": "#090B10",
+                      "on-error": "#690005",
+                      "on-secondary-container": "#004933",
+                      "on-secondary": "#003827",
+                      "error": "#FF5D6C", 
+                      "inverse-on-surface": "#2b313a",
+                      "surface-variant": "#30353f",
+                      "primary-fixed-dim": "#c6bfff",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "surface-container-lowest": "#090e17",
+                      "on-primary": "#2800a0",
+                      "on-secondary-fixed": "#002115",
+                      "surface": "#12151C",
+                      "elevated": "#191D26",
+                      "primary-fixed": "#e4dfff",
+                      "inverse-surface": "#dee2ef",
+                      "surface-dim": "#0e141c",
+                      "on-tertiary": "#4b2800",
+                      "on-primary-container": "#22008d",
+                      "primary-container": "#8c80ff",
+                      "primary": "#7C6CFF",
+                      "on-surface": "#dee2ef",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "on-tertiary-fixed": "#2d1600",
+                      "on-tertiary-container": "#412200"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "16px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "xxl": "32px",
+                      "md": "12px",
+                      "xl": "24px",
+                      "section": "48px",
+                      "page-padding": "20px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter", "sans-serif"],
+                      "headline-md": ["Inter", "sans-serif"],
+                      "title-md": ["Inter", "sans-serif"],
+                      "label-md": ["Inter", "sans-serif"],
+                      "display-lg": ["Inter", "sans-serif"],
+                      "headline-sm": ["Inter", "sans-serif"]
+              },
+              "fontSize": {
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+          .toggle-checkbox:checked {
+            right: 0;
+            border-color: #7C6CFF;
+          }
+          .toggle-checkbox:checked + .toggle-label {
+            background-color: #7C6CFF;
+          }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg antialiased pb-24 h-screen overflow-y-auto">
+<!-- Top App Bar -->
+<header class="sticky top-0 bg-surface z-50 flex items-center justify-between px-page-padding h-[64px] w-full border-b-0 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Settings</h1>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors active:opacity-80 text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</button>
+</header>
+<main class="px-page-padding py-6 space-y-xl max-w-2xl mx-auto">
+<!-- Account Profile Summary -->
+<section class="bg-elevated rounded-2xl p-4 flex flex-col gap-4 relative overflow-hidden group hover:bg-[#1f242e] transition-colors cursor-pointer border border-surface-variant">
+<!-- Subtle glass effect accent -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<div class="flex items-center justify-between relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center font-title-md text-title-md text-white shadow-[0_0_15px_rgba(124,108,255,0.3)]">
+                        ZC
+                    </div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Zed Clay</h2>
+<p class="text-sm text-on-surface-variant mt-1">@zedclay</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="text-xs bg-surface-variant px-2 py-1 rounded-md text-on-surface-variant tracking-wider font-mono">PKD-84A7-19ZX</span>
+</div>
+</div>
+</div>
+<button class="text-on-surface-variant group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="border-t border-surface-variant pt-4 flex items-center justify-between relative z-10">
+<div class="flex items-center gap-2 text-sm text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">gpp_good</span>
+<span>Account protected</span>
+</div>
+<button class="flex items-center gap-2 text-sm text-primary hover:bg-primary/10 px-3 py-1.5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+                     View QR
+                 </button>
+</div>
+</section>
+<!-- Section: Privacy and Security -->
+<section>
+<h3 class="text-sm font-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-2">Privacy &amp; Security</h3>
+<div class="bg-surface rounded-2xl overflow-hidden border border-surface-variant divide-y divide-surface-variant">
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+<div>
+<p class="font-medium text-on-surface">App lock</p>
+<p class="text-sm text-on-surface-variant">PIN and biometrics</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(50,214,160,0.6)]"></div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">fingerprint</span>
+<p class="font-medium text-on-surface">Biometric unlock</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="biometric-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="biometric-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">timer</span>
+<p class="font-medium text-on-surface">Automatically lock</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-sm text-on-surface-variant">After 1 minute</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">visibility_off</span>
+<div>
+<p class="font-medium text-on-surface">Screen privacy</p>
+<p class="text-sm text-on-surface-variant">Hide content in app switcher</p>
+</div>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="screen-privacy-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="screen-privacy-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">done_all</span>
+<p class="font-medium text-on-surface">Read receipts</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="read-receipts-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="read-receipts-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">more_horiz</span>
+<p class="font-medium text-on-surface">Typing indicators</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="typing-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="typing-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">block</span>
+<p class="font-medium text-on-surface">Blocked users</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-sm bg-surface-variant px-2 py-0.5 rounded-full text-on-surface-variant">2</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">devices</span>
+<p class="font-medium text-on-surface">Linked devices</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(50,214,160,0.6)] mr-1"></div>
+<span class="text-sm text-on-surface-variant">1 active</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary">security</span>
+<div>
+<p class="font-medium text-on-surface">Security activity</p>
+<p class="text-sm text-on-surface-variant">Review important changes</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Notifications -->
+<section>
+<h3 class="text-sm font-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-2">Notifications</h3>
+<div class="bg-surface rounded-2xl overflow-hidden border border-surface-variant divide-y divide-surface-variant">
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<p class="font-medium text-on-surface">Message notifications</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="notif-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="notif-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4 pr-4">
+<span class="material-symbols-outlined text-on-surface-variant">preview</span>
+<div>
+<p class="font-medium text-on-surface">Notification previews</p>
+<p class="text-sm text-on-surface-variant">Show message text</p>
+</div>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="preview-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="preview-toggle"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">music_note</span>
+<p class="font-medium text-on-surface">Notification sound</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-sm text-on-surface-variant">Pokidoki Default</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+<p class="font-medium text-on-surface">Vibration</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="vibe-toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="vibe-toggle"></label>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Help & Info -->
+<section>
+<h3 class="text-sm font-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-2">Help &amp; Information</h3>
+<div class="bg-surface rounded-2xl overflow-hidden border border-surface-variant divide-y divide-surface-variant">
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors" href="#">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">help_center</span>
+<p class="font-medium text-on-surface">Help center</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">info</span>
+<p class="font-medium text-on-surface">Pokidoki version</p>
+</div>
+<span class="text-sm text-on-surface-variant">1.0.0</span>
+</div>
+</div>
+</section>
+<!-- Sign Out -->
+<section class="pb-8">
+<button class="w-full bg-surface rounded-2xl p-4 border border-surface-variant flex items-center justify-center gap-3 text-error hover:bg-error/10 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-title-md">Sign Out</span>
+</button>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface border-t-0 shadow-[0_-4px_30px_rgba(0,0,0,0.5)] z-50 md:hidden pb-safe">
+<div class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">chat</span>
+<span class="text-[10px] font-medium">Chats</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="text-[10px] font-medium">Contacts</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="#">
+<div class="bg-primary/10 px-4 py-1 rounded-full mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+</div>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - App Lock Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30353f;
+            border-radius: 4px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#1a2029",
+                        "on-secondary-fixed-variant": "#005139",
+                        "outline-variant": "#474554",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-secondary": "#003827",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#412200",
+                        "on-tertiary": "#4b2800",
+                        "background": "#0e141c",
+                        "inverse-on-surface": "#2b313a",
+                        "inverse-primary": "#5845d9",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-primary": "#2800a0",
+                        "tertiary-fixed": "#ffdcc0",
+                        "primary-container": "#8c80ff",
+                        "tertiary": "#ffb875",
+                        "surface-container-lowest": "#090e17",
+                        "surface-container-highest": "#30353f",
+                        "primary": "#c6bfff",
+                        "on-surface": "#dee2ef",
+                        "on-background": "#dee2ef",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "surface": "#0e141c",
+                        "on-secondary-container": "#004933",
+                        "tertiary-container": "#d27c17",
+                        "surface-container-low": "#161c25",
+                        "outline": "#928ea0",
+                        "error-container": "#93000a",
+                        "secondary-fixed": "#64fcc3",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#e4dfff",
+                        "inverse-surface": "#dee2ef",
+                        "on-primary-fixed": "#160066",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "secondary": "#40dfa8",
+                        "surface-dim": "#0e141c",
+                        "secondary-container": "#00c28e",
+                        "surface-variant": "#30353f",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-secondary-fixed": "#002115",
+                        "on-primary-container": "#22008d",
+                        "surface-tint": "#c6bfff",
+                        "on-surface-variant": "#c8c4d7",
+                        "surface-container-high": "#252a34",
+                        "surface-bright": "#343943"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xxl": "32px",
+                        "page-padding": "20px",
+                        "lg": "16px",
+                        "xl": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "12px",
+                        "section": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-lg antialiased min-h-screen pb-section">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background flex items-center justify-between px-page-padding h-16 flat no shadows">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center text-primary active:scale-95 transition-transform hover:bg-surface-variant/20 rounded-full">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-primary">App lock</h1>
+<button aria-label="Help and information" class="w-12 h-12 flex items-center justify-center text-primary active:scale-95 transition-transform hover:bg-surface-variant/20 rounded-full">
+<span class="material-symbols-outlined">info</span>
+</button>
+</header>
+<!-- Main Content Canvas (Pushed down by TopAppBar) -->
+<main class="pt-[80px] px-page-padding flex flex-col gap-lg">
+<!-- Status Header -->
+<section class="bg-surface-container-low rounded-xl p-lg shadow-sm border border-surface-variant flex flex-col gap-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-[#32D6A0]"></div>
+<div class="flex items-center gap-sm pl-2">
+<span class="material-symbols-outlined text-[#32D6A0]" style="font-variation-settings: 'FILL' 1;">shield_locked</span>
+<h2 class="font-title-md text-title-md text-[#32D6A0]">Protected</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant pl-2">
+                App Lock is active. Pokidoki requires your PIN or biometric authentication before showing conversations.
+            </p>
+</section>
+<!-- Main Toggle Section -->
+<section class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-surface-variant">
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Use App Lock</span>
+</div>
+<!-- Toggle -->
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+</section>
+<!-- Unlock Methods Section -->
+<section class="flex flex-col gap-xs">
+<h3 class="px-md font-label-md text-label-md text-primary uppercase tracking-wider">Unlock Methods</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-surface-variant">
+<div class="flex flex-col p-lg gap-sm min-h-[72px]">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Biometric unlock</span>
+<!-- Toggle -->
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">
+                        Your biometric data is managed by your device and is not stored by Pokidoki.
+                    </p>
+</div>
+<button class="w-full flex items-center justify-between p-lg min-h-[72px] hover:bg-surface-variant/20 transition-colors text-left active:bg-surface-variant/40">
+<span class="font-title-md text-title-md text-on-surface">Change app PIN</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-lg min-h-[72px] hover:bg-surface-variant/20 transition-colors text-left active:bg-surface-variant/40">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">PIN length</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">6 digits</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Automatic Locking Section -->
+<section class="flex flex-col gap-xs">
+<h3 class="px-md font-label-md text-label-md text-primary uppercase tracking-wider">Automatic Locking</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-surface-variant">
+<button class="w-full flex items-center justify-between p-lg min-h-[72px] hover:bg-surface-variant/20 transition-colors text-left active:bg-surface-variant/40">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Automatically lock</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">After 1 minute</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Lock after leaving Pokidoki</span>
+<!-- Toggle -->
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+<div class="flex items-center justify-between p-lg min-h-[72px] opacity-70 cursor-not-allowed">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Require PIN after device restart</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Always required</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+</div>
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Lock after security changes</span>
+<!-- Toggle -->
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+</div>
+</section>
+<!-- Privacy While Locked Section -->
+<section class="flex flex-col gap-xs">
+<h3 class="px-md font-label-md text-label-md text-primary uppercase tracking-wider">Privacy While Locked</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-surface-variant">
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Hide content in app switcher</span>
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Hide notification content</span>
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Show sender names</span>
+<button aria-pressed="false" class="w-[52px] h-[32px] bg-surface-container-highest rounded-full relative transition-colors border border-outline-variant">
+<div class="absolute left-[4px] top-[4px] w-[24px] h-[24px] bg-outline rounded-full transition-transform"></div>
+</button>
+</div>
+<div class="flex flex-col p-lg gap-sm min-h-[72px]">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Screenshot protection</span>
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">
+                        Protection depends on the operating system and may not prevent external recording.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Failed Attempts Section -->
+<section class="flex flex-col gap-xs">
+<h3 class="px-md font-label-md text-label-md text-primary uppercase tracking-wider">Failed Attempts</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-surface-variant">
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Temporary lockout</span>
+<span class="font-label-md text-label-md text-[#32D6A0] bg-[#32D6A0]/10 px-md py-xs rounded-full">Active</span>
+</div>
+<button class="w-full flex items-center justify-between p-lg min-h-[72px] hover:bg-surface-variant/20 transition-colors text-left active:bg-surface-variant/40">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">After repeated failures</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant text-sm">Temporary delay</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<div class="flex items-center justify-between p-lg min-h-[72px]">
+<span class="font-title-md text-title-md text-on-surface">Notify me about repeated failures</span>
+<button aria-pressed="true" class="w-[52px] h-[32px] bg-primary rounded-full relative transition-colors">
+<div class="absolute right-[4px] top-[4px] w-[24px] h-[24px] bg-on-primary rounded-full transition-transform"></div>
+</button>
+</div>
+</div>
+<!-- Warning Card -->
+<div class="mt-xs bg-surface-container-low rounded-xl p-md border border-[#F5B942]/30 flex gap-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-[#F5B942]"></div>
+<span class="material-symbols-outlined text-[#F5B942] pl-2">warning</span>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm leading-snug">
+                    Pokidoki does not erase your messages automatically. Your local data is not deleted without a separate confirmed action.
+                </p>
+</div>
+</section>
+<!-- Authentication Explanation -->
+<section class="bg-surface-container-low rounded-xl p-lg flex flex-col gap-sm relative overflow-hidden backdrop-blur-sm bg-white/5">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">info</span>
+<h4 class="font-title-md text-title-md text-on-surface">The app PIN is not your account password</h4>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm pl-[32px]">
+                The app PIN only protects access to this specific device. If you forget it, you will need to reinstall Pokidoki, which will clear your local message history. Your account password remains separate and is used for logging in across devices.
+            </p>
+</section>
+<!-- Footer Action -->
+<div class="flex justify-center pt-md pb-xl">
+<button class="font-label-md text-label-md text-primary hover:text-primary-fixed transition-colors underline-offset-4 hover:underline px-4 py-2 rounded-lg hover:bg-primary/10 active:bg-primary/20">
+                Forgot app PIN?
+            </button>
+</div>
+</main>
+</body></html>

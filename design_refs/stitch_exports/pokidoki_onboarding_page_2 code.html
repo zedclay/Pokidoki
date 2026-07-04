@@ -1,0 +1,147 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Onboarding 2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#c6bfff",
+                        "on-background": "#dee2ef",
+                        "surface-container-lowest": "#090e17",
+                        "primary-container": "#8c80ff",
+                        "on-primary": "#2800a0",
+                        "inverse-on-surface": "#2b313a",
+                        "surface-bright": "#343943",
+                        "surface": "#0e141c",
+                        "surface-container-low": "#161c25",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005139",
+                        "surface-variant": "#30353f",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "on-error": "#690005",
+                        "background": "#0e141c",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "on-primary-fixed": "#160066",
+                        "surface-dim": "#0e141c",
+                        "on-tertiary-container": "#412200",
+                        "inverse-primary": "#5845d9",
+                        "on-tertiary": "#4b2800",
+                        "on-secondary-container": "#004933",
+                        "outline-variant": "#474554",
+                        "secondary-container": "#00c28e",
+                        "surface-container": "#1a2029",
+                        "on-secondary-fixed": "#002115",
+                        "on-secondary": "#003827",
+                        "primary-fixed": "#e4dfff",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "tertiary-fixed": "#ffdcc0",
+                        "outline": "#928ea0",
+                        "on-surface": "#dee2ef",
+                        "on-tertiary-fixed": "#2d1600",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-primary-container": "#22008d",
+                        "surface-container-high": "#252a34",
+                        "secondary-fixed": "#64fcc3",
+                        "inverse-surface": "#dee2ef",
+                        "tertiary-container": "#d27c17",
+                        "surface-tint": "#c6bfff",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-surface-variant": "#c8c4d7",
+                        "secondary": "#40dfa8",
+                        "tertiary": "#ffb875",
+                        "surface-container-highest": "#30353f",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "section": "48px",
+                        "xxl": "32px",
+                        "xs": "4px",
+                        "xl": "24px",
+                        "page-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #090B10;
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen flex flex-col font-body-lg overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Area -->
+<header class="flex justify-between items-center w-full px-page-padding h-[64px] z-50 pt-safe shrink-0">
+<button aria-label="Go back" class="w-[48px] h-[48px] flex items-center justify-center rounded-full hover:bg-surface-container-low active:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-primary text-on-surface">
+<span aria-hidden="true" class="material-symbols-outlined">arrow_back</span>
+</button>
+<button class="px-sm py-xs font-label-md text-label-md text-primary hover:bg-surface-container-low rounded-full active:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-primary">
+            Skip
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col justify-between px-page-padding pb-section pt-lg relative z-10">
+<!-- Illustration Container -->
+<div class="flex-1 flex items-center justify-center w-full max-h-[50vh] relative">
+<div class="relative w-full max-w-sm aspect-square flex items-center justify-center">
+<!-- The glowing orb background effect -->
+<div class="absolute inset-0 bg-primary-container/20 blur-[80px] rounded-full pointer-events-none"></div>
+<img alt="Illustration depicting secure communication with a glowing QR code and verification checkmark between two abstracted human silhouettes." class="w-full h-full object-contain relative z-10 drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_imT1zhma5E4XTjgQrzFTGRWLrL00pk6AaqTYpTnMzfD0ZJ1yoJh11jnebSPfZxQXYSah_Sd-RyUN17d8DsdfHDwXqyf4xrcKFeHJxvaSltaz4X-tg-biPsO1LOQ-VfH5JPDMI-bTkux3LV981jsWuPHXUhVsFkMvqhxBQMgLmTyvancYT0tsWaZp14XJY-s4vLBCqA9tv8Fof6HCPi4148mhMdecCbgMPtxupCFHOOb_UC9w8wYy-OrBFIVRwz1Lw4mWa_ydyaE">
+</div>
+</div>
+<!-- Typography & Paging Section -->
+<div class="flex flex-col items-center text-center mt-xl mb-xxl shrink-0">
+<h1 class="font-headline-md text-headline-md text-on-background mb-lg">
+                Know who you are talking to
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mx-auto">
+                Verify trusted contacts using a QR code or safety number before sharing sensitive information.
+            </p>
+<!-- Progress Indicators -->
+<div class="flex items-center justify-center gap-sm mt-xxl h-[24px]">
+<div class="w-2 h-2 rounded-full bg-surface-variant transition-colors duration-300"></div>
+<div class="w-6 h-2 rounded-full bg-primary transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant transition-colors duration-300"></div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="w-full shrink-0">
+<button class="w-full h-[52px] bg-[#7C6CFF] text-on-primary font-label-md text-label-md uppercase rounded-[14px] hover:bg-primary-container active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_0_20px_rgba(124,108,255,0.15)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background">
+                Continue
+            </button>
+</div>
+</main>
+</body></html>

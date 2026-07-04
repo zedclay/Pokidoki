@@ -1,0 +1,176 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Welcome</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#8c80ff",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#005139",
+                        "surface-tint": "#c6bfff",
+                        "secondary-container": "#00c28e",
+                        "outline-variant": "#474554",
+                        "primary": "#c6bfff",
+                        "on-background": "#dee2ef",
+                        "surface-container": "#1a2029",
+                        "outline": "#928ea0",
+                        "on-primary-container": "#22008d",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "on-surface": "#dee2ef",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#252a34",
+                        "on-tertiary": "#4b2800",
+                        "on-secondary": "#003827",
+                        "surface-container-low": "#161c25",
+                        "tertiary": "#ffb875",
+                        "secondary-fixed": "#64fcc3",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "primary-fixed": "#e4dfff",
+                        "inverse-primary": "#5845d9",
+                        "surface-container-highest": "#30353f",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-tertiary-container": "#412200",
+                        "surface-container-lowest": "#090e17",
+                        "surface": "#0e141c",
+                        "surface-variant": "#30353f",
+                        "tertiary-container": "#d27c17",
+                        "background": "#0e141c",
+                        "surface-bright": "#343943",
+                        "on-secondary-fixed": "#002115",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "on-primary-fixed": "#160066",
+                        "on-primary": "#2800a0",
+                        "on-surface-variant": "#c8c4d7",
+                        "inverse-surface": "#dee2ef",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#2d1600",
+                        "secondary": "#40dfa8",
+                        "inverse-on-surface": "#2b313a",
+                        "surface-dim": "#0e141c",
+                        "on-secondary-container": "#004933"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "14px": "14px",
+                        "24px": "24px"
+                    },
+                    "spacing": {
+                        "xxl": "32px",
+                        "md": "12px",
+                        "sm": "8px",
+                        "page-padding": "20px",
+                        "xs": "4px",
+                        "section": "48px",
+                        "lg": "16px",
+                        "xl": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .brand-glow {
+            box-shadow: 0 0 80px 20px rgba(140, 128, 255, 0.15);
+        }
+        .safe-area-top { padding-top: env(safe-area-inset-top, 24px); }
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 24px); }
+    </style>
+</head>
+<body class="bg-[#090B10] text-on-background min-h-screen flex flex-col font-sans antialiased selection:bg-primary-container selection:text-on-primary-container">
+<div class="flex-1 flex flex-col px-page-padding safe-area-top safe-area-bottom w-full max-w-md mx-auto relative overflow-hidden">
+<!-- Top Utility -->
+<div class="w-full flex justify-end py-sm">
+<button class="flex items-center gap-xs px-md py-sm rounded-full hover:bg-surface-container-low transition-colors h-[48px] text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">language</span>
+<span>English</span>
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</button>
+</div>
+<!-- Center Content -->
+<div class="flex-1 flex flex-col justify-center items-center text-center mt-section mb-section">
+<!-- Logo area with glow -->
+<div class="relative mb-xl flex flex-col items-center justify-center">
+<div class="absolute inset-0 rounded-full brand-glow pointer-events-none"></div>
+<!-- Assuming logo is represented by a stylized icon for now if screen placeholder isn't rendering an image -->
+<div class="w-24 h-24 bg-surface-container rounded-24px flex items-center justify-center mb-md border border-outline-variant/30 relative z-10 shadow-lg shadow-black/50">
+<span class="material-symbols-outlined text-5xl text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+</div>
+<h1 class="font-display-lg text-display-lg tracking-tight relative z-10">Pokidoki</h1>
+</div>
+<div class="flex flex-col gap-sm mb-xxl max-w-[320px]">
+<h2 class="font-headline-md text-headline-md">Welcome to your private space</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Connect with the people you trust and keep your conversations protected.</p>
+</div>
+<!-- Reassurance Row -->
+<div class="w-full flex flex-col gap-sm mb-section">
+<!-- Private conversations -->
+<div class="flex items-center gap-md bg-[#12151C] p-md rounded-lg border border-outline-variant/20">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Private conversations</span>
+</div>
+<!-- Contact verification -->
+<div class="flex items-center gap-md bg-[#12151C] p-md rounded-lg border border-outline-variant/20">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Contact verification</span>
+</div>
+<!-- App lock protection -->
+<div class="flex items-center gap-md bg-[#12151C] p-md rounded-lg border border-outline-variant/20">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">phonelink_lock</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">App lock protection</span>
+</div>
+</div>
+</div>
+<!-- Actions & Footer -->
+<div class="w-full flex flex-col gap-md pb-md">
+<button class="w-full h-[52px] bg-[#7C6CFF] text-white rounded-14px font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container transition-colors active:scale-[0.98] shadow-[0_4px_20px_rgba(140,128,255,0.15)]">
+                Create account
+            </button>
+<button class="w-full h-[52px] bg-transparent border-[1.5px] border-outline-variant text-on-surface rounded-14px font-label-md text-label-md hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                Sign in
+            </button>
+<p class="text-center font-body-lg text-[12px] leading-relaxed text-on-surface-variant mt-sm px-md">
+                By continuing, you agree to the <a class="text-primary hover:underline" href="#">Terms of Service</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>.
+            </p>
+<div class="flex items-center justify-center gap-xs mt-xs text-secondary opacity-80">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+<span class="text-[12px] font-medium">Pokidoki cannot read your private messages.</span>
+</div>
+</div>
+</div>
+</body></html>

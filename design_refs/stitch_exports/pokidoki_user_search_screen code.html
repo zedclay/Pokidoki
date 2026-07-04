@@ -1,0 +1,269 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>Find someone - Pokidoki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#252a34",
+                      "surface-container": "#1a2029",
+                      "primary-fixed": "#e4dfff",
+                      "outline": "#928ea0",
+                      "inverse-surface": "#dee2ef",
+                      "outline-variant": "#474554",
+                      "on-secondary": "#003827",
+                      "on-primary": "#2800a0",
+                      "inverse-primary": "#5845d9",
+                      "on-surface": "#dee2ef",
+                      "error": "#ffb4ab",
+                      "surface-bright": "#343943",
+                      "primary-container": "#8c80ff",
+                      "error-container": "#93000a",
+                      "background": "#0e141c",
+                      "on-error-container": "#ffdad6",
+                      "secondary": "#40dfa8",
+                      "on-surface-variant": "#c8c4d7",
+                      "secondary-container": "#00c28e",
+                      "surface-variant": "#30353f",
+                      "surface": "#0e141c",
+                      "tertiary": "#ffb875",
+                      "inverse-on-surface": "#2b313a",
+                      "on-secondary-fixed": "#002115",
+                      "tertiary-fixed": "#ffdcc0",
+                      "surface-container-lowest": "#090e17",
+                      "surface-container-highest": "#30353f",
+                      "primary": "#c6bfff",
+                      "on-primary-container": "#22008d",
+                      "on-tertiary-container": "#412200",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "on-secondary-container": "#004933",
+                      "surface-dim": "#0e141c",
+                      "primary-fixed-dim": "#c6bfff",
+                      "secondary-fixed": "#64fcc3",
+                      "on-primary-fixed": "#160066",
+                      "on-background": "#dee2ef",
+                      "surface-container-low": "#161c25",
+                      "surface-tint": "#c6bfff",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "on-tertiary-fixed": "#2d1600",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "on-secondary-fixed-variant": "#005139",
+                      "on-tertiary": "#4b2800",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "tertiary-container": "#d27c17",
+                      "on-error": "#690005"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "page-padding": "20px",
+                      "md": "12px",
+                      "xs": "4px",
+                      "xl": "24px",
+                      "xxl": "32px",
+                      "section": "48px",
+                      "sm": "8px",
+                      "lg": "16px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #090B10; /* Level 0 Background */
+            color: #dee2ef; /* on-background */
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Glassmorphism accents for cards */
+        .glass-panel {
+            background: rgba(18, 21, 28, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Ambient glowing shadows */
+        .ambient-glow-primary {
+            box-shadow: 0 4px 24px -4px rgba(124, 108, 255, 0.15);
+        }
+        
+        .ambient-glow-secondary {
+            box-shadow: 0 4px 24px -4px rgba(50, 214, 160, 0.15);
+        }
+        
+        /* Hide scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col pt-safe">
+<!-- Top App Bar (Based on Shared Components specs but adjusted for focused task intent) -->
+<header class="w-full sticky top-0 z-50 bg-surface/90 backdrop-blur-md">
+<div class="flex justify-between items-center px-page-padding h-[64px]">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-start rounded-full active:scale-95 transition-transform duration-100 text-on-surface">
+<span class="material-symbols-outlined text-2xl" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-on-surface flex-1 text-center truncate pr-12">Find someone</h1>
+<!-- The pr-12 visually balances the absolutely positioned header text against the leading back button -->
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-page-padding pb-xl flex flex-col gap-xl max-w-2xl mx-auto w-full">
+<!-- Search Field Area -->
+<section class="mt-sm">
+<div class="relative flex items-center w-full h-[52px] bg-surface-container rounded-[14px] border border-outline-variant/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all duration-200">
+<span class="material-symbols-outlined absolute left-4 text-outline" data-icon="search">search</span>
+<input class="w-full h-full bg-transparent border-none focus:ring-0 pl-12 pr-12 text-on-surface font-body-lg text-body-lg placeholder-outline" dir="ltr" placeholder="Enter username or Pokidoki ID" type="text" value="@amira"> <!-- Force LTR for usernames -->
+<button aria-label="Clear search" class="absolute right-2 w-8 h-8 flex items-center justify-center rounded-full text-outline hover:text-on-surface active:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="close">close</span>
+</button>
+</div>
+</section>
+<!-- Guidance Card (Glassmorphism) -->
+<section class="glass-panel rounded-xl p-md flex items-start gap-md border-l-4 border-l-primary/80">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="info" data-weight="fill">info</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-[14px] leading-relaxed text-on-surface-variant">
+                    Usernames and IDs help you find accounts easily. They are <span class="text-primary-fixed font-medium">public locators</span>, not your private encryption keys.
+                </p>
+</div>
+</section>
+<!-- Search Results Section -->
+<section class="flex flex-col gap-sm mt-md">
+<h2 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-xs pl-xs">Search results</h2>
+<!-- Result 1: Exact Match (Existing Contact) -->
+<div class="flex items-center p-md bg-surface-container rounded-xl gap-md active:scale-[0.98] transition-transform">
+<div class="relative w-14 h-14 shrink-0">
+<img class="w-full h-full rounded-full object-cover border-2 border-surface" data-alt="A professional, modern 3D rendered avatar of a young woman with dark curly hair wearing glasses, glowing subtle rim light against a dark background, high resolution, minimalist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAxSBFZrc3t3_Tg-25wKevUYiIYfivOSnUhyOlHZPQV4GQPADWkFoq2bbplDWKOjTpRKryoQtWXHFQPcHi1A02RkYLCInPTyu4PBGytMj5h9Y4vAiEKHNeBv3K_ZWN5O9vO-_jNBBYeexLg9u6Gg-EOnsSmPbESr_fu2KnTWrnfGr_t1-h3QbrLUU037WV7Cc03zbkUKN_XfTiWvTUMkZKuO69VemDBMUWvczUg0QH_joU5XGY6Td1ncHC8vos2m9n1BFLmcBMlVk">
+<div class="absolute -bottom-1 -right-1 w-5 h-5 bg-secondary-container rounded-full flex items-center justify-center border-2 border-surface-container shadow-sm">
+<span class="material-symbols-outlined text-on-secondary-container text-[12px] font-bold" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center">
+<div class="flex items-baseline gap-2 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Amira Mansouri</span>
+<span class="font-body-lg text-[13px] text-outline shrink-0 truncate" dir="ltr">@amira</span>
+</div>
+<span class="font-body-lg text-[12px] text-secondary font-medium tracking-wide mt-0.5">PKD-AM84-2LX7</span>
+<p class="font-body-lg text-[13px] text-on-surface-variant truncate mt-1">Designer, traveller, and coffee lover.</p>
+</div>
+<button class="shrink-0 h-10 px-4 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg flex items-center gap-2 hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="chat_bubble">chat_bubble</span>
+                    Message
+                </button>
+</div>
+<!-- Result 2: Not in contacts -->
+<div class="flex items-center p-md bg-surface-container/50 rounded-xl gap-md active:scale-[0.98] transition-transform">
+<div class="w-14 h-14 shrink-0 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant/30 text-outline">
+<span class="font-title-md text-title-md">AR</span>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center">
+<div class="flex items-baseline gap-2 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Amira Rahal</span>
+<span class="font-body-lg text-[13px] text-outline shrink-0 truncate" dir="ltr">@amira.r</span>
+</div>
+<span class="font-body-lg text-[12px] text-outline-variant font-medium tracking-wide mt-0.5">PKD-4N7R-Q81A</span>
+<p class="font-body-lg text-[13px] text-on-surface-variant truncate mt-1">Building meaningful digital products.</p>
+</div>
+<button class="shrink-0 h-10 px-4 bg-transparent border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg flex items-center hover:bg-surface-variant transition-colors">
+                    View
+                </button>
+</div>
+<!-- Result 3: Pending Request -->
+<div class="flex items-center p-md bg-surface-container/50 rounded-xl gap-md active:scale-[0.98] transition-transform opacity-80">
+<div class="w-14 h-14 shrink-0 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant/30 text-outline">
+<span class="font-title-md text-title-md">MA</span>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center">
+<div class="flex items-baseline gap-2 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Meriem Amira</span>
+<span class="font-body-lg text-[13px] text-outline shrink-0 truncate" dir="ltr">@meriem.amira</span>
+</div>
+<span class="font-body-lg text-[12px] text-outline-variant font-medium tracking-wide mt-0.5">PKD-H5C2-6TZ9</span>
+</div>
+<div class="shrink-0 h-8 px-3 bg-surface-variant text-outline font-body-lg text-[12px] rounded-full flex items-center border border-outline-variant/50">
+                    Request sent
+                </div>
+</div>
+</section>
+<!-- Recent Searches Section -->
+<section class="flex flex-col gap-sm mt-md opacity-70">
+<h2 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-xs pl-xs">Recent searches</h2>
+<!-- Recent 1 -->
+<div class="flex items-center py-2 px-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-outline mr-md" data-icon="history">history</span>
+<div class="flex-1 min-w-0 flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface-variant truncate">Yasmine A.</span>
+<span class="font-body-lg text-[13px] text-outline truncate" dir="ltr">@yasmine.a</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Recent 2 -->
+<div class="flex items-center py-2 px-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-outline mr-md" data-icon="history">history</span>
+<div class="flex-1 min-w-0 flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface-variant truncate">Sofiane K.</span>
+<span class="font-body-lg text-[12px] text-outline truncate font-mono">PKD-7M4K-92QX</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+</section>
+<!-- Spacer to push privacy reminder to bottom if screen is tall -->
+<div class="flex-1 min-h-[40px]"></div>
+<!-- Privacy / Security Reminder -->
+<section class="bg-surface-container-low rounded-xl p-md border border-surface-container-high mt-auto">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5" data-icon="shield_lock">shield_lock</span>
+<p class="font-body-lg text-[13px] leading-relaxed text-on-surface-variant">
+                    A matching username does not confirm someone's identity. Use QR or safety-number verification after connecting to ensure secure end-to-end encryption.
+                </p>
+</div>
+</section>
+</main>
+<!-- Navigation Shell suppressed as per instructions for Task-Focused/Linear screens with a Back button -->
+</body></html>

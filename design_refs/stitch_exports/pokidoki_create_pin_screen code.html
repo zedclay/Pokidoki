@@ -1,0 +1,205 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Pokidoki - Create PIN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#005139",
+                        "primary-fixed": "#e4dfff",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#c6bfff",
+                        "error-container": "#93000a",
+                        "surface-variant": "#30353f",
+                        "inverse-primary": "#5845d9",
+                        "tertiary": "#ffb875",
+                        "primary": "#c6bfff",
+                        "on-tertiary": "#4b2800",
+                        "surface-bright": "#343943",
+                        "on-primary": "#2800a0",
+                        "on-background": "#dee2ef",
+                        "tertiary-container": "#d27c17",
+                        "secondary-container": "#00c28e",
+                        "surface-tint": "#c6bfff",
+                        "surface-container": "#1a2029",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-tertiary-container": "#412200",
+                        "on-surface-variant": "#c8c4d7",
+                        "background": "#0e141c",
+                        "primary-container": "#8c80ff",
+                        "on-secondary-container": "#004933",
+                        "surface": "#0e141c",
+                        "surface-container-low": "#161c25",
+                        "outline-variant": "#474554",
+                        "on-secondary": "#003827",
+                        "surface-container-lowest": "#090e17",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "inverse-surface": "#dee2ef",
+                        "surface-dim": "#0e141c",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#160066",
+                        "on-tertiary-fixed": "#2d1600",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "surface-container-highest": "#30353f",
+                        "on-secondary-fixed": "#002115",
+                        "surface-container-high": "#252a34",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#2b313a",
+                        "on-surface": "#dee2ef",
+                        "tertiary-fixed": "#ffdcc0",
+                        "secondary-fixed": "#64fcc3",
+                        "on-primary-container": "#22008d",
+                        "secondary": "#40dfa8",
+                        "outline": "#928ea0",
+                        
+                        // Adding specific brand colors for exact hex matching requested in prompt
+                        "brand-primary": "#7C6CFF",
+                        "brand-bg": "#090B10"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "xl": "24px",
+                        "md": "12px",
+                        "xxl": "32px",
+                        "sm": "8px",
+                        "section": "48px",
+                        "lg": "16px",
+                        "page-padding": "20px",
+                        "xs": "4px",
+                        "safe-bottom": "env(safe-area-inset-bottom, 20px)"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-sm": ["Inter", "sans-serif"],
+                        "title-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-sm": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "title-md": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "headline-md": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+                        "display-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom Keypad active states */
+        .keypad-btn:active {
+            background-color: theme('colors.surface-container-high');
+            transform: scale(0.95);
+        }
+        
+        /* PIN dots animation */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(124, 108, 255, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(124, 108, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(124, 108, 255, 0); }
+        }
+        .pin-dot.filled {
+            animation: pulse-glow 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-on-surface antialiased min-h-screen flex flex-col font-sans select-none overflow-hidden">
+<!-- Top App Bar (From Shared Components) -->
+<header class="w-full top-0 bg-surface dark:bg-surface flex items-center h-16 px-page-padding shrink-0 border-b border-surface-container-low shadow-sm z-50">
+<button aria-label="Go back" class="w-12 h-12 -ml-2 rounded-full flex items-center justify-center hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary dark:text-primary">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center font-title-md text-title-md mr-10">Create app PIN</h1>
+</header>
+<!-- Main Content Area - Scrollable if needed on smaller screens -->
+<main class="flex-1 flex flex-col px-page-padding overflow-y-auto pb-6 pt-4">
+<!-- Header & Illustration -->
+<div class="flex flex-col items-center text-center mb-8">
+<!-- Minimal Security Graphic -->
+<div class="relative w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-surface-container border border-surface-container-high shadow-[0_4px_24px_rgba(124,108,255,0.15)]">
+<span class="material-symbols-outlined text-brand-primary text-3xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+<div class="absolute inset-0 bg-brand-primary opacity-10 rounded-2xl blur-md"></div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2">Create an app PIN</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px]">Choose a six-digit PIN to protect access to Pokidoki on this device.</p>
+<p class="font-label-md text-label-md text-outline mt-2">This PIN is different from your account password.</p>
+</div>
+<!-- PIN Indicators -->
+<div class="flex justify-center gap-4 mb-section">
+<div class="w-4 h-4 rounded-full bg-brand-primary pin-dot filled"></div>
+<div class="w-4 h-4 rounded-full bg-brand-primary pin-dot filled"></div>
+<div class="w-4 h-4 rounded-full bg-brand-primary pin-dot filled"></div>
+<div class="w-4 h-4 rounded-full bg-brand-primary pin-dot filled"></div>
+<div class="w-4 h-4 rounded-full border-2 border-surface-container-high bg-transparent"></div>
+<div class="w-4 h-4 rounded-full border-2 border-surface-container-high bg-transparent"></div>
+</div>
+<!-- Guidance Card (Glassmorphism inspired) -->
+<div class="bg-surface-container-low border border-surface-container-high rounded-xl p-4 mb-auto">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-xl mt-0.5">info</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface mb-2">Choose a PIN that is difficult to guess</h3>
+<ul class="font-body-lg text-[14px] leading-relaxed text-on-surface-variant list-none space-y-1">
+<li class="flex items-center gap-2 before:content-['•'] before:text-surface-container-highest">Avoid 123456</li>
+<li class="flex items-center gap-2 before:content-['•'] before:text-surface-container-highest">Avoid repeated digits such as 111111</li>
+<li class="flex items-center gap-2 before:content-['•'] before:text-surface-container-highest">Avoid your birthday</li>
+<li class="flex items-center gap-2 before:content-['•'] before:text-surface-container-highest">Do not share your PIN</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Fixed Section: Keypad, Button, Info -->
+<div class="w-full bg-brand-bg px-page-padding pb-safe-bottom shrink-0 rounded-t-3xl pt-2 pb-6">
+<!-- Custom Numeric Keypad -->
+<div class="grid grid-cols-3 gap-y-4 gap-x-6 mb-6 max-w-sm mx-auto">
+<!-- Row 1 -->
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">1</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">2</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">3</button>
+<!-- Row 2 -->
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">4</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">5</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">6</button>
+<!-- Row 3 -->
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">7</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">8</button>
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">9</button>
+<!-- Row 4 -->
+<div></div> <!-- Empty bottom left -->
+<button class="keypad-btn h-16 rounded-full flex items-center justify-center font-display-lg text-display-lg text-on-surface transition-all">0</button>
+<button aria-label="Delete" class="keypad-btn h-16 rounded-full flex items-center justify-center text-on-surface transition-all">
+<span class="material-symbols-outlined text-3xl">backspace</span>
+</button>
+</div>
+<!-- Primary Action Button (Disabled State) -->
+<button class="w-full h-[52px] rounded-[14px] bg-surface-container-high text-on-surface-variant font-label-md text-label-md uppercase tracking-wide opacity-80 cursor-not-allowed mb-4" disabled="">
+            Continue
+        </button>
+<!-- Security Clarification Footer -->
+<div class="flex items-center justify-center gap-2 text-outline">
+<span class="material-symbols-outlined text-sm">shield</span>
+<p class="font-label-sm text-label-sm text-center">Your app PIN protects local access. It is not your message-encryption key.</p>
+</div>
+</div>
+</body></html>

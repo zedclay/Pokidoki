@@ -1,0 +1,247 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - New Conversation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#22008d",
+                        "on-tertiary": "#4b2800",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-tertiary-container": "#412200",
+                        "primary-container": "#8c80ff",
+                        "primary": "#c6bfff",
+                        "on-surface": "#dee2ef",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "surface-container-lowest": "#090e17",
+                        "on-primary": "#2800a0",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "inverse-surface": "#dee2ef",
+                        "surface-dim": "#0e141c",
+                        "on-secondary-fixed": "#002115",
+                        "surface": "#0e141c",
+                        "primary-fixed": "#e4dfff",
+                        "inverse-on-surface": "#2b313a",
+                        "on-secondary-container": "#004933",
+                        "on-secondary": "#003827",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#c6bfff",
+                        "surface-variant": "#30353f",
+                        "surface-tint": "#c6bfff",
+                        "on-surface-variant": "#c8c4d7",
+                        "on-background": "#dee2ef",
+                        "inverse-primary": "#5845d9",
+                        "background": "#090b10",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "on-error": "#690005",
+                        "outline": "#928ea0",
+                        "secondary": "#40dfa8",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-primary-fixed": "#160066",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "surface-container": "#12151c",
+                        "outline-variant": "#292e39",
+                        "tertiary-container": "#d27c17",
+                        "tertiary": "#ffb875",
+                        "secondary-container": "#00c28e",
+                        "surface-container-highest": "#30353f",
+                        "surface-bright": "#343943",
+                        "secondary-fixed": "#64fcc3",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#005139",
+                        "surface-container-high": "#191d26",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#161c25",
+                        "secure-green": "#40dfa8",
+                        "purple-accent": "#c6bfff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xxl": "32px",
+                        "md": "12px",
+                        "xl": "24px",
+                        "section": "48px",
+                        "page-padding": "20px",
+                        "lg": "16px",
+                        "sm": "8px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #090B10; color: #dee2ef; }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-page-padding">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-page-padding h-[64px] w-full z-50 sticky top-0 bg-surface dark:bg-surface">
+<button aria-label="Go back" class="w-[48px] h-[48px] flex items-center justify-center text-primary dark:text-primary active:opacity-80 transition-opacity rounded-full hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-on-surface truncate flex-1 text-center pr-[48px]">New conversation</h1>
+</header>
+<main class="px-page-padding pt-sm pb-xl flex flex-col gap-lg max-w-2xl mx-auto">
+<!-- Search Field -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-lg top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="search">search</span>
+<input class="w-full h-[52px] bg-surface-container border border-outline-variant rounded-[14px] pl-[48px] pr-lg font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors focus:ring-1 focus:ring-primary/50" placeholder="Search contacts" type="text">
+</div>
+<!-- Quick Actions -->
+<section class="flex flex-col gap-sm">
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left active:scale-[0.98] transition-transform">
+<div class="w-[48px] h-[48px] rounded-full bg-primary/10 flex items-center justify-center text-purple-accent flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Find someone</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal">Search by username or Pokidoki ID</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left active:scale-[0.98] transition-transform">
+<div class="w-[48px] h-[48px] rounded-full bg-secondary/10 flex items-center justify-center text-secure-green flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Scan QR code</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal">Add or verify someone nearby</span>
+</div>
+</button>
+<div class="flex items-center justify-between p-md rounded-xl opacity-50 w-full text-left pointer-events-none">
+<div class="flex items-center gap-lg">
+<div class="w-[48px] h-[48px] rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="group_add">group_add</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">New group</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal">Create a private conversation...</span>
+</div>
+</div>
+<span class="text-xs font-semibold bg-surface-variant text-on-surface-variant px-2 py-1 rounded-full uppercase tracking-wider whitespace-nowrap ml-2">Coming later</span>
+</div>
+</section>
+<!-- Divider -->
+<div class="h-[1px] bg-outline-variant w-full my-xs"></div>
+<!-- Recent Contacts -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider px-md pb-xs">Recent contacts</h2>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-title-md flex-shrink-0 relative">
+                    A
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<div class="flex items-center gap-xs">
+<span class="font-title-md text-title-md text-on-surface truncate">Amira</span>
+<span class="material-symbols-outlined text-secure-green text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@amira</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-title-md flex-shrink-0">
+                    L
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Lina</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@lina</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-title-md flex-shrink-0 relative">
+                    K
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<div class="flex items-center gap-xs">
+<span class="font-title-md text-title-md text-on-surface truncate">Karim</span>
+<span class="material-symbols-outlined text-secure-green text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@karim</span>
+</div>
+</button>
+</section>
+<!-- All Contacts -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider px-md pt-sm pb-xs">All contacts</h2>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-title-md flex-shrink-0 relative">
+                    A
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<div class="flex items-center gap-xs">
+<span class="font-title-md text-title-md text-on-surface truncate">Amira</span>
+<span class="material-symbols-outlined text-secure-green text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@amira</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-title-md flex-shrink-0 relative">
+                    K
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<div class="flex items-center gap-xs">
+<span class="font-title-md text-title-md text-on-surface truncate">Karim</span>
+<span class="material-symbols-outlined text-secure-green text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@karim</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-title-md flex-shrink-0">
+                    L
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Lina</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@lina</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-title-md flex-shrink-0">
+                    M
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Maya</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@maya_x</span>
+</div>
+</button>
+<button class="flex items-center gap-lg p-md rounded-xl hover:bg-surface-container transition-colors w-full text-left h-[72px]">
+<div class="w-[48px] h-[48px] rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-title-md flex-shrink-0">
+                    N
+                </div>
+<div class="flex flex-col flex-1 truncate">
+<span class="font-title-md text-title-md text-on-surface truncate">Nour</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-normal truncate">@nour.designs</span>
+</div>
+</button>
+</section>
+</main>
+</body></html>

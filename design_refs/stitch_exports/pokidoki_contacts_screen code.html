@@ -1,0 +1,340 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki - Contacts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#005139",
+                        "background": "#090b10",
+                        "primary-fixed-dim": "#c6bfff",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-tertiary": "#4b2800",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "inverse-primary": "#5845d9",
+                        "surface-bright": "#343943",
+                        "surface-container-low": "#161c25",
+                        "surface-container-highest": "#30353f",
+                        "secondary-container": "#00c28e",
+                        "tertiary": "#ffb875",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "on-surface-variant": "#c8c4d7",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#252a34",
+                        "primary": "#7c6cff",
+                        "on-primary-fixed": "#160066",
+                        "on-primary-container": "#22008d",
+                        "inverse-on-surface": "#2b313a",
+                        "on-secondary-fixed": "#002115",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "primary-fixed": "#e4dfff",
+                        "on-secondary": "#003827",
+                        "on-primary": "#2800a0",
+                        "inverse-surface": "#dee2ef",
+                        "surface-container-lowest": "#090e17",
+                        "surface-container": "#12151c",
+                        "on-tertiary-fixed": "#2d1600",
+                        "surface-variant": "#30353f",
+                        "outline-variant": "#474554",
+                        "on-tertiary-container": "#412200",
+                        "outline": "#928ea0",
+                        "error-container": "#93000a",
+                        "surface": "#12151c",
+                        "primary-container": "#8c80ff",
+                        "surface-dim": "#0e141c",
+                        "on-secondary-container": "#004933",
+                        "on-background": "#dee2ef",
+                        "tertiary-container": "#d27c17",
+                        "on-error": "#690005",
+                        "secondary": "#32d6a0",
+                        "on-surface": "#dee2ef",
+                        "tertiary-fixed": "#ffdcc0",
+                        "secondary-fixed": "#64fcc3",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#c6bfff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xxl": "32px",
+                        "xl": "24px",
+                        "page-padding": "20px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "section": "48px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #090b10; }
+        .glass-panel {
+            background: rgba(18, 21, 28, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .verified-badge {
+            background-color: rgba(50, 214, 160, 0.15);
+            color: #32d6a0;
+            border: 1px solid rgba(50, 214, 160, 0.3);
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-lg pb-[100px] pt-[80px]">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-page-padding h-[64px] bg-background">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-title-md text-primary">
+                ZC
+            </div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface ml-2">Contacts</h1>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface" data-icon="search">search</span>
+</button>
+</header>
+<main class="px-page-padding flex flex-col gap-xl">
+<!-- Search Field -->
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full h-[52px] bg-surface rounded-[14px] border border-[#292E39] pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline font-body-lg text-body-lg" placeholder="Search contacts" type="text">
+</div>
+<!-- Contact Requests Card -->
+<div class="glass-panel rounded-[20px] p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary relative">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-[10px] font-bold text-white border-2 border-background">2</div>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Contact requests</h2>
+<p class="text-on-surface-variant text-sm mt-1">2 requests are waiting for your review.</p>
+</div>
+</div>
+</div>
+<button class="w-full h-[44px] mt-sm bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md text-label-md rounded-xl transition-colors">
+                Review Requests
+            </button>
+</div>
+<!-- Verified Contacts Section -->
+<section class="flex flex-col gap-sm mt-md">
+<h3 class="font-title-md text-title-md text-on-surface mb-2">Verified contacts</h3>
+<div class="flex flex-col gap-2">
+<!-- Amira -->
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young middle eastern woman with dark curly hair smiling warmly against a soft studio lighting background. The image has a moody dark theme with deep shadows and soft highlights, professional corporate headshot style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtjmSkKCz2jBLcL4LO6g3BUQNCPCmbnaQ72fF7rF7vTlUvitkPlAeo5rDlhlfNjG3X9SoOpH9LopTE--lZSqB9e7zHZkmJ_2GEIUcm5neKPFowNaa9SSaDWqT9wrNzTnF4V9x_B_A59attomJfXbmSxjuuOBiKu22CLP4Tw7UIsgmrdfSfIGim6R2vhbFkO6r5M2DisKAMflf4tdzDuYFP6vrKbbmn4kSmi3HqNvAl8brzmlKDinpZcbhrwG3QV2cv078WZ8c8GpY">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Amira</span>
+<span class="text-on-surface-variant text-sm">@amira</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="verified-badge px-3 py-1 rounded-full flex items-center gap-1 text-[12px] font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span>
+                            Verified
+                        </div>
+<button class="w-10 h-10 rounded-full bg-transparent group-hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</div>
+</div>
+<!-- Karim -->
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a middle-aged man with a short beard and glasses, looking slightly off-camera with a neutral expression. Dark mode studio lighting, professional corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0sU5GuQ_97C5IGt-lRrpfIp4BKJ5ZybR5V2qjN5lFeVOZEEAoTZ5AsxZQMAL0m7uLJ5BdCfW93Wgh8RQv-HEs98SP8czhZyLYpo6QEFKmBFSvpY8tPCLJYoZtQ61-NMkKe804z1OVarvr3CT_U-WdyY898XMAXyBuYzKQYQVsONoW9mUrtk2Wxc5PZXmEahB6w2fmx5vfmNA5buuKxYvS_ozyMAnk2xZpftFVqpMmj7AFUNzRoUPXJesuxHSOfXQ3vfu-dai80Qw">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Karim</span>
+<span class="text-on-surface-variant text-sm">@karim</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="verified-badge px-3 py-1 rounded-full flex items-center gap-1 text-[12px] font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span>
+                            Verified
+                        </div>
+<button class="w-10 h-10 rounded-full bg-transparent group-hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</div>
+</div>
+<!-- Lina -->
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young woman with a hijab, smiling brightly. The lighting is soft and cinematic, set against a dark background, fitting a premium corporate design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVanT2VIP8Hc5xIwUxDNE0nsAl9eSfZfFTljlJYlbs-wv7zkM_VG2_ZfoNvLhLPZH_pSYdRUM1ujID4m0Nz3o6LpDD5GxaZz2fDDCF6QMsRTfzaugRHoc7gjqv-SoqiNjNWm4i47DKRl4En6K7RF0rSdaYieiuiy9zYX2YB8ZF6Uu1ImavbNJ5--tUxVE14QqKXTXsBACaWCQ-4hzfad4st_9HkpJ-GBIy-1AnCAcM_XIWSIRATU9sPlhwfwjuiS1tWhk1y_bchAw">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Lina</span>
+<span class="text-on-surface-variant text-sm">@lina</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="verified-badge px-3 py-1 rounded-full flex items-center gap-1 text-[12px] font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span>
+                            Verified
+                        </div>
+<button class="w-10 h-10 rounded-full bg-transparent group-hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- All Contacts Section -->
+<section class="flex flex-col gap-0 mt-md pb-xxl">
+<h3 class="font-title-md text-title-md text-on-surface mb-4">All contacts</h3>
+<!-- A -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-2">A</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young middle eastern woman with dark curly hair smiling warmly against a soft studio lighting background. The image has a moody dark theme with deep shadows and soft highlights, professional corporate headshot style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAQGpXSgrqiZ9DMMmEFQ8DfyQ-wSthwdXZhP-jJYWQy9bf1YLcGAYiMl7DXg5EMDjZv5s_Fo6px9SfEIhxBqzpgZNURdQC0-gCjp8vSmgpN66z2S4lhePZWMW4XSkjN-24ghuWXcGTK_-qskIDMrHeGtj7xW0pWPR40KWktxfi81nC8z65H9WVSltkvnruKh36nonTmM2SS1y72bvU5P-aEMh3yWjIRar0iW0xZeiBbIvywFc9IgTGi7cEXh46TaCeQsnEjWC2c4E">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Amira</span>
+<span class="text-on-surface-variant text-sm">@amira</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+</div>
+</div>
+<!-- K -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-4">K</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a middle-aged man with a short beard and glasses, looking slightly off-camera with a neutral expression. Dark mode studio lighting, professional corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG2ObLszBiQteJFRGktOPS1iufbOzmvDIUG2-axvC9n_qyA01GUdTz92wS4d0ADdJyMiBDqdePt5kFV3FdcUgfDgs_wpMAeUsWOdpIfzoudbf2ukJToP7lyNvkTCL6cusGMF2yT2c1ZLhMvpOg0-j6SntStMdB25VBrTsPPAFuG7HebIcNrVExa3UPQLB6pZbGLwXFbY5pIMtVmvon4JVmsf_lYD6CCBwVUxkPUGdZQPIYEfNgESWsU9UdIjRTlaict9xpeLn_K84">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Karim</span>
+<span class="text-on-surface-variant text-sm">@karim</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+</div>
+</div>
+<!-- L -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-4">L</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young woman with a hijab, smiling brightly. The lighting is soft and cinematic, set against a dark background, fitting a premium corporate design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4gtj9xLB68lr-3w9XvPEQMuqbVMZiHNxGt-Hr2JH7t7CLhCrukn1qdDf2XcNaEiG1_T3BwlQfwZv4axWPv5jsxmf3Ys3eM2tvfER6cg4V-gjzJ4bOt6vq8n9YnBCXPPOpvaHkGyxZGSEQnSX9oXCkOR9SzAQyDkD2jZS-6psJItv0yGwo4vb7B6QJwmzHrzzphyyqnkQED0S_9vSUfcXTqyzCZPyWCzph42YZmpmxgpyvtaAQdlSso0GsrZCqv0tjZxtdbYU10WA">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Lina</span>
+<span class="text-on-surface-variant text-sm">@lina</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+</div>
+</div>
+<!-- M -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-4">M</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group opacity-80">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-title-md text-xl">
+                        M
+                    </div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Maya</span>
+<span class="text-on-surface-variant text-sm">@maya</span>
+</div>
+</div>
+</div>
+<!-- N -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-4">N</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-title-md text-xl">
+                        N
+                    </div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Nour</span>
+<span class="text-on-surface-variant text-sm">@nour</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+</div>
+</div>
+<!-- S -->
+<div class="w-full py-2 px-3 text-primary font-bold text-sm tracking-widest uppercase mt-4">S</div>
+<div class="flex items-center justify-between p-3 rounded-[16px] hover:bg-surface-container transition-colors cursor-pointer group opacity-80">
+<div class="flex items-center gap-md">
+<div class="w-[56px] h-[56px] rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-title-md text-xl">
+                        S
+                    </div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Samir</span>
+<span class="text-on-surface-variant text-sm">@samir</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-[96px] right-page-padding w-14 h-14 bg-primary text-white rounded-[16px] shadow-[0_4px_24px_rgba(124,108,255,0.3)] flex items-center justify-center z-40 hover:bg-inverse-primary transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+</button>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 h-[80px] bg-surface-container shadow-sm rounded-t-xl md:hidden">
+<!-- Chats (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-container-high rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat">chat</span>
+<span class="font-label-md text-label-md text-[12px]">Chats</span>
+</a>
+<!-- Contacts (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-5 py-1 transition-transform duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="contacts" data-weight="fill" style="font-variation-settings: 'FILL' 1;">contacts</span>
+<span class="font-label-md text-label-md text-[12px] font-semibold">Contacts</span>
+</a>
+<!-- Settings (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-container-high rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md text-[12px]">Settings</span>
+</a>
+</nav>
+</body></html>

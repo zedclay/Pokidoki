@@ -1,0 +1,390 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki QR Scanner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        /* Camera overlay effect */
+        .camera-overlay {
+            background: rgba(9, 11, 16, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Scanning frame */
+        .scan-frame {
+            position: relative;
+            width: 270px;
+            height: 270px;
+            border-radius: 24px;
+            box-shadow: 0 0 0 9999px rgba(9, 11, 16, 0.75);
+            /* Corner markers */
+        }
+
+        .scan-frame::before,
+        .scan-frame::after {
+            content: '';
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-color: #c6bfff; /* Primary color */
+            border-style: solid;
+        }
+
+        /* Top Left & Bottom Right */
+        .scan-frame::before {
+            top: -2px;
+            left: -2px;
+            border-width: 4px 0 0 4px;
+            border-top-left-radius: 24px;
+        }
+        /* Top Right & Bottom Left - handled by extra divs to avoid pseudo element conflict if needed, or composite shadow approach */
+        .corner-tr {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 48px;
+            height: 48px;
+            border-color: #c6bfff;
+            border-width: 4px 4px 0 0;
+            border-top-right-radius: 24px;
+        }
+        .corner-bl {
+            position: absolute;
+            bottom: -2px;
+            left: -2px;
+            width: 48px;
+            height: 48px;
+            border-color: #c6bfff;
+            border-width: 0 0 4px 4px;
+            border-bottom-left-radius: 24px;
+        }
+        .corner-br {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 48px;
+            height: 48px;
+            border-color: #c6bfff;
+            border-width: 0 4px 4px 0;
+            border-bottom-right-radius: 24px;
+        }
+
+
+        /* Scanning Line Animation */
+        @keyframes scan {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(270px);
+                opacity: 0;
+            }
+        }
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: #c6bfff;
+            box-shadow: 0 0 8px 2px rgba(198, 191, 255, 0.5);
+            animation: scan 2.5s infinite linear;
+            z-index: 10;
+        }
+
+        /* Pulsing Dot */
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(198, 191, 255, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(198, 191, 255, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(198, 191, 255, 0);
+            }
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #c6bfff;
+            animation: pulse 2s infinite;
+        }
+
+        /* Glass Utility Buttons */
+        .glass-btn {
+            background: rgba(48, 53, 63, 0.4); /* surface-container-highest/40 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-panel {
+            background: rgba(37, 42, 52, 0.6); /* surface-container-high with opacity */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#dee2ef",
+                      "on-secondary-fixed": "#002115",
+                      "on-error": "#690005",
+                      "on-secondary-fixed-variant": "#005139",
+                      "primary": "#c6bfff",
+                      "on-primary": "#2800a0",
+                      "surface-dim": "#0e141c",
+                      "error-container": "#93000a",
+                      "outline-variant": "#474554",
+                      "tertiary-fixed-dim": "#ffb875",
+                      "surface-container-high": "#252a34",
+                      "secondary-fixed": "#64fcc3",
+                      "on-surface": "#dee2ef",
+                      "surface-container-low": "#161c25",
+                      "outline": "#928ea0",
+                      "surface-container-lowest": "#090e17",
+                      "on-tertiary-fixed": "#2d1600",
+                      "tertiary": "#ffb875",
+                      "primary-fixed-dim": "#c6bfff",
+                      "primary-fixed": "#e4dfff",
+                      "surface-container": "#1a2029",
+                      "on-primary-container": "#22008d",
+                      "secondary-fixed-dim": "#40dfa8",
+                      "surface-tint": "#c6bfff",
+                      "inverse-primary": "#5845d9",
+                      "on-primary-fixed-variant": "#3f25c1",
+                      "on-secondary-container": "#004933",
+                      "inverse-surface": "#dee2ef",
+                      "background": "#0e141c",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-fixed": "#ffdcc0",
+                      "surface": "#0e141c",
+                      "tertiary-container": "#d27c17",
+                      "on-tertiary": "#4b2800",
+                      "error": "#ffb4ab",
+                      "secondary": "#40dfa8",
+                      "on-tertiary-fixed-variant": "#6b3b00",
+                      "surface-bright": "#343943",
+                      "on-primary-fixed": "#160066",
+                      "surface-container-highest": "#30353f",
+                      "primary-container": "#8c80ff",
+                      "on-secondary": "#003827",
+                      "secondary-container": "#00c28e",
+                      "surface-variant": "#30353f",
+                      "on-tertiary-container": "#412200",
+                      "on-surface-variant": "#c8c4d7",
+                      "inverse-on-surface": "#2b313a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "lg": "16px",
+                      "xxl": "32px",
+                      "xl": "24px",
+                      "sm": "8px",
+                      "md": "12px",
+                      "page-padding": "20px",
+                      "section": "48px"
+              },
+              "fontFamily": {
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-md-mobile": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md-mobile": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-sm-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg-mobile": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-lg h-screen w-full overflow-hidden flex flex-col relative antialiased selection:bg-primary selection:text-on-primary">
+<!-- Simulated Camera Background -->
+<div class="absolute inset-0 w-full h-full z-0" data-alt="A blurred, low-light abstract background representing a camera preview in a softly lit, secure, and calm modern office or living space environment. The lighting is subtle with deep dark tones and slight bokeh effects, evoking a sense of privacy and technology. It maintains the dark Secure Modernism aesthetic with deep #090B10 base tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDogxOo2-MVMQrPL2isTL6X6iywPjN2hRXLjQ7LEHyNJZcvtY1-nYDRISJ8gY8aDUVHfwc6I_48MzY5GsYLt5ojmFH37_pDYSbmzdPZppo-5lD4rl578Ys2_aWhpaIxWhw9_Dk7lXSotSDUWzv4_a7fudcJtN2gysBVjE_JDzYEUFBvLWzGGBBU7h692BRu4he03UPA5dSQWtfMpnYv6zXVD0rAhPJTfQ0CVUN3JMT9pKURpuWfBaeG70m1BJEkJx76FG7KrGNKMdE')">
+<div class="absolute inset-0 bg-background/30 backdrop-blur-[2px]"></div>
+</div>
+<!-- Top App Bar - Using Predicted Component JSON -->
+<header class="flex justify-between items-center w-full px-page-padding h-14 z-50 bg-transparent absolute top-0 docked full-width">
+<button class="w-10 h-10 rounded-full bg-surface-container-highest/40 backdrop-blur-md flex items-center justify-center text-on-surface hover:bg-surface-container-highest/60 transition-colors border border-white/5 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+</button>
+<h1 class="font-headline-sm-mobile text-headline-sm-mobile font-bold text-on-surface">Scan QR Code</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest/20 transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="help" data-weight="regular">help</span>
+</button>
+</header>
+<!-- Main Scanner Area -->
+<main class="flex-1 flex flex-col items-center justify-center relative z-10 w-full h-full px-page-padding pt-24 pb-32 pointer-events-none">
+<!-- Instructions -->
+<div class="text-center mb-10 max-w-sm px-4">
+<h2 class="font-title-md-mobile text-title-md-mobile text-on-surface mb-2">Scan a Pokidoki QR code</h2>
+<p class="font-body-lg-mobile text-body-lg-mobile text-on-surface-variant">Place the code inside the frame to add or verify someone</p>
+</div>
+<!-- Scanner Frame Container -->
+<div class="relative w-[270px] h-[270px] mb-8">
+<div class="scan-frame rounded-[24px] bg-transparent">
+<!-- Additional corner markers -->
+<div class="corner-tr"></div>
+<div class="corner-bl"></div>
+<div class="corner-br"></div>
+<!-- Animated Line -->
+<div class="scan-line"></div>
+</div>
+<!-- Clear Center Mask (CSS magic using box-shadow on scan-frame handles the overlay, so the center is automatically clear) -->
+</div>
+<!-- Feedback indicator -->
+<div class="flex items-center gap-sm bg-surface-container-high/50 backdrop-blur-sm py-2 px-4 rounded-full border border-white/5">
+<div class="pulse-dot"></div>
+<span class="font-label-md-mobile text-label-md-mobile text-on-surface-variant">Looking for a Pokidoki code...</span>
+</div>
+</main>
+<!-- Bottom Controls Overlay -->
+<div class="absolute bottom-0 left-0 w-full z-40 flex flex-col items-center pb-section px-page-padding pointer-events-auto">
+<!-- Utility Buttons -->
+<div class="flex gap-xl mb-8">
+<button class="glass-btn w-[64px] h-[64px] rounded-full flex flex-col items-center justify-center gap-1 group active:scale-90 transition-all duration-150 shadow-[0_0_15px_rgba(198,191,255,0.05)] hover:bg-surface-container-highest/60">
+<span class="material-symbols-outlined text-on-surface group-hover:text-primary transition-colors text-[24px]" data-icon="flashlight_on" data-weight="regular">flashlight_on</span>
+<span class="font-label-md-mobile text-[10px] font-medium text-on-surface-variant">Flash</span>
+</button>
+<button class="glass-btn w-[64px] h-[64px] rounded-full flex flex-col items-center justify-center gap-1 group active:scale-90 transition-all duration-150 shadow-[0_0_15px_rgba(198,191,255,0.05)] hover:bg-surface-container-highest/60">
+<span class="material-symbols-outlined text-on-surface group-hover:text-primary transition-colors text-[24px]" data-icon="image" data-weight="regular">image</span>
+<span class="font-label-md-mobile text-[10px] font-medium text-on-surface-variant">Gallery</span>
+</button>
+</div>
+<!-- Manual Entry Link -->
+<button class="font-title-md-mobile text-title-md-mobile text-primary mb-xl hover:text-primary-fixed transition-colors active:scale-95 px-4 py-2 rounded-lg hover:bg-primary/5">
+            Enter Pokidoki ID instead
+        </button>
+<!-- Privacy Note -->
+<div class="glass-panel w-full max-w-md rounded-2xl p-4 flex gap-md items-start shadow-lg">
+<span class="material-symbols-outlined text-secondary shrink-0 mt-0.5 text-[20px]" data-icon="info" data-weight="regular">info</span>
+<p class="font-label-md-mobile text-[12px] leading-[18px] font-normal text-on-surface-variant">
+                Scanning a Pokidoki QR code helps identify or verify an account. It does not reveal private messages or secret keys.
+            </p>
+</div>
+</div>
+</body></html>

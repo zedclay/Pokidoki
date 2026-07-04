@@ -1,0 +1,296 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pokidoki Language Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+Arabic:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#0e141c",
+                        "on-surface": "#dee2ef",
+                        "surface-container-high": "#252a34",
+                        "on-primary-fixed-variant": "#3f25c1",
+                        "inverse-on-surface": "#2b313a",
+                        "tertiary-container": "#d27c17",
+                        "secondary-fixed-dim": "#40dfa8",
+                        "background": "#0e141c",
+                        "on-secondary": "#003827",
+                        "on-primary": "#2800a0",
+                        "on-surface-variant": "#c8c4d7",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#64fcc3",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#928ea0",
+                        "surface-tint": "#c6bfff",
+                        "on-secondary-fixed": "#002115",
+                        "surface-container-lowest": "#090e17",
+                        "error-container": "#93000a",
+                        "primary": "#c6bfff",
+                        "on-secondary-container": "#004933",
+                        "surface-container-highest": "#30353f",
+                        "primary-fixed": "#e4dfff",
+                        "surface-container": "#1a2029",
+                        "secondary-container": "#00c28e",
+                        "on-tertiary": "#4b2800",
+                        "surface": "#0e141c",
+                        "primary-fixed-dim": "#c6bfff",
+                        "outline-variant": "#474554",
+                        "on-primary-container": "#22008d",
+                        "inverse-surface": "#dee2ef",
+                        "tertiary": "#ffb875",
+                        "error": "#ffb4ab",
+                        "surface-container-low": "#161c25",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "surface-bright": "#343943",
+                        "surface-variant": "#30353f",
+                        "primary-container": "#8c80ff",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-primary-fixed": "#160066",
+                        "on-tertiary-container": "#412200",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "inverse-primary": "#5845d9",
+                        "on-secondary-fixed-variant": "#005139",
+                        "on-background": "#dee2ef",
+                        "secondary": "#40dfa8",
+                        "on-tertiary-fixed": "#2d1600"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "page-padding": "20px",
+                        "lg": "16px",
+                        "xs": "4px",
+                        "md": "12px",
+                        "xxl": "32px",
+                        "xl": "24px",
+                        "sm": "8px",
+                        "section": "48px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "arabic": ["Noto Sans Arabic"]
+                    },
+                    fontSize: {
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-sm-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #090B10; }
+        .glass-panel {
+            background: rgba(18, 21, 28, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        input[type="radio"]:checked + div {
+            border-color: #8c80ff;
+            background-color: rgba(140, 128, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen pb-section">
+<!-- TopAppBar -->
+<header class="flex items-center w-full px-page-padding h-16 bg-surface dark:bg-surface docked full-width top-0 sticky z-50">
+<button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 active:scale-95 transition-transform duration-200 text-primary dark:text-primary mr-sm -ml-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-sm-mobile text-headline-sm-mobile font-bold text-on-surface dark:text-on-surface">Language</h1>
+</header>
+<main class="max-w-3xl mx-auto px-page-padding pt-lg flex flex-col gap-xl">
+<!-- Current Language Summary Card -->
+<section class="glass-panel rounded-xl p-lg flex items-start gap-lg shadow-sm">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">language</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface mb-xs">English is active</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">Pokidoki menus, settings, and system messages are displayed in English.</p>
+</div>
+</section>
+<!-- Preview Card -->
+<section class="bg-surface-container-low rounded-xl p-lg border border-outline-variant/30 overflow-hidden relative">
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 100% 0%, #8c80ff 0%, transparent 50%);"></div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-md pl-sm border-l-2 border-primary/50 relative z-10">Live Preview</h3>
+<div class="bg-surface rounded-lg p-md space-y-md border border-outline-variant/20 shadow-lg relative z-10">
+<!-- Mock Header -->
+<div class="flex items-center gap-md border-b border-outline-variant/20 pb-md">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="font-headline-sm text-headline-sm text-tertiary">Z</span>
+</div>
+<div>
+<div class="font-title-md text-title-md text-on-surface text-base">Settings</div>
+<div class="font-label-md text-label-md text-primary" dir="ltr">@zedclay</div>
+</div>
+</div>
+<!-- Mock Items -->
+<div class="flex items-center justify-between py-xs">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+<span class="font-body-lg text-body-lg text-on-surface text-sm">Privacy and security</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">chevron_right</span>
+</div>
+<div class="flex items-center justify-between py-xs">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="font-body-lg text-body-lg text-on-surface text-sm">Notifications</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">chevron_right</span>
+</div>
+<div class="flex items-center justify-between py-xs">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">palette</span>
+<span class="font-body-lg text-body-lg text-on-surface text-sm">Appearance and language</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Language Selection Section -->
+<section>
+<div class="mb-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-xs">App language</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">Choose the language used throughout Pokidoki on this device.</p>
+</div>
+<div class="space-y-sm">
+<!-- English Option -->
+<label class="block cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="app_language" type="radio" value="en">
+<div class="bg-surface-container rounded-xl p-md border-2 border-transparent transition-all duration-200">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<div class="w-5 h-5 rounded-full border-2 border-outline peer-checked:border-primary flex items-center justify-center shrink-0">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-100 transition-opacity"></div>
+</div>
+<div>
+<div class="font-title-md text-title-md text-on-surface text-base">English</div>
+<div class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+<span>English</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Left to right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Preview inside option -->
+<div class="mt-sm ml-xl pl-2 border-l border-outline-variant/30 flex items-center gap-xs text-xs text-on-surface-variant opacity-80" dir="ltr">
+<span>Settings</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Privacy and security</span>
+</div>
+</div>
+</label>
+<!-- Arabic Option -->
+<label class="block cursor-pointer group relative">
+<input class="peer sr-only" name="app_language" type="radio" value="ar">
+<div class="bg-surface-container rounded-xl p-md border-2 border-transparent transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary-container/10">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<div class="w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center shrink-0">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 transition-opacity"></div>
+</div>
+<div>
+<div class="font-arabic font-semibold text-lg text-on-surface" dir="rtl">العربية</div>
+<div class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+<span>Arabic</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Right to left</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Preview inside option (RTL) -->
+<div class="mt-sm ml-xl pl-2 border-l border-outline-variant/30 flex items-center gap-xs text-xs text-on-surface-variant opacity-80 font-arabic" dir="rtl">
+<span>الإعدادات</span>
+<span class="material-symbols-outlined text-[14px] transform rotate-180">chevron_right</span>
+<span>الخصوصية والأمان</span>
+</div>
+</div>
+</label>
+<!-- French Option -->
+<label class="block cursor-pointer group relative">
+<input class="peer sr-only" name="app_language" type="radio" value="fr">
+<div class="bg-surface-container rounded-xl p-md border-2 border-transparent transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary-container/10">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<div class="w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center shrink-0">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 transition-opacity"></div>
+</div>
+<div>
+<div class="font-title-md text-title-md text-on-surface text-base">Français</div>
+<div class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+<span>French</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Left to right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Preview inside option -->
+<div class="mt-sm ml-xl pl-2 border-l border-outline-variant/30 flex items-center gap-xs text-xs text-on-surface-variant opacity-80" dir="ltr">
+<span>Paramètres</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Confidentialité et sécurité</span>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- Information Card -->
+<section class="bg-surface-dim rounded-xl p-md border border-outline-variant/20 flex gap-md">
+<span class="material-symbols-outlined text-outline shrink-0 mt-xs text-[20px]" style="font-variation-settings: 'FILL' 0;">info</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface mb-1">Changing language does not translate messages</h4>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-xs">Pokidoki translates menus, settings, and system messages. Messages written by you or your contacts remain in their original language.</p>
+</div>
+</section>
+<!-- Footer Note -->
+<p class="text-center font-label-md text-label-md text-outline text-xs mt-sm">Language settings apply to this device.</p>
+</main>
+<script>
+        // Simple script to toggle radio button visual states for demonstration
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Reset all inner circles
+                document.querySelectorAll('input[type="radio"] + div .rounded-full.bg-primary').forEach(circle => {
+                    circle.classList.remove('opacity-100');
+                    circle.classList.add('opacity-0');
+                });
+                
+                // Show selected inner circle
+                if(this.checked) {
+                    const innerCircle = this.nextElementSibling.querySelector('.rounded-full.bg-primary');
+                    if(innerCircle) {
+                        innerCircle.classList.remove('opacity-0');
+                        innerCircle.classList.add('opacity-100');
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>
