@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../app/providers/app_providers.dart';
 import '../../../../app/routing/route_names.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../authentication/presentation/controllers/auth_flow_controller.dart';
@@ -31,8 +30,9 @@ Future<void> confirmAndSignOut(BuildContext context, WidgetRef ref) async {
     return;
   }
 
-  ref.read(authFlowProvider.notifier).signOut();
-  ref.read(authPresentationProvider.notifier).state =
-      AuthPresentationStatus.unauthenticated;
+  await ref.read(authFlowProvider.notifier).signOut();
+  if (!context.mounted) {
+    return;
+  }
   context.go(AppRoutes.welcome);
 }

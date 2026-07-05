@@ -11,6 +11,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../controllers/auth_flow_controller.dart';
+import '../utils/auth_message_localization.dart';
 import '../widgets/auth_requirement_row.dart';
 import '../widgets/auth_scaffold.dart';
 
@@ -41,7 +42,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim());
   }
 
-  bool get _hasMinLength => _passwordController.text.length >= 10;
+  bool get _hasMinLength => _passwordController.text.length >= 12;
   bool get _hasUpper => RegExp(r'[A-Z]').hasMatch(_passwordController.text);
   bool get _hasLower => RegExp(r'[a-z]').hasMatch(_passwordController.text);
   bool get _hasNumber => RegExp(r'[0-9]').hasMatch(_passwordController.text);
@@ -76,6 +77,8 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
       return;
     }
     if (ok) {
+      _passwordController.clear();
+      _confirmController.clear();
       context.push(AppRoutes.emailVerification);
     }
   }
@@ -262,7 +265,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
             if (flow.errorMessageKey != null) ...[
               const SizedBox(height: PokidokiSpacing.md),
               Text(
-                l10n.authGenericError,
+                l10n.authMessageForKey(flow.errorMessageKey!),
                 style: typography.caption.copyWith(color: colors.error),
               ),
             ],

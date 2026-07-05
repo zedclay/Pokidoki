@@ -20,6 +20,8 @@ import 'package:pokidoki/features/security_setup/presentation/screens/enable_bio
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../../helpers/test_overrides.dart';
+
 GoRouter _batch2Router() {
   return GoRouter(
     initialLocation: AppRoutes.welcome,
@@ -84,6 +86,7 @@ void main() {
   testWidgets('create account renders required fields', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp(
           theme: PokidokiTheme.dark(),
           locale: const Locale('en'),
@@ -108,6 +111,7 @@ void main() {
   testWidgets('sign in with wrong password shows safe error', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp(
           theme: PokidokiTheme.dark(),
           locale: const Locale('en'),
@@ -130,7 +134,7 @@ void main() {
   });
 
   test('mock verification accepts development code only', () async {
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: pokidokiTestOverrides);
     addTearDown(container.dispose);
     final auth = container.read(authFlowProvider.notifier);
     expect(await auth.verifyEmailCode('000000'), isFalse);
@@ -143,7 +147,7 @@ void main() {
   });
 
   test('app lock accepts configured PIN and rejects others', () {
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: pokidokiTestOverrides);
     addTearDown(container.dispose);
     final auth = container.read(authFlowProvider.notifier);
     auth.setPendingPin('654321');
@@ -162,6 +166,7 @@ void main() {
     final router = _batch2Router();
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp.router(
           theme: PokidokiTheme.dark(),
           themeMode: ThemeMode.dark,
@@ -182,7 +187,7 @@ void main() {
 
     final createFuture = auth.createAccount(
       email: 'you@example.com',
-      password: 'Password1!',
+      password: 'Password1234!',
     );
     await tester.pump(const Duration(milliseconds: 500));
     expect(await createFuture, isTrue);

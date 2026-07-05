@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pokidoki/app/providers/app_providers.dart';
 import 'package:pokidoki/app/routing/app_router.dart';
 import 'package:pokidoki/app/routing/route_names.dart';
+import 'package:pokidoki/app/routing/auth_route_guard.dart';
 import 'package:pokidoki/app/routing/route_not_found_screen.dart';
 import 'package:pokidoki/data/mock/mock_development_credentials.dart';
 import 'package:pokidoki/design_system/themes/pokidoki_theme.dart';
@@ -17,6 +18,7 @@ import 'package:pokidoki/features/chats/presentation/screens/conversations_home_
 import 'package:pokidoki/features/dev/presentation/screens/dev_placeholder_screen.dart';
 import 'package:pokidoki/features/messaging/presentation/controllers/messaging_controller.dart';
 import 'package:pokidoki/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:pokidoki/features/settings/presentation/screens/account_management_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/appearance_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/language_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/settings_screen.dart';
@@ -25,9 +27,12 @@ import 'package:pokidoki/features/verification/presentation/screens/qr_scanner_s
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../helpers/test_overrides.dart';
+
 Future<void> _pumpRouter(
   WidgetTester tester,
   GoRouter router, {
+  ProviderContainer? container,
   Locale locale = const Locale('en'),
   ThemeMode themeMode = ThemeMode.dark,
   Size viewport = const Size(390, 844),
@@ -38,19 +43,20 @@ Future<void> _pumpRouter(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 
+  final app = MaterialApp.router(
+    theme: PokidokiTheme.light(locale: locale),
+    darkTheme: PokidokiTheme.dark(locale: locale),
+    themeMode: themeMode,
+    locale: locale,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    routerConfig: router,
+  );
+
   await tester.pumpWidget(
-    ProviderScope(
-      overrides: overrides,
-      child: MaterialApp.router(
-        theme: PokidokiTheme.light(locale: locale),
-        darkTheme: PokidokiTheme.dark(locale: locale),
-        themeMode: themeMode,
-        locale: locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: router,
-      ),
-    ),
+    container != null
+        ? UncontrolledProviderScope(container: container, child: app)
+        : ProviderScope(overrides: overrides, child: app),
   );
   await tester.pumpAndSettle();
 }
@@ -108,12 +114,19 @@ void main() {
 
   group('navigation audit', () {
     testWidgets('primary routes render without overflow', (tester) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
+      await _pumpRouter(tester, router, container: container);
+
       for (final route in _primaryRoutes) {
-        await _pumpRouter(tester, router);
+        container.read(authPresentationProvider.notifier).state =
+            isProtectedRoute(route)
+            ? AuthPresentationStatus.authenticated
+            : AuthPresentationStatus.unauthenticated;
         router.go(route);
         await tester.pumpAndSettle();
         await _flushAsyncTimers(tester);
@@ -122,7 +135,9 @@ void main() {
     });
 
     testWidgets('bottom navigation appears only on root tabs', (tester) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
@@ -131,7 +146,7 @@ void main() {
         AppRoutes.appContacts,
         AppRoutes.appSettings,
       ]) {
-        await _pumpRouter(tester, router);
+        await _pumpRouter(tester, router, container: container);
         router.go(route);
         await tester.pumpAndSettle();
         expect(find.byType(MainBottomNav), findsOneWidget, reason: route);
@@ -142,7 +157,7 @@ void main() {
         AppRoutes.chatPath('conv-amira'),
         AppRoutes.newConversation,
       ]) {
-        await _pumpRouter(tester, router);
+        await _pumpRouter(tester, router, container: container);
         router.go(route);
         await tester.pumpAndSettle();
         expect(find.byType(MainBottomNav), findsNothing, reason: route);
@@ -152,11 +167,13 @@ void main() {
     testWidgets('legacy placeholder routes redirect to real screens', (
       tester,
     ) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
-      await _pumpRouter(tester, router);
+      await _pumpRouter(tester, router, container: container);
       router.go(AppRoutes.conversationsHomePlaceholder);
       await tester.pumpAndSettle();
       expect(find.byType(ConversationsHomeScreen), findsOneWidget);
@@ -171,11 +188,13 @@ void main() {
     });
 
     testWidgets('unknown route shows safe not-found screen', (tester) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
-      await _pumpRouter(tester, router);
+      await _pumpRouter(tester, router, container: container);
       router.go('/this-route-does-not-exist');
       await tester.pumpAndSettle();
       expect(find.byType(RouteNotFoundScreen), findsOneWidget);
@@ -184,11 +203,13 @@ void main() {
     testWidgets('pin recovery remains intentional dev placeholder', (
       tester,
     ) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
-      await _pumpRouter(tester, router);
+      await _pumpRouter(tester, router, container: container);
       router.go(AppRoutes.pinRecovery);
       await tester.pumpAndSettle();
       expect(find.byType(DevPlaceholderScreen), findsOneWidget);
@@ -200,7 +221,9 @@ void main() {
       testWidgets('critical screens render in ${locale.languageCode}', (
         tester,
       ) async {
-        final container = ProviderContainer();
+        final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
         addTearDown(container.dispose);
         final router = container.read(appRouterProvider);
 
@@ -212,8 +235,18 @@ void main() {
           AppRoutes.settingsLanguage: LanguageScreen,
         };
 
+        await _pumpRouter(
+          tester,
+          router,
+          locale: locale,
+          container: container,
+        );
+
         for (final entry in routes.entries) {
-          await _pumpRouter(tester, router, locale: locale);
+          container.read(authPresentationProvider.notifier).state =
+              isProtectedRoute(entry.key)
+              ? AuthPresentationStatus.authenticated
+              : AuthPresentationStatus.unauthenticated;
           router.go(entry.key);
           await tester.pumpAndSettle();
           await _flushAsyncTimers(tester);
@@ -226,7 +259,9 @@ void main() {
   group('theme matrix', () {
     for (final mode in [ThemeMode.dark, ThemeMode.light]) {
       testWidgets('welcome and settings render in $mode', (tester) async {
-        final container = ProviderContainer();
+        final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
         addTearDown(container.dispose);
         final router = container.read(appRouterProvider);
 
@@ -234,12 +269,16 @@ void main() {
           tester,
           router,
           themeMode: mode,
-          overrides: [themeModeProvider.overrideWith((ref) => mode)],
+          container: container,
         );
+        container.read(authPresentationProvider.notifier).state =
+            AuthPresentationStatus.unauthenticated;
         router.go(AppRoutes.welcome);
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
 
+        container.read(authPresentationProvider.notifier).state =
+            AuthPresentationStatus.authenticated;
         router.go(AppRoutes.appSettings);
         await tester.pumpAndSettle();
         await _flushAsyncTimers(tester);
@@ -316,7 +355,9 @@ void main() {
 
   group('shared state integration', () {
     test('verify contact updates contacts and conversations', () async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
 
       await container
@@ -337,7 +378,9 @@ void main() {
     });
 
     test('block and unblock syncs blocked users list', () {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final graph = container.read(socialGraphProvider.notifier);
 
@@ -366,7 +409,9 @@ void main() {
     });
 
     test('send message updates conversation preview', () async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final messaging = container.read(messagingProvider.notifier);
 
@@ -380,7 +425,9 @@ void main() {
     });
 
     test('remove linked device adds security event', () async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final settings = container.read(settingsProvider.notifier);
       await settings.loadDevices();
@@ -406,7 +453,9 @@ void main() {
       'email change updates masked email in account security state',
       () async {
         MockAccountSecurityRepository.resetForTests();
-        final container = ProviderContainer();
+        final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
         addTearDown(container.dispose);
         final notifier = container.read(accountSecurityProvider.notifier);
 
@@ -427,9 +476,10 @@ void main() {
   });
 
   group('sign out', () {
-    test('sign out clears auth flow and keeps theme and locale', () {
+    test('sign out clears auth flow and keeps theme and locale', () async {
       final container = ProviderContainer(
         overrides: [
+          ...pokidokiTestOverrides,
           localeOverrideProvider.overrideWith((ref) => const Locale('fr')),
           themeModeProvider.overrideWith((ref) => ThemeMode.light),
         ],
@@ -438,8 +488,8 @@ void main() {
 
       container.read(authFlowProvider.notifier)
         ..setEmail('test@example.invalid')
-        ..setPendingPin('999999')
-        ..signOut();
+        ..setPendingPin('999999');
+      await container.read(authFlowProvider.notifier).signOut();
 
       final auth = container.read(authFlowProvider);
       expect(auth.email, isEmpty);
@@ -451,11 +501,13 @@ void main() {
 
   group('debug controls', () {
     testWidgets('QR simulate scan button follows debug mode', (tester) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
       final router = container.read(appRouterProvider);
 
-      await _pumpRouter(tester, router);
+      await _pumpRouter(tester, router, container: container);
       router.go(AppRoutes.qrScanner);
       await tester.pumpAndSettle();
 
@@ -474,12 +526,25 @@ void main() {
 
   group('RTL identifiers', () {
     testWidgets('Arabic settings preserves LTR Pokidoki ID', (tester) async {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: pokidokiTestOverrides,
+      );
       addTearDown(container.dispose);
-      final router = container.read(appRouterProvider);
 
-      await _pumpRouter(tester, router, locale: const Locale('ar'));
-      router.go(AppRoutes.settingsAccount);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: PokidokiTheme.dark(locale: const Locale('ar')),
+            darkTheme: PokidokiTheme.dark(locale: const Locale('ar')),
+            themeMode: ThemeMode.dark,
+            locale: const Locale('ar'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const AccountManagementScreen(),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.textContaining('PKD-'), findsWidgets);

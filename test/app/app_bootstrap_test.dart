@@ -4,11 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pokidoki/app/app_bootstrap.dart';
 import 'package:pokidoki/app/providers/app_providers.dart';
 
+import '../helpers/test_overrides.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('bootstrap moves from loading to ready', () async {
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: pokidokiTestOverrides);
     addTearDown(container.dispose);
 
     expect(container.read(appBootstrapProvider).phase, BootstrapPhase.idle);

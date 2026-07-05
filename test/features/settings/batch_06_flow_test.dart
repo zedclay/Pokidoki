@@ -30,6 +30,8 @@ import 'package:pokidoki/features/social/presentation/controllers/social_graph_c
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../../helpers/test_overrides.dart';
+
 GoRouter _settingsRouter({String initial = AppRoutes.appSettings}) {
   return GoRouter(
     initialLocation: initial,
@@ -156,6 +158,7 @@ Future<void> _pumpRouter(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        ...pokidokiTestOverrides,
         themeModeProvider.overrideWith((ref) => themeMode),
         if (locale != null)
           localeOverrideProvider.overrideWith((ref) => locale),
@@ -487,8 +490,7 @@ void main() {
     await tester.pump();
     expect(find.text('Sign out of Pokidoki?'), findsOneWidget);
     await tester.tap(find.text('Sign out').last);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
     expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 
