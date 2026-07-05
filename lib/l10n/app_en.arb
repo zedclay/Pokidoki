@@ -927,5 +927,17 @@
   "reportSubmitAction": "Submit Report",
   "reportSubmitted": "Report submitted.",
   "reportSubmitFailed": "Your report has not been sent.",
-  "reportNotEmergency": "Pokidoki reports are not an emergency service."
+  "reportNotEmergency": "Pokidoki reports are not an emergency service.",
+  "contactsSelfNotAllowed": "You cannot send a contact request to yourself.",
+  "contactsAlreadyPending": "A contact request is already pending.",
+  "contactsReversePending": "This person already sent you a request. Accept it from Contact requests.",
+  "contactsRequestNotFound": "This contact request is no longer available.",
+  "contactsRequestNotPending": "This contact request is no longer pending.",
+  "contactsRequestForbidden": "You cannot perform this action on this request.",
+  "contactsAlreadyExists": "You are already connected with this person.",
+  "contactsNotFound": "This contact is no longer available.",
+  "contactsUserUnavailable": "This user is not available.",
+  "contactsAlreadyBlocked": "This user is already blocked.",
+  "contactsNotBlocked": "This user is not blocked.",
+  "contactsRelationshipUnavailable": "Relationship information is unavailable."
 }

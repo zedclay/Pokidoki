@@ -38,6 +38,7 @@ class _UserProfilePreviewScreenState
   }
 
   Future<void> _load() async {
+    setState(() => _loading = true);
     await ref
         .read(socialGraphProvider.notifier)
         .loadProfilePreview(widget.userId);
@@ -56,11 +57,71 @@ class _UserProfilePreviewScreenState
     }
     setState(() => _sending = false);
     if (ok) {
+      await _load();
+      if (!mounted) {
+        return;
+      }
       final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.usersRequestSent)));
     }
+  }
+
+  Future<void> _acceptIncoming(UserProfilePreview profile) async {
+    final request = ref
+        .read(socialGraphProvider)
+        .receivedRequests
+        .where((item) => item.userId == profile.id)
+        .firstOrNull;
+    if (request == null) {
+      return;
+    }
+    await ref.read(socialGraphProvider.notifier).acceptRequest(request.id);
+    if (!mounted) {
+      return;
+    }
+    await _load();
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context).contactsRequestAccepted),
+      ),
+    );
+  }
+
+  Future<void> _declineIncoming(UserProfilePreview profile) async {
+    final request = ref
+        .read(socialGraphProvider)
+        .receivedRequests
+        .where((item) => item.userId == profile.id)
+        .firstOrNull;
+    if (request == null) {
+      return;
+    }
+    await ref.read(socialGraphProvider.notifier).declineRequest(request.id);
+    if (!mounted) {
+      return;
+    }
+    await _load();
+  }
+
+  Future<void> _cancelOutgoing(UserProfilePreview profile) async {
+    final outgoing = ref
+        .read(socialGraphProvider)
+        .sentRequests
+        .where((request) => request.userId == profile.id)
+        .firstOrNull;
+    if (outgoing == null) {
+      return;
+    }
+    await ref.read(socialGraphProvider.notifier).cancelSentRequest(outgoing.id);
+    if (!mounted) {
+      return;
+    }
+    await _load();
   }
 
   Future<void> _block(UserProfilePreview profile) async {
@@ -83,10 +144,30 @@ class _UserProfilePreviewScreenState
       ),
     );
     if (confirmed == true && mounted) {
+      await ref
+          .read(socialGraphProvider.notifier)
+          .blockUser(
+            userId: profile.id,
+            displayName: profile.displayName,
+            username: profile.username,
+            pokidokiId: profile.pokidokiId,
+          );
+      if (!mounted) {
+        return;
+      }
+      await _load();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.usersBlocked)));
     }
+  }
+
+  Future<void> _unblock(UserProfilePreview profile) async {
+    await ref.read(socialGraphProvider.notifier).unblockUser(profile.id);
+    if (!mounted) {
+      return;
+    }
+    await _load();
   }
 
   @override
@@ -94,11 +175,13 @@ class _UserProfilePreviewScreenState
     final l10n = AppLocalizations.of(context);
     final typography = context.pokidokiTypography;
     ref.watch(socialGraphProvider);
+
     if (_loading) {
       return const PokidokiScaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
     final profile = ref
         .read(socialGraphProvider.notifier)
         .profileFor(widget.userId);
@@ -108,6 +191,8 @@ class _UserProfilePreviewScreenState
         body: Center(child: Text(l10n.usersNoResultsTitle)),
       );
     }
+
+    final unavailable = profile.relationship == ProfileRelationship.unavailable;
 
     return PokidokiScaffold(
       body: SafeArea(
@@ -129,25 +214,28 @@ class _UserProfilePreviewScreenState
                       style: typography.sectionTitle,
                     ),
                   ),
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'report') {
-                        context.push(AppRoutes.reportUserPath(widget.userId));
-                      } else if (value == 'block') {
-                        _block(profile);
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 'block',
-                        child: Text(l10n.usersBlockAction),
-                      ),
-                      PopupMenuItem(
-                        value: 'report',
-                        child: Text(l10n.usersReportAction),
-                      ),
-                    ],
-                  ),
+                  if (!unavailable)
+                    PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'report') {
+                          context.push(AppRoutes.reportUserPath(widget.userId));
+                        } else if (value == 'block') {
+                          _block(profile);
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'block',
+                          child: Text(l10n.usersBlockAction),
+                        ),
+                        PopupMenuItem(
+                          value: 'report',
+                          child: Text(l10n.usersReportAction),
+                        ),
+                      ],
+                    )
+                  else
+                    const SizedBox(width: PokidokiSpacing.minTouchTarget),
                 ],
               ),
             ),
@@ -190,24 +278,23 @@ class _UserProfilePreviewScreenState
                   ),
                   const SizedBox(height: PokidokiSpacing.md),
                   _InfoCard(
-                    icon: Icons.person_off_outlined,
-                    title: profile.relationship == ProfileRelationship.contact
-                        ? l10n.usersInContacts
-                        : profile.relationship ==
-                              ProfileRelationship.pendingOutgoing
-                        ? l10n.usersRequestPending
-                        : l10n.usersNotInContacts,
+                    icon: unavailable
+                        ? Icons.block_rounded
+                        : Icons.person_off_outlined,
+                    title: _relationshipLabel(l10n, profile.relationship),
                   ),
-                  const SizedBox(height: PokidokiSpacing.sm),
-                  _InfoCard(
-                    icon: Icons.shield_outlined,
-                    title: profile.isVerified
-                        ? l10n.semanticVerified
-                        : l10n.usersNotVerified,
-                    subtitle: profile.isVerified
-                        ? null
-                        : l10n.usersVerifyBeforeSensitive,
-                  ),
+                  if (!unavailable) ...[
+                    const SizedBox(height: PokidokiSpacing.sm),
+                    _InfoCard(
+                      icon: Icons.shield_outlined,
+                      title: profile.isVerified
+                          ? l10n.semanticVerified
+                          : l10n.usersNotVerified,
+                      subtitle: profile.isVerified
+                          ? null
+                          : l10n.usersVerifyBeforeSensitive,
+                    ),
+                  ],
                   if (profile.bio != null) ...[
                     const SizedBox(height: PokidokiSpacing.lg),
                     Text(l10n.usersAbout, style: typography.inputLabel),
@@ -228,30 +315,69 @@ class _UserProfilePreviewScreenState
             ),
             Padding(
               padding: const EdgeInsets.all(PokidokiSpacing.lg),
-              child: profile.relationship == ProfileRelationship.contact
-                  ? PokidokiButton.primary(
-                      label: l10n.usersMessage,
-                      onPressed: () =>
-                          context.push(AppRoutes.chatPath('conv-amira')),
-                    )
-                  : PokidokiButton.primary(
-                      label:
-                          profile.relationship ==
-                              ProfileRelationship.pendingOutgoing
-                          ? l10n.usersRequestPending
-                          : l10n.usersSendRequest,
-                      isLoading: _sending,
-                      onPressed:
-                          profile.relationship == ProfileRelationship.none &&
-                              !_sending
-                          ? _sendRequest
-                          : null,
-                    ),
+              child: _buildActions(l10n, profile),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _relationshipLabel(
+    AppLocalizations l10n,
+    ProfileRelationship relationship,
+  ) {
+    return switch (relationship) {
+      ProfileRelationship.contact => l10n.usersInContacts,
+      ProfileRelationship.pendingOutgoing => l10n.usersRequestPending,
+      ProfileRelationship.pendingIncoming => l10n.contactsReceived,
+      ProfileRelationship.blockedByMe => l10n.settingsBlockedUsers,
+      ProfileRelationship.unavailable => l10n.contactsUserUnavailable,
+      ProfileRelationship.none => l10n.usersNotInContacts,
+    };
+  }
+
+  Widget _buildActions(AppLocalizations l10n, UserProfilePreview profile) {
+    return switch (profile.relationship) {
+      ProfileRelationship.contact => PokidokiButton.primary(
+        label: l10n.usersMessage,
+        onPressed: () => context.push(AppRoutes.chatPath('conv-amira')),
+      ),
+      ProfileRelationship.pendingOutgoing => PokidokiButton.secondary(
+        label: l10n.contactsCancelRequest,
+        onPressed: () => _cancelOutgoing(profile),
+      ),
+      ProfileRelationship.pendingIncoming => Row(
+        children: [
+          Expanded(
+            child: PokidokiButton.primary(
+              label: l10n.contactsAccept,
+              onPressed: () => _acceptIncoming(profile),
+            ),
+          ),
+          const SizedBox(width: PokidokiSpacing.sm),
+          Expanded(
+            child: PokidokiButton.secondary(
+              label: l10n.contactsDecline,
+              onPressed: () => _declineIncoming(profile),
+            ),
+          ),
+        ],
+      ),
+      ProfileRelationship.blockedByMe => PokidokiButton.primary(
+        label: l10n.settingsUnblockAction,
+        onPressed: () => _unblock(profile),
+      ),
+      ProfileRelationship.unavailable => PokidokiButton.primary(
+        label: l10n.contactsUserUnavailable,
+        onPressed: null,
+      ),
+      ProfileRelationship.none => PokidokiButton.primary(
+        label: l10n.usersSendRequest,
+        isLoading: _sending,
+        onPressed: !_sending ? _sendRequest : null,
+      ),
+    };
   }
 }
 
@@ -292,5 +418,15 @@ class _InfoCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension<T> on Iterable<T> {
+  T? get firstOrNull {
+    final iterator = this.iterator;
+    if (!iterator.moveNext()) {
+      return null;
+    }
+    return iterator.current;
   }
 }

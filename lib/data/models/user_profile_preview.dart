@@ -1,5 +1,12 @@
 /// Privacy-safe public profile preview for contact discovery.
-enum ProfileRelationship { none, pendingOutgoing, contact }
+enum ProfileRelationship {
+  none,
+  pendingOutgoing,
+  pendingIncoming,
+  contact,
+  blockedByMe,
+  unavailable,
+}
 
 class UserProfilePreview {
   const UserProfilePreview({

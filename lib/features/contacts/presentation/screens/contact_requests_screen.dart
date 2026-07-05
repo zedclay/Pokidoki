@@ -31,6 +31,9 @@ class _ContactRequestsScreenState extends ConsumerState<ContactRequestsScreen>
   void initState() {
     super.initState();
     _tabs = TabController(length: 2, vsync: this);
+    Future<void>.microtask(
+      () => ref.read(socialGraphProvider.notifier).refresh(),
+    );
   }
 
   @override

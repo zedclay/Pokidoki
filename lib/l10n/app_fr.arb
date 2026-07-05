@@ -605,5 +605,17 @@
   "reportSubmitAction": "Envoyer le signalement",
   "reportSubmitted": "Signalement envoyé.",
   "reportSubmitFailed": "Votre signalement n’a pas été envoyé.",
-  "reportNotEmergency": "Les signalements Pokidoki ne sont pas un service d’urgence."
+  "reportNotEmergency": "Les signalements Pokidoki ne sont pas un service d’urgence.",
+  "contactsSelfNotAllowed": "Vous ne pouvez pas vous envoyer une demande de contact.",
+  "contactsAlreadyPending": "Une demande de contact est déjà en attente.",
+  "contactsReversePending": "Cette personne vous a déjà envoyé une demande. Acceptez-la dans Demandes de contact.",
+  "contactsRequestNotFound": "Cette demande de contact n’est plus disponible.",
+  "contactsRequestNotPending": "Cette demande de contact n’est plus en attente.",
+  "contactsRequestForbidden": "Vous ne pouvez pas effectuer cette action sur cette demande.",
+  "contactsAlreadyExists": "Vous êtes déjà connecté avec cette personne.",
+  "contactsNotFound": "Ce contact n’est plus disponible.",
+  "contactsUserUnavailable": "Cet utilisateur n’est pas disponible.",
+  "contactsAlreadyBlocked": "Cet utilisateur est déjà bloqué.",
+  "contactsNotBlocked": "Cet utilisateur n’est pas bloqué.",
+  "contactsRelationshipUnavailable": "Les informations de relation ne sont pas disponibles."
 }
