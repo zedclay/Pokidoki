@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 
-import '../../../../data/models/conversation.dart';
 import '../../../../data/models/message.dart';
 import '../../domain/local_message_status.dart';
 import '../api/api_conversations_repository.dart';
@@ -8,7 +7,6 @@ import '../api/messaging_api_mapper.dart';
 import '../api/messaging_api_models.dart';
 import '../local/database/messaging_database.dart';
 import '../local/mappers/local_conversation_mapper.dart';
-import '../local/mappers/local_message_mapper.dart';
 
 /// Persists remote REST and Socket.IO messaging data into Drift.
 class MessagingSyncEngine {

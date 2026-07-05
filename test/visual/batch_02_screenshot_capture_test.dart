@@ -17,7 +17,7 @@ import 'package:pokidoki/features/security_setup/presentation/screens/create_pin
 import 'package:pokidoki/features/security_setup/presentation/screens/enable_biometrics_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
-import '../../helpers/test_overrides.dart';
+import '../helpers/test_overrides.dart';
 
 const _viewport = Size(390, 844);
 const _outputDir = 'artifacts/ui_comparisons/batch_02';

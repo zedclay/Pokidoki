@@ -27,9 +27,10 @@ class ConversationInfoScreen extends ConsumerWidget {
     final typography = context.pokidokiTypography;
     ref.watch(socialGraphProvider);
     ref.watch(messagingProvider);
+    ref.watch(conversationsProvider);
     final conversation = ref
-        .read(messagingProvider.notifier)
-        .conversation(conversationId);
+        .read(conversationsProvider.notifier)
+        .conversationById(conversationId);
     final displayName = conversation?.peerDisplayName ?? 'Chat';
     final username = conversation?.peerUsername ?? '';
     final peerId = conversation?.peerId ?? '';

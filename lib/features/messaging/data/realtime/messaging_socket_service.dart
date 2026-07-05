@@ -531,6 +531,8 @@ class FakeMessagingSocketService implements MessagingSocketService {
           'userId': 'user-self',
           'displayName': 'Self',
           'username': 'self',
+          'publicId': 'PKD-TEST-TEST',
+          'avatarInitials': 'S',
         },
         'senderStatus': 'sent',
       },

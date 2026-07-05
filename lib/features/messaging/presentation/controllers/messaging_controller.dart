@@ -129,7 +129,6 @@ class MessagingController extends StateNotifier<MessagingState> {
   Timer? _typingDebounce;
   Timer? _typingStopTimer;
   Timer? _typingIndicatorTimeout;
-  Timer? _expirySweepTimer;
   StreamSubscription<dynamic>? _messageCreatedSub;
   StreamSubscription<dynamic>? _messageDeliveredSub;
   StreamSubscription<dynamic>? _messageReadSub;
@@ -640,7 +639,6 @@ class MessagingController extends StateNotifier<MessagingState> {
     _typingDebounce?.cancel();
     _typingStopTimer?.cancel();
     _typingIndicatorTimeout?.cancel();
-    _expirySweepTimer?.cancel();
     _sessionManager.removeAccessTokenListener(_onAccessTokenChanged);
     super.dispose();
   }
@@ -880,32 +878,6 @@ class MessagingController extends StateNotifier<MessagingState> {
       final expiresAt = message.expiresAt;
       return expiresAt == null || expiresAt.isAfter(now);
     }).toList();
-  }
-
-  void _startExpirySweep() {
-    _expirySweepTimer?.cancel();
-    _expirySweepTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-      _removeExpiredMessages();
-    });
-  }
-
-  void _removeExpiredMessages() {
-    final now = DateTime.now().toUtc();
-    var changed = false;
-    final map = Map<String, List<ChatMessage>>.of(state.messagesByConversation);
-    for (final entry in map.entries) {
-      final filtered = entry.value.where((message) {
-        final expiresAt = message.expiresAt;
-        return expiresAt == null || expiresAt.isAfter(now);
-      }).toList();
-      if (filtered.length != entry.value.length) {
-        changed = true;
-        map[entry.key] = filtered;
-      }
-    }
-    if (changed) {
-      state = state.copyWith(messagesByConversation: map);
-    }
   }
 
   void _applyConversationSettingsUpdated(

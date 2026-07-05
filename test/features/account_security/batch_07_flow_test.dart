@@ -300,6 +300,7 @@ void main() {
       container: container,
     );
     await container.read(conversationsProvider.notifier).loadInitial();
+    await tester.pump();
 
     await tester.dragUntilVisible(
       find.text('Report'),

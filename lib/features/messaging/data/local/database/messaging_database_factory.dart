@@ -16,10 +16,14 @@ import 'secure_messaging_database_key_store.dart';
 const messagingDatabaseFileName = 'pokidoki_messages_v1.sqlite';
 
 class MessagingDatabaseFactory {
-  MessagingDatabaseFactory({MessagingDatabaseKeyStore? keyStore})
-    : _keyStore = keyStore ?? SecureMessagingDatabaseKeyStore();
+  MessagingDatabaseFactory({
+    MessagingDatabaseKeyStore? keyStore,
+    Directory? databaseDirectory,
+  }) : _keyStore = keyStore ?? SecureMessagingDatabaseKeyStore(),
+       _databaseDirectory = databaseDirectory;
 
   final MessagingDatabaseKeyStore _keyStore;
+  final Directory? _databaseDirectory;
 
   Future<MessagingDatabase> openEncrypted() async {
     final hexKey = await _resolveKey(createIfMissing: true);
@@ -91,6 +95,10 @@ class MessagingDatabaseFactory {
   }
 
   Future<File> _databaseFile() async {
+    final databaseDirectory = _databaseDirectory;
+    if (databaseDirectory != null) {
+      return File(p.join(databaseDirectory.path, messagingDatabaseFileName));
+    }
     final dir = await getApplicationSupportDirectory();
     return File(p.join(dir.path, messagingDatabaseFileName));
   }

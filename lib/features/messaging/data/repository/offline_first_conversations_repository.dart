@@ -12,7 +12,6 @@ import '../../../../data/repositories/conversations_repository.dart';
 import '../../domain/disappearing_duration_mapper.dart';
 import '../../domain/local_message_status.dart';
 import '../api/api_conversations_repository.dart';
-import '../api/messaging_api_mapper.dart';
 import '../local/database/messaging_database.dart';
 import '../local/mappers/local_conversation_mapper.dart';
 import '../local/mappers/local_message_mapper.dart';

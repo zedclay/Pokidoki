@@ -10,7 +10,6 @@ import '../api/api_conversations_repository.dart';
 import '../api/messaging_api_mapper.dart';
 import '../api/messaging_api_models.dart';
 import '../local/database/messaging_database.dart';
-import '../local/mappers/local_message_mapper.dart';
 import '../realtime/messaging_socket_models.dart';
 import '../realtime/messaging_socket_service.dart';
 import 'messaging_sync_engine.dart';

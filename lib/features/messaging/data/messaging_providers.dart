@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
-import '../../../core/network/api_error_mapper.dart';
 import '../../../data/mock/mock_conversations_repository.dart';
 import '../../../data/models/conversation.dart';
 import '../../../data/models/conversation_page.dart';
