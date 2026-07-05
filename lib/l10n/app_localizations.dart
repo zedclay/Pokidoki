@@ -1435,7 +1435,7 @@ abstract class AppLocalizations {
   /// No description provided for @authPasswordMinLength.
   ///
   /// In en, this message translates to:
-  /// **'At least 10 characters'**
+  /// **'At least 12 characters'**
   String get authPasswordMinLength;
 
   /// No description provided for @authPasswordUppercase.
@@ -1497,6 +1497,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Try again.'**
   String get authGenericError;
+
+  /// No description provided for @authEmailUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This email cannot be used. Try another address.'**
+  String get authEmailUnavailable;
+
+  /// No description provided for @authInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not sign you in. Check your information and try again.'**
+  String get authInvalidCredentials;
+
+  /// No description provided for @authEmailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email before signing in.'**
+  String get authEmailNotVerified;
+
+  /// No description provided for @authAccountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'This account is temporarily unavailable.'**
+  String get authAccountSuspended;
+
+  /// No description provided for @authAccountDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account is disabled.'**
+  String get authAccountDisabled;
+
+  /// No description provided for @authVerificationInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is not valid. Try again.'**
+  String get authVerificationInvalid;
+
+  /// No description provided for @authVerificationExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'That code has expired. Request a new one.'**
+  String get authVerificationExpired;
+
+  /// No description provided for @authVerificationAttemptsExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Request a new code.'**
+  String get authVerificationAttemptsExceeded;
+
+  /// No description provided for @authVerificationResendTooSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait before requesting another code.'**
+  String get authVerificationResendTooSoon;
+
+  /// No description provided for @authSessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session expired. Sign in again.'**
+  String get authSessionExpired;
+
+  /// No description provided for @authRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait and try again.'**
+  String get authRateLimited;
+
+  /// No description provided for @authNoInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your network and try again.'**
+  String get authNoInternet;
+
+  /// No description provided for @authRequestTimedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'The request timed out. Try again.'**
+  String get authRequestTimedOut;
+
+  /// No description provided for @authServerUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The server is unavailable. Try again later.'**
+  String get authServerUnavailable;
+
+  /// No description provided for @authUnexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get authUnexpectedError;
+
+  /// No description provided for @authSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been signed out.'**
+  String get authSignedOut;
 
   /// No description provided for @authSignInTitle.
   ///

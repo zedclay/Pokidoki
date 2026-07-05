@@ -13,6 +13,8 @@ import 'package:pokidoki/features/splash/presentation/screens/splash_screen.dart
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../helpers/test_overrides.dart';
+
 const _viewport = Size(390, 844);
 const _outputDir = 'artifacts/ui_comparisons/batch_01';
 
@@ -49,6 +51,7 @@ Future<void> _pumpScreen(
 
   await tester.pumpWidget(
     ProviderScope(
+      overrides: pokidokiBootstrapTestOverrides,
       child: MaterialApp(
         theme: PokidokiTheme.dark(),
         darkTheme: PokidokiTheme.dark(),

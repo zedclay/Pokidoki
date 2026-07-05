@@ -1,9 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/providers/app_providers.dart';
 import '../../../../data/mock/mock_development_credentials.dart';
+import '../../data/api/api_authentication_repository.dart';
+import '../../data/auth_providers.dart';
 import '../../data/authentication_repository.dart';
+import '../../domain/auth_models.dart';
 
-/// In-memory account-setup and unlock state for Batch 2 UI flows.
+/// In-memory account-setup and unlock state for authentication flows.
 ///
 /// Passwords, PINs, and verification codes are never persisted.
 class AuthFlowState {
@@ -17,19 +21,19 @@ class AuthFlowState {
     this.biometricsEnabled = false,
     this.isLoading = false,
     this.errorMessageKey,
+    this.emailVerified = false,
   });
 
   final String email;
   final String username;
   final String displayName;
   final String bio;
-
-  /// Temporary app PIN held only in memory during setup / unlock.
   final String pendingPin;
   final String confirmedPin;
   final bool biometricsEnabled;
   final bool isLoading;
   final String? errorMessageKey;
+  final bool emailVerified;
 
   String get unlockPin => confirmedPin.isNotEmpty
       ? confirmedPin
@@ -69,6 +73,7 @@ class AuthFlowState {
     bool? biometricsEnabled,
     bool? isLoading,
     String? errorMessageKey,
+    bool? emailVerified,
     bool clearError = false,
     bool clearPins = false,
   }) {
@@ -84,13 +89,16 @@ class AuthFlowState {
       errorMessageKey: clearError
           ? null
           : (errorMessageKey ?? this.errorMessageKey),
+      emailVerified: emailVerified ?? this.emailVerified,
     );
   }
 }
 
 class AuthFlowController extends StateNotifier<AuthFlowState> {
-  AuthFlowController(this._repository) : super(const AuthFlowState());
+  AuthFlowController(this._ref, this._repository)
+    : super(const AuthFlowState());
 
+  final Ref _ref;
   final AuthenticationRepository _repository;
 
   void setEmail(String value) {
@@ -132,9 +140,17 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(clearPins: true, clearError: true);
   }
 
-  /// Clears in-memory authentication presentation state for mock sign-out.
-  /// Does not revoke server sessions or delete account data.
-  void signOut() {
+  Future<void> signOut() async {
+    await _repository.logout();
+    _ref.read(authPresentationProvider.notifier).state =
+        AuthPresentationStatus.unauthenticated;
+    state = const AuthFlowState();
+  }
+
+  Future<void> signOutAll() async {
+    await _repository.logoutAll();
+    _ref.read(authPresentationProvider.notifier).state =
+        AuthPresentationStatus.unauthenticated;
     state = const AuthFlowState();
   }
 
@@ -145,12 +161,34 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.createAccount(email: email, password: password);
-      state = state.copyWith(email: email.trim(), isLoading: false);
+      state = state.copyWith(
+        email: email.trim(),
+        isLoading: false,
+        emailVerified: false,
+      );
       return true;
-    } on AuthFailure {
+    } on AuthFailure catch (failure) {
       state = state.copyWith(
         isLoading: false,
-        errorMessageKey: 'authGenericError',
+        errorMessageKey: failure.messageKey,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> sendVerificationCode() async {
+    if (state.email.isEmpty) {
+      return false;
+    }
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      await _repository.sendVerificationCode(email: state.email);
+      state = state.copyWith(isLoading: false);
+      return true;
+    } on AuthFailure catch (failure) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessageKey: failure.messageKey,
       );
       return false;
     }
@@ -159,18 +197,29 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
   Future<bool> signIn({required String email, required String password}) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      await _repository.signIn(email: email, password: password);
+      final session = await _repository.signIn(
+        email: email,
+        password: password,
+        deviceLabel: defaultDeviceLabel(),
+      );
+      _applyAuthenticatedSession(session);
       state = state.copyWith(
         email: email.trim(),
-        displayName: state.displayName.isEmpty ? 'Zed Clay' : state.displayName,
-        username: state.username.isEmpty ? 'zedclay' : state.username,
+        emailVerified: session.user.emailVerified,
+        displayName: state.displayName.isEmpty
+            ? 'Pokidoki User'
+            : state.displayName,
+        username: state.username.isEmpty ? 'pokidoki_user' : state.username,
         isLoading: false,
       );
       return true;
-    } on AuthFailure {
+    } on AuthFailure catch (failure) {
       state = state.copyWith(
         isLoading: false,
-        errorMessageKey: 'authSignInError',
+        errorMessageKey: failure.messageKey,
+        email: failure.backendCode == 'AUTH_EMAIL_NOT_VERIFIED'
+            ? email.trim()
+            : state.email,
       );
       return false;
     }
@@ -179,13 +228,13 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
   Future<bool> verifyEmailCode(String code) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      await _repository.verifyEmailCode(code);
-      state = state.copyWith(isLoading: false);
+      await _repository.verifyEmailCode(email: state.email, code: code);
+      state = state.copyWith(isLoading: false, emailVerified: true);
       return true;
-    } on AuthFailure {
+    } on AuthFailure catch (failure) {
       state = state.copyWith(
         isLoading: false,
-        errorMessageKey: 'authVerificationError',
+        errorMessageKey: failure.messageKey,
       );
       return false;
     }
@@ -221,15 +270,18 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(clearError: true);
     return true;
   }
-}
 
-final authenticationRepositoryProvider = Provider<AuthenticationRepository>((
-  ref,
-) {
-  return const MockAuthenticationRepository();
-});
+  void _applyAuthenticatedSession(AuthSession session) {
+    _ref.read(authSessionManagerProvider).establishSession(session);
+    _ref.read(authPresentationProvider.notifier).state =
+        AuthPresentationStatus.authenticated;
+  }
+}
 
 final authFlowProvider =
     StateNotifierProvider<AuthFlowController, AuthFlowState>((ref) {
-      return AuthFlowController(ref.watch(authenticationRepositoryProvider));
+      return AuthFlowController(
+        ref,
+        ref.watch(authenticationRepositoryProvider),
+      );
     });

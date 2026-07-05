@@ -10,6 +10,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../controllers/auth_flow_controller.dart';
+import '../utils/auth_message_localization.dart';
 import '../widgets/auth_scaffold.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -56,7 +57,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       return;
     }
     if (ok) {
+      _passwordController.clear();
       context.push(AppRoutes.appLock);
+      return;
+    }
+
+    final flow = ref.read(authFlowProvider);
+    if (flow.errorMessageKey == 'authEmailNotVerified' && mounted) {
+      context.push(AppRoutes.emailVerification);
     }
   }
 
@@ -156,7 +164,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             ),
             if (flow.errorMessageKey != null) ...[
               Text(
-                l10n.authSignInError,
+                l10n.authMessageForKey(flow.errorMessageKey!),
                 style: typography.caption.copyWith(color: colors.error),
               ),
               const SizedBox(height: PokidokiSpacing.sm),

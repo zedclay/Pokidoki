@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/app_bootstrap.dart';
-import '../../../../app/routing/route_names.dart';
+import '../../../../app/providers/app_providers.dart';
+import '../../../../app/routing/auth_route_guard.dart';
 import '../../../../core/utilities/motion.dart';
 import '../../../../design_system/colors/pokidoki_colors.dart';
 import '../../../../design_system/components/layout/pokidoki_safe_area.dart';
@@ -86,7 +87,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       // in widget tests without a router.
       final router = GoRouter.maybeOf(context);
       if (router != null) {
-        context.go(AppRoutes.onboarding);
+        final authStatus = ref.read(authPresentationProvider);
+        final onboardingCompleted = ref.read(onboardingCompletedProvider);
+        context.go(
+          resolveInitialEntry(
+            authStatus: authStatus,
+            onboardingCompleted: onboardingCompleted,
+          ),
+        );
       }
     });
   }

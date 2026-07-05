@@ -12,6 +12,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../controllers/auth_flow_controller.dart';
+import '../utils/auth_message_localization.dart';
 import '../widgets/auth_scaffold.dart';
 import '../widgets/verification_code_input.dart';
 
@@ -57,23 +58,29 @@ class _EmailVerificationScreenState
     }
   }
 
-  void _resend() {
+  Future<void> _resend() async {
     if (_secondsRemaining > 0) {
       return;
     }
-    setState(() => _secondsRemaining = 42);
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaining <= 0) {
-        timer.cancel();
-        return;
-      }
-      setState(() => _secondsRemaining -= 1);
-    });
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.authCodeResent)));
+    final ok = await ref.read(authFlowProvider.notifier).sendVerificationCode();
+    if (!mounted) {
+      return;
+    }
+    if (ok) {
+      setState(() => _secondsRemaining = 42);
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_secondsRemaining <= 0) {
+          timer.cancel();
+          return;
+        }
+        setState(() => _secondsRemaining -= 1);
+      });
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.authCodeResent)));
+    }
   }
 
   @override
@@ -142,7 +149,7 @@ class _EmailVerificationScreenState
             if (flow.errorMessageKey != null) ...[
               const SizedBox(height: PokidokiSpacing.sm),
               Text(
-                l10n.authVerificationError,
+                l10n.authMessageForKey(flow.errorMessageKey!),
                 style: typography.caption.copyWith(color: colors.error),
               ),
             ],

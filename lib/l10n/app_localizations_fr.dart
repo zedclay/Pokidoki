@@ -759,7 +759,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authPasswordRequirements => 'Votre mot de passe doit inclure :';
 
   @override
-  String get authPasswordMinLength => 'Au moins 10 caractères';
+  String get authPasswordMinLength => 'Au moins 12 caractères';
 
   @override
   String get authPasswordUppercase => 'Une lettre majuscule';
@@ -791,6 +791,63 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authGenericError => 'Une erreur s’est produite. Réessayez.';
+
+  @override
+  String get authEmailUnavailable =>
+      'Cette adresse e-mail ne peut pas être utilisée. Essayez-en une autre.';
+
+  @override
+  String get authInvalidCredentials =>
+      'Connexion impossible. Vérifiez vos informations et réessayez.';
+
+  @override
+  String get authEmailNotVerified =>
+      'Vérifiez votre e-mail avant de vous connecter.';
+
+  @override
+  String get authAccountSuspended =>
+      'Ce compte est temporairement indisponible.';
+
+  @override
+  String get authAccountDisabled => 'Ce compte est désactivé.';
+
+  @override
+  String get authVerificationInvalid => 'Ce code n’est pas valide. Réessayez.';
+
+  @override
+  String get authVerificationExpired =>
+      'Ce code a expiré. Demandez-en un nouveau.';
+
+  @override
+  String get authVerificationAttemptsExceeded =>
+      'Trop de tentatives. Demandez un nouveau code.';
+
+  @override
+  String get authVerificationResendTooSoon =>
+      'Veuillez patienter avant de demander un autre code.';
+
+  @override
+  String get authSessionExpired => 'Votre session a expiré. Reconnectez-vous.';
+
+  @override
+  String get authRateLimited => 'Trop de tentatives. Patientez puis réessayez.';
+
+  @override
+  String get authNoInternet =>
+      'Pas de connexion Internet. Vérifiez votre réseau et réessayez.';
+
+  @override
+  String get authRequestTimedOut => 'La requête a expiré. Réessayez.';
+
+  @override
+  String get authServerUnavailable =>
+      'Le serveur est indisponible. Réessayez plus tard.';
+
+  @override
+  String get authUnexpectedError => 'Une erreur s’est produite. Réessayez.';
+
+  @override
+  String get authSignedOut => 'Vous avez été déconnecté.';
 
   @override
   String get authSignInTitle => 'Se connecter';

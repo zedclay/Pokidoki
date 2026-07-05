@@ -743,7 +743,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authPasswordRequirements => 'Your password must include:';
 
   @override
-  String get authPasswordMinLength => 'At least 10 characters';
+  String get authPasswordMinLength => 'At least 12 characters';
 
   @override
   String get authPasswordUppercase => 'One uppercase letter';
@@ -775,6 +775,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authGenericError => 'Something went wrong. Try again.';
+
+  @override
+  String get authEmailUnavailable =>
+      'This email cannot be used. Try another address.';
+
+  @override
+  String get authInvalidCredentials =>
+      'We could not sign you in. Check your information and try again.';
+
+  @override
+  String get authEmailNotVerified => 'Verify your email before signing in.';
+
+  @override
+  String get authAccountSuspended => 'This account is temporarily unavailable.';
+
+  @override
+  String get authAccountDisabled => 'This account is disabled.';
+
+  @override
+  String get authVerificationInvalid => 'That code is not valid. Try again.';
+
+  @override
+  String get authVerificationExpired =>
+      'That code has expired. Request a new one.';
+
+  @override
+  String get authVerificationAttemptsExceeded =>
+      'Too many attempts. Request a new code.';
+
+  @override
+  String get authVerificationResendTooSoon =>
+      'Please wait before requesting another code.';
+
+  @override
+  String get authSessionExpired => 'Your session expired. Sign in again.';
+
+  @override
+  String get authRateLimited => 'Too many attempts. Please wait and try again.';
+
+  @override
+  String get authNoInternet =>
+      'No internet connection. Check your network and try again.';
+
+  @override
+  String get authRequestTimedOut => 'The request timed out. Try again.';
+
+  @override
+  String get authServerUnavailable =>
+      'The server is unavailable. Try again later.';
+
+  @override
+  String get authUnexpectedError => 'Something went wrong. Try again.';
+
+  @override
+  String get authSignedOut => 'You have been signed out.';
 
   @override
   String get authSignInTitle => 'Sign in';

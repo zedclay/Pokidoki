@@ -8,6 +8,8 @@ import 'package:pokidoki/design_system/themes/pokidoki_theme.dart';
 import 'package:pokidoki/features/splash/presentation/screens/splash_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../helpers/test_overrides.dart';
+
 Future<void> pumpPokidokiApp(
   WidgetTester tester, {
   Locale? localeOverride,
@@ -16,6 +18,7 @@ Future<void> pumpPokidokiApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        ...pokidokiBootstrapTestOverrides,
         if (localeOverride != null)
           localeOverrideProvider.overrideWith((ref) => localeOverride),
         ...overrides,
@@ -41,6 +44,7 @@ Future<AppLocalizations> pumpLoadingSplash(
 
   await tester.pumpWidget(
     ProviderScope(
+      overrides: pokidokiBootstrapTestOverrides,
       child: MaterialApp(
         locale: locale,
         theme: PokidokiTheme.light(locale: locale),

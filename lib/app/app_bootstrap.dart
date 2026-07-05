@@ -5,6 +5,7 @@ import '../core/constants/app_constants.dart';
 import '../core/services/secure_messaging_service.dart';
 import '../data/models/account_settings.dart';
 import '../data/repositories/user_repository.dart';
+import '../features/authentication/data/auth_providers.dart';
 import 'providers/app_providers.dart';
 
 enum BootstrapPhase { idle, loading, ready, failed }
@@ -46,6 +47,7 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
       await Future.wait<void>([
         _loadPreferences(),
         _initializeDependencies(),
+        _restoreAuthSession(),
       ]).timeout(AppConstants.splashTimeout);
 
       final elapsed = DateTime.now().difference(startedAt);
@@ -76,12 +78,6 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
       _ => ThemeMode.dark,
     };
     _ref.read(themeModeProvider.notifier).state = themeMode;
-
-    // Locale remains device-local until Screen 34 persists a preference.
-    // Account settings locale is available for future wiring.
-    if (settings.localeCode.isNotEmpty) {
-      // Intentionally not applying mock locale override on first launch.
-    }
   }
 
   Future<void> _initializeDependencies() async {
@@ -90,12 +86,33 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
     );
     await messaging.initialize();
 
-    // Warm mock repositories so later screens can resolve quickly.
     await Future.wait<void>([
       _ref.read(userRepositoryProvider).getCurrentUser(),
       _ref.read(contactsRepositoryProvider).getContacts(),
       _ref.read(conversationsRepositoryProvider).getConversations(),
     ]);
+  }
+
+  Future<void> _restoreAuthSession() async {
+    final repository = _ref.read(authenticationRepositoryProvider);
+    try {
+      final session = await repository.restoreSession().timeout(
+        const Duration(seconds: 10),
+      );
+      if (session != null) {
+        _ref.read(authSessionManagerProvider).establishSession(session);
+        await repository.getCurrentUser();
+        _ref.read(authPresentationProvider.notifier).state =
+            AuthPresentationStatus.authenticated;
+      } else {
+        _ref.read(authPresentationProvider.notifier).state =
+            AuthPresentationStatus.unauthenticated;
+      }
+    } on Object {
+      await _ref.read(authenticationRepositoryProvider).logout();
+      _ref.read(authPresentationProvider.notifier).state =
+          AuthPresentationStatus.unauthenticated;
+    }
   }
 }
 

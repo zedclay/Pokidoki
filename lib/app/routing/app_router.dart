@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../app_bootstrap.dart';
+import '../providers/app_providers.dart';
 import '../../features/app_shell/presentation/screens/main_shell_screen.dart';
+import 'auth_route_guard.dart';
 import '../../features/authentication/presentation/screens/create_account_screen.dart';
 import '../../features/authentication/presentation/screens/email_verification_screen.dart';
 import '../../features/authentication/presentation/screens/profile_setup_screen.dart';
@@ -49,11 +52,31 @@ import 'route_not_found_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
+final _routerRefreshListenableProvider = Provider<ValueNotifier<int>>((ref) {
+  final notifier = ValueNotifier(0);
+  ref.listen(authPresentationProvider, (_, __) => notifier.value++);
+  ref.listen(appBootstrapProvider, (_, __) => notifier.value++);
+  ref.onDispose(notifier.dispose);
+  return notifier;
+});
+
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final refreshListenable = ref.watch(_routerRefreshListenableProvider);
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: false,
+    refreshListenable: refreshListenable,
+    redirect: (context, state) {
+      final authStatus = ref.read(authPresentationProvider);
+      final bootstrapPhase = ref.read(appBootstrapProvider).phase;
+      return authRedirect(
+        authStatus: authStatus,
+        bootstrapPhase: bootstrapPhase,
+        location: state.matchedLocation,
+      );
+    },
     errorBuilder: (context, state) => const RouteNotFoundScreen(),
     routes: [
       GoRoute(

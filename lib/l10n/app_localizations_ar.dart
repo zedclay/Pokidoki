@@ -730,7 +730,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authPasswordRequirements => 'يجب أن تتضمن كلمة المرور:';
 
   @override
-  String get authPasswordMinLength => '10 أحرف على الأقل';
+  String get authPasswordMinLength => '12 حرفًا على الأقل';
 
   @override
   String get authPasswordUppercase => 'حرفًا كبيرًا واحدًا';
@@ -762,6 +762,59 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authGenericError => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
+  String get authEmailUnavailable =>
+      'لا يمكن استخدام هذا البريد. جرّب عنوانًا آخر.';
+
+  @override
+  String get authInvalidCredentials =>
+      'تعذّر تسجيل الدخول. تحقق من معلوماتك وحاول مرة أخرى.';
+
+  @override
+  String get authEmailNotVerified => 'تحقق من بريدك قبل تسجيل الدخول.';
+
+  @override
+  String get authAccountSuspended => 'هذا الحساب غير متاح مؤقتًا.';
+
+  @override
+  String get authAccountDisabled => 'تم تعطيل هذا الحساب.';
+
+  @override
+  String get authVerificationInvalid => 'رمز غير صالح. حاول مرة أخرى.';
+
+  @override
+  String get authVerificationExpired =>
+      'انتهت صلاحية الرمز. اطلب رمزًا جديدًا.';
+
+  @override
+  String get authVerificationAttemptsExceeded =>
+      'محاولات كثيرة. اطلب رمزًا جديدًا.';
+
+  @override
+  String get authVerificationResendTooSoon => 'يرجى الانتظار قبل طلب رمز آخر.';
+
+  @override
+  String get authSessionExpired => 'انتهت جلستك. سجّل الدخول مرة أخرى.';
+
+  @override
+  String get authRateLimited => 'محاولات كثيرة. انتظر ثم حاول مرة أخرى.';
+
+  @override
+  String get authNoInternet =>
+      'لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
+
+  @override
+  String get authRequestTimedOut => 'انتهت مهلة الطلب. حاول مرة أخرى.';
+
+  @override
+  String get authServerUnavailable => 'الخادم غير متاح. حاول لاحقًا.';
+
+  @override
+  String get authUnexpectedError => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
+  String get authSignedOut => 'تم تسجيل خروجك.';
 
   @override
   String get authSignInTitle => 'تسجيل الدخول';
