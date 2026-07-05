@@ -22,6 +22,7 @@ class AuthFlowState {
     this.username = '',
     this.displayName = '',
     this.bio = '',
+    this.pendingPassword = '',
     this.pendingPin = '',
     this.confirmedPin = '',
     this.biometricsEnabled = false,
@@ -34,6 +35,7 @@ class AuthFlowState {
   final String username;
   final String displayName;
   final String bio;
+  final String pendingPassword;
   final String pendingPin;
   final String confirmedPin;
   final bool biometricsEnabled;
@@ -74,6 +76,7 @@ class AuthFlowState {
     String? username,
     String? displayName,
     String? bio,
+    String? pendingPassword,
     String? pendingPin,
     String? confirmedPin,
     bool? biometricsEnabled,
@@ -82,12 +85,16 @@ class AuthFlowState {
     bool? emailVerified,
     bool clearError = false,
     bool clearPins = false,
+    bool clearPendingPassword = false,
   }) {
     return AuthFlowState(
       email: email ?? this.email,
       username: username ?? this.username,
       displayName: displayName ?? this.displayName,
       bio: bio ?? this.bio,
+      pendingPassword: clearPendingPassword
+          ? ''
+          : (pendingPassword ?? this.pendingPassword),
       pendingPin: clearPins ? '' : (pendingPin ?? this.pendingPin),
       confirmedPin: clearPins ? '' : (confirmedPin ?? this.confirmedPin),
       biometricsEnabled: biometricsEnabled ?? this.biometricsEnabled,
@@ -185,6 +192,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
       await _repository.createAccount(email: email, password: password);
       state = state.copyWith(
         email: email.trim(),
+        pendingPassword: password,
         isLoading: false,
         emailVerified: false,
       );
@@ -255,7 +263,22 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.verifyEmailCode(email: state.email, code: code);
-      state = state.copyWith(isLoading: false, emailVerified: true);
+      state = state.copyWith(emailVerified: true);
+
+      final password = state.pendingPassword;
+      if (password.isEmpty) {
+        state = state.copyWith(isLoading: false);
+        return true;
+      }
+
+      final session = await _repository.signIn(
+        email: state.email,
+        password: password,
+        deviceLabel: defaultDeviceLabel(),
+      );
+      _applyAuthenticatedSession(session);
+      _ref.read(currentProfileProvider.notifier).clear();
+      state = state.copyWith(isLoading: false, clearPendingPassword: true);
       return true;
     } on AuthFailure catch (failure) {
       state = state.copyWith(
@@ -266,12 +289,38 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     }
   }
 
-  Future<bool> checkUsernameAvailable(String username) async {
+  /// Ensures a JWT exists before username availability checks during signup.
+  Future<void> ensureProfileSetupSession() async {
+    if (_ref.read(authSessionManagerProvider).hasAccessToken) {
+      return;
+    }
+
+    final password = state.pendingPassword;
+    if (!state.emailVerified || state.email.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    try {
+      final session = await _repository.signIn(
+        email: state.email,
+        password: password,
+        deviceLabel: defaultDeviceLabel(),
+      );
+      _applyAuthenticatedSession(session);
+      _ref.read(currentProfileProvider.notifier).clear();
+      state = state.copyWith(clearPendingPassword: true);
+    } on AuthFailure {
+      // Sign-in is retried from email verification when credentials are missing.
+    }
+  }
+
+  /// Returns `null` when availability could not be checked (for example, no session).
+  Future<bool?> checkUsernameAvailable(String username) async {
     try {
       final result = await _userRepository.checkUsernameAvailability(username);
       return result.available;
     } on UserFailure {
-      return false;
+      return null;
     }
   }
 
