@@ -51,8 +51,11 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
       await Future.wait<void>([
         _loadPreferences(),
         _initializeDependencies(),
-        _restoreAuthSession(),
       ]).timeout(AppConstants.splashTimeout);
+
+      await _restoreAuthSession().timeout(const Duration(seconds: 10));
+
+      await _warmAuthenticatedServices();
 
       final elapsed = DateTime.now().difference(startedAt);
       if (elapsed < minDuration) {
@@ -89,11 +92,22 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
       secureMessagingServiceProvider,
     );
     await messaging.initialize();
+  }
 
-    await Future.wait<void>([
-      _ref.read(contactsRepositoryProvider).getContacts(),
-      _ref.read(conversationsProvider.notifier).loadInitial(),
-    ]);
+  Future<void> _warmAuthenticatedServices() async {
+    if (_ref.read(authPresentationProvider) !=
+        AuthPresentationStatus.authenticated) {
+      return;
+    }
+
+    try {
+      await Future.wait<void>([
+        _ref.read(contactsRepositoryProvider).getContacts(),
+        _ref.read(conversationsProvider.notifier).loadInitial(),
+      ]).timeout(const Duration(seconds: 6));
+    } on Object {
+      // Screens reload data on demand when prefetch fails (offline backend, etc.).
+    }
 
     if (_ref.read(authSessionManagerProvider).hasAccessToken) {
       unawaited(
