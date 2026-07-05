@@ -276,7 +276,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
         password: password,
         deviceLabel: defaultDeviceLabel(),
       );
-      _applyAuthenticatedSession(session);
+      _establishSignupSession(session);
       _ref.read(currentProfileProvider.notifier).clear();
       state = state.copyWith(isLoading: false, clearPendingPassword: true);
       return true;
@@ -306,7 +306,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
         password: password,
         deviceLabel: defaultDeviceLabel(),
       );
-      _applyAuthenticatedSession(session);
+      _establishSignupSession(session);
       _ref.read(currentProfileProvider.notifier).clear();
       state = state.copyWith(clearPendingPassword: true);
     } on AuthFailure {
@@ -370,6 +370,12 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     }
     state = state.copyWith(clearError: true);
     return true;
+  }
+
+  void _establishSignupSession(AuthSession session) {
+    _ref.read(authSessionManagerProvider).establishSession(session);
+    _ref.read(authPresentationProvider.notifier).state =
+        AuthPresentationStatus.authenticated;
   }
 
   void _applyAuthenticatedSession(AuthSession session) {
