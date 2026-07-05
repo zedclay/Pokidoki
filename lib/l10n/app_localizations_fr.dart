@@ -847,6 +847,35 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authUnexpectedError => 'Une erreur s’est produite. Réessayez.';
 
   @override
+  String get profileNotCreated => 'Votre profil n’a pas encore été configuré.';
+
+  @override
+  String get profileAlreadyExists => 'Un profil existe déjà pour ce compte.';
+
+  @override
+  String get profileNotFound => 'Profil introuvable.';
+
+  @override
+  String get profileNotDiscoverable => 'Ce profil n’est pas disponible.';
+
+  @override
+  String get usernameInvalid => 'Ce nom d’utilisateur n’est pas valide.';
+
+  @override
+  String get usernameChangeTooSoon =>
+      'Vous avez changé de nom d’utilisateur récemment. Réessayez plus tard.';
+
+  @override
+  String get userSearchQueryTooShort =>
+      'Saisissez au moins deux caractères pour rechercher.';
+
+  @override
+  String get userNotFound => 'Utilisateur introuvable.';
+
+  @override
+  String get userUnexpectedError => 'Une erreur s’est produite. Réessayez.';
+
+  @override
   String get authSignedOut => 'Vous avez été déconnecté.';
 
   @override

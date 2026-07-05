@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/routing/route_names.dart';
 import '../../../../core/utilities/bidirectional_text.dart';
-import '../../../../data/mock/mock_sample_data.dart';
 import '../../../../design_system/colors/pokidoki_colors.dart';
 import '../../../../design_system/components/identity/pokidoki_identity.dart';
 import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/components/settings/pokidoki_settings_rows.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/users/data/user_providers.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../authentication/presentation/controllers/auth_flow_controller.dart';
 import '../widgets/settings_app_bar.dart';
@@ -27,11 +27,12 @@ class AccountManagementScreen extends ConsumerWidget {
     final colors = context.pokidokiColors;
     final typography = context.pokidokiTypography;
     final auth = ref.watch(authFlowProvider);
-    const user = MockSampleData.currentUser;
-    final displayName = auth.displayName.isNotEmpty
-        ? auth.displayName
-        : user.displayName;
-    final username = auth.username.isNotEmpty ? auth.username : user.username;
+    final profileState = ref.watch(currentProfileProvider);
+    final profile = profileState.profile;
+    final displayName = profile?.displayName ?? auth.displayName;
+    final username = profile?.username ?? auth.username;
+    final pokidokiId = profile?.pokidokiId ?? '';
+    final userId = profile?.id ?? '';
     final maskedEmail = auth.email.isNotEmpty
         ? auth.maskedEmail
         : 'z••••••@example.com';
@@ -126,23 +127,29 @@ class AccountManagementScreen extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             LtrText(
-                              user.pokidokiId,
+                              pokidokiId,
                               style: typography.supportingBody,
                             ),
                             IconButton(
                               tooltip: l10n.settingsCopyId,
-                              onPressed: () async {
-                                await Clipboard.setData(
-                                  ClipboardData(text: user.pokidokiId),
-                                );
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(l10n.settingsIdCopied),
-                                    ),
-                                  );
-                                }
-                              },
+                              onPressed: pokidokiId.isEmpty
+                                  ? null
+                                  : () async {
+                                      await Clipboard.setData(
+                                        ClipboardData(text: pokidokiId),
+                                      );
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              l10n.settingsIdCopied,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
                               icon: Icon(
                                 Icons.copy_rounded,
                                 size: 18,
@@ -166,8 +173,11 @@ class AccountManagementScreen extends ConsumerWidget {
                         leading: const SettingsIconBadge(
                           icon: Icons.visibility_rounded,
                         ),
-                        onTap: () =>
-                            context.push(AppRoutes.userProfilePath(user.id)),
+                        onTap: userId.isEmpty
+                            ? null
+                            : () => context.push(
+                                AppRoutes.userProfilePath(userId),
+                              ),
                       ),
                     ],
                   ),

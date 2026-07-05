@@ -29,6 +29,22 @@ class UserProfilePreviewScreen extends ConsumerStatefulWidget {
 class _UserProfilePreviewScreenState
     extends ConsumerState<UserProfilePreviewScreen> {
   bool _sending = false;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  Future<void> _load() async {
+    await ref
+        .read(socialGraphProvider.notifier)
+        .loadProfilePreview(widget.userId);
+    if (mounted) {
+      setState(() => _loading = false);
+    }
+  }
 
   Future<void> _sendRequest() async {
     setState(() => _sending = true);
@@ -78,6 +94,11 @@ class _UserProfilePreviewScreenState
     final l10n = AppLocalizations.of(context);
     final typography = context.pokidokiTypography;
     ref.watch(socialGraphProvider);
+    if (_loading) {
+      return const PokidokiScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     final profile = ref
         .read(socialGraphProvider.notifier)
         .profileFor(widget.userId);

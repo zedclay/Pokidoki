@@ -1,5 +1,6 @@
 import '../app_bootstrap.dart';
 import '../providers/app_providers.dart';
+import '../../features/users/data/user_providers.dart';
 import 'route_names.dart';
 
 /// Routes reachable without a backend-authenticated session.
@@ -29,6 +30,17 @@ bool isPublicAuthRoute(String location) {
   }
 
   return location.startsWith('/dev/');
+}
+
+bool isProfileOnboardingRoute(String location) {
+  const routes = {
+    AppRoutes.usernameSetup,
+    AppRoutes.profileSetup,
+    AppRoutes.createPin,
+    AppRoutes.confirmPin,
+    AppRoutes.enableBiometrics,
+  };
+  return routes.contains(location);
 }
 
 bool isProtectedRoute(String location) {
@@ -68,12 +80,16 @@ bool isProtectedRoute(String location) {
       location.startsWith('/security/safety-number/');
 }
 
-/// Resolves post-splash entry based on auth and onboarding state.
+/// Resolves post-splash entry based on auth, profile, and onboarding state.
 String resolveInitialEntry({
   required AuthPresentationStatus authStatus,
   required bool onboardingCompleted,
+  required ProfileCompletionStatus profileStatus,
 }) {
   if (authStatus == AuthPresentationStatus.authenticated) {
+    if (profileStatus == ProfileCompletionStatus.missing) {
+      return AppRoutes.usernameSetup;
+    }
     return AppRoutes.appLock;
   }
   if (!onboardingCompleted) {
@@ -86,10 +102,16 @@ String resolveInitialEntry({
 String? authRedirect({
   required AuthPresentationStatus authStatus,
   required BootstrapPhase bootstrapPhase,
+  required ProfileCompletionStatus profileStatus,
   required String location,
 }) {
   if (bootstrapPhase != BootstrapPhase.ready ||
       authStatus == AuthPresentationStatus.unknown) {
+    return location == AppRoutes.splash ? null : AppRoutes.splash;
+  }
+
+  if (authStatus == AuthPresentationStatus.authenticated &&
+      profileStatus == ProfileCompletionStatus.unknown) {
     return location == AppRoutes.splash ? null : AppRoutes.splash;
   }
 
@@ -100,6 +122,23 @@ String? authRedirect({
     return null;
   }
 
+  if (profileStatus == ProfileCompletionStatus.missing) {
+    if (isProtectedRoute(location) || location == AppRoutes.appLock) {
+      if (isProfileOnboardingRoute(location) ||
+          location == AppRoutes.emailVerification) {
+        return null;
+      }
+      return AppRoutes.usernameSetup;
+    }
+  }
+
+  if (profileStatus == ProfileCompletionStatus.complete &&
+      isProfileOnboardingRoute(location) &&
+      location != AppRoutes.profileSetup &&
+      location != AppRoutes.usernameSetup) {
+    // Allow username/profile setup from account management when complete.
+  }
+
   // Authenticated users should not return to pre-auth entry screens.
   const signedInBlocked = {
     AppRoutes.signIn,
@@ -108,7 +147,9 @@ String? authRedirect({
     AppRoutes.onboarding,
   };
   if (signedInBlocked.contains(location)) {
-    return AppRoutes.appLock;
+    return profileStatus == ProfileCompletionStatus.missing
+        ? AppRoutes.usernameSetup
+        : AppRoutes.appLock;
   }
 
   return null;

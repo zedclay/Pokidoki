@@ -6,6 +6,8 @@ import '../core/services/secure_messaging_service.dart';
 import '../data/models/account_settings.dart';
 import '../data/repositories/user_repository.dart';
 import '../features/authentication/data/auth_providers.dart';
+import '../features/authentication/presentation/controllers/auth_flow_controller.dart';
+import '../features/users/data/user_providers.dart';
 import 'providers/app_providers.dart';
 
 enum BootstrapPhase { idle, loading, ready, failed }
@@ -87,7 +89,6 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
     await messaging.initialize();
 
     await Future.wait<void>([
-      _ref.read(userRepositoryProvider).getCurrentUser(),
       _ref.read(contactsRepositoryProvider).getContacts(),
       _ref.read(conversationsRepositoryProvider).getConversations(),
     ]);
@@ -104,6 +105,11 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
         await repository.getCurrentUser();
         _ref.read(authPresentationProvider.notifier).state =
             AuthPresentationStatus.authenticated;
+        await _ref.read(currentProfileProvider.notifier).loadProfile();
+        final profile = _ref.read(currentProfileProvider).profile;
+        if (profile != null) {
+          _ref.read(authFlowProvider.notifier).hydrateFromProfile(profile);
+        }
       } else {
         _ref.read(authPresentationProvider.notifier).state =
             AuthPresentationStatus.unauthenticated;

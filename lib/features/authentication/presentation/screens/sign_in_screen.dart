@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../features/users/data/user_providers.dart';
 import '../../../../app/routing/route_names.dart';
 import '../../../../design_system/colors/pokidoki_colors.dart';
 import '../../../../design_system/components/buttons/pokidoki_buttons.dart';
@@ -58,7 +59,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
     if (ok) {
       _passwordController.clear();
-      context.push(AppRoutes.appLock);
+      final profileStatus = ref.read(profileCompletionStatusProvider);
+      if (profileStatus == ProfileCompletionStatus.missing) {
+        context.push(AppRoutes.usernameSetup);
+      } else {
+        context.push(AppRoutes.appLock);
+      }
       return;
     }
 

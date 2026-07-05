@@ -156,13 +156,6 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     }
   }
 
-  @override
-  Future<bool> isUsernameAvailable(String username) async {
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    const reserved = {'admin', 'pokidoki', 'support'};
-    return !reserved.contains(username.toLowerCase());
-  }
-
   AuthFailure _mapException(DioException error) {
     if (error.type == DioExceptionType.connectionError ||
         error.type == DioExceptionType.connectionTimeout ||
