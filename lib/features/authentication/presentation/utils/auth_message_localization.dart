@@ -25,6 +25,16 @@ extension AuthMessageLocalization on AppLocalizations {
       'authPinMismatch' => authPinMismatch,
       'authAppLockError' => authAppLockError,
       'authBiometricsUnavailable' => authBiometricsUnavailable,
+      'profileNotCreated' => profileNotCreated,
+      'profileAlreadyExists' => profileAlreadyExists,
+      'profileNotFound' => profileNotFound,
+      'profileNotDiscoverable' => profileNotDiscoverable,
+      'usernameInvalid' => usernameInvalid,
+      'usernameChangeTooSoon' => usernameChangeTooSoon,
+      'userSearchQueryTooShort' => userSearchQueryTooShort,
+      'userNotFound' => userNotFound,
+      'userUnexpectedError' => userUnexpectedError,
+      'authUsernameUnavailable' => authUsernameUnavailable,
       _ => authUnexpectedError,
     };
   }

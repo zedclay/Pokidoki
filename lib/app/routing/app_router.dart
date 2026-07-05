@@ -47,6 +47,7 @@ import '../../features/verification/presentation/screens/my_qr_code_screen.dart'
 import '../../features/verification/presentation/screens/qr_scanner_screen.dart';
 import '../../features/verification/presentation/screens/safety_number_screen.dart';
 import '../../features/welcome/presentation/screens/welcome_screen.dart';
+import '../../features/users/data/user_providers.dart';
 import 'route_names.dart';
 import 'route_not_found_screen.dart';
 
@@ -56,6 +57,7 @@ final _routerRefreshListenableProvider = Provider<ValueNotifier<int>>((ref) {
   final notifier = ValueNotifier(0);
   ref.listen(authPresentationProvider, (_, __) => notifier.value++);
   ref.listen(appBootstrapProvider, (_, __) => notifier.value++);
+  ref.listen(currentProfileProvider, (_, __) => notifier.value++);
   ref.onDispose(notifier.dispose);
   return notifier;
 });
@@ -74,6 +76,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return authRedirect(
         authStatus: authStatus,
         bootstrapPhase: bootstrapPhase,
+        profileStatus: ref.read(profileCompletionStatusProvider),
         location: state.matchedLocation,
       );
     },

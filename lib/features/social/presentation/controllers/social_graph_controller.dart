@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../data/repositories/user_repository.dart';
+import '../../../../features/users/data/user_providers.dart';
+import '../../../../features/users/domain/user_failure.dart';
 import '../../../../data/mock/mock_sample_data.dart';
 import '../../../../data/models/blocked_user.dart';
 import '../../../../data/models/contact.dart';
@@ -87,7 +90,7 @@ class SocialGraphState {
 }
 
 class SocialGraphController extends StateNotifier<SocialGraphState> {
-  SocialGraphController()
+  SocialGraphController(this._userRepository)
     : super(
         SocialGraphState(
           conversations: List.of(MockSampleData.conversations),
@@ -97,6 +100,9 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
           blockedUsers: List.of(MockSampleData.blockedUsers),
         ),
       );
+
+  final UserRepository _userRepository;
+  int _searchRequestId = 0;
 
   Future<void> refresh() async {
     state = state.copyWith(isLoading: true, clearError: true);
@@ -156,26 +162,60 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
   }
 
   Future<void> searchUsers(String query) async {
-    final q = query.trim().toLowerCase();
+    final requestId = ++_searchRequestId;
+    final q = query.trim();
     state = state.copyWith(
       searchQuery: query,
       isSearching: true,
       clearError: true,
     );
-    await Future<void>.delayed(const Duration(milliseconds: 280));
-    if (q.isEmpty) {
+    if (q.length < 2) {
       state = state.copyWith(searchResults: const [], isSearching: false);
       return;
     }
-    final results = MockSampleData.directoryUsers
-        .where(
-          (u) =>
-              u.displayName.toLowerCase().contains(q) ||
-              u.username.toLowerCase().contains(q) ||
-              u.pokidokiId.toLowerCase().contains(q),
-        )
-        .toList();
-    state = state.copyWith(searchResults: results, isSearching: false);
+    try {
+      final page = await _userRepository.searchUsers(query: q);
+      if (requestId != _searchRequestId) {
+        return;
+      }
+      state = state.copyWith(searchResults: page.items, isSearching: false);
+    } on UserFailure catch (failure) {
+      if (requestId != _searchRequestId) {
+        return;
+      }
+      state = state.copyWith(
+        isSearching: false,
+        errorKey: failure.messageKey,
+        searchResults: const [],
+      );
+    }
+  }
+
+  Future<UserProfilePreview?> loadProfilePreview(String userId) async {
+    final existing = state.profiles[userId];
+    if (existing != null) {
+      return existing;
+    }
+    try {
+      final preview = await _userRepository.getUserProfile(userId);
+      final enriched = _enrichRelationship(preview);
+      state = state.copyWith(profiles: {...state.profiles, userId: enriched});
+      return enriched;
+    } on Object {
+      return profileFor(userId);
+    }
+  }
+
+  UserProfilePreview _enrichRelationship(UserProfilePreview preview) {
+    final isContact = state.contacts.any((c) => c.username == preview.username);
+    final pending = state.sentRequests.any((r) => r.userId == preview.id);
+    return preview.copyWith(
+      relationship: isContact
+          ? ProfileRelationship.contact
+          : pending
+          ? ProfileRelationship.pendingOutgoing
+          : ProfileRelationship.none,
+    );
   }
 
   UserProfilePreview? profileFor(String userId) {
@@ -433,5 +473,5 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
 
 final socialGraphProvider =
     StateNotifierProvider<SocialGraphController, SocialGraphState>((ref) {
-      return SocialGraphController();
+      return SocialGraphController(ref.watch(userRepositoryProvider));
     });
