@@ -46,9 +46,9 @@ class UsersApi {
     final response = await _dio.patch<Map<String, dynamic>>(
       '/users/me/profile',
       data: {
-        if (displayName != null) 'displayName': displayName,
-        if (bio != null) 'bio': bio,
-        if (isDiscoverable != null) 'isDiscoverable': isDiscoverable,
+        'displayName': ?displayName,
+        'bio': ?bio,
+        'isDiscoverable': ?isDiscoverable,
       },
     );
     return ProfileResponseDto.fromJson(response.data!);

@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pokidoki/app/app_bootstrap.dart';
 import 'package:pokidoki/app/providers/app_providers.dart';
 import 'package:pokidoki/app/routing/auth_route_guard.dart';
-import 'package:pokidoki/features/users/data/user_providers.dart';
 
 void main() {
   group('authRedirect', () {

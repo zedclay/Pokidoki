@@ -16,7 +16,6 @@ import 'package:pokidoki/features/app_shell/presentation/widgets/main_bottom_nav
 import 'package:pokidoki/features/authentication/presentation/controllers/auth_flow_controller.dart';
 import 'package:pokidoki/features/chats/presentation/screens/conversations_home_screen.dart';
 import 'package:pokidoki/features/dev/presentation/screens/dev_placeholder_screen.dart';
-import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:pokidoki/features/settings/presentation/screens/account_management_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/appearance_screen.dart';

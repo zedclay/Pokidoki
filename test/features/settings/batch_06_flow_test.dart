@@ -12,7 +12,6 @@ import 'package:pokidoki/features/contacts/presentation/screens/contacts_screen.
 import 'package:pokidoki/features/account_security/presentation/screens/account_recovery_screen.dart';
 import 'package:pokidoki/features/account_security/presentation/screens/change_password_screen.dart';
 import 'package:pokidoki/features/account_security/presentation/screens/email_management_screen.dart';
-import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/conversation_info_screen.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/one_to_one_chat_screen.dart';
 import 'package:pokidoki/data/models/storage_usage.dart';

@@ -19,7 +19,6 @@ import '../../data/realtime/messaging_socket_models.dart';
 import '../../data/realtime/messaging_socket_service.dart';
 import '../../domain/disappearing_duration_mapper.dart';
 import '../../../social/presentation/controllers/social_graph_controller.dart';
-import 'conversations_controller.dart';
 
 class MessagingState {
   const MessagingState({

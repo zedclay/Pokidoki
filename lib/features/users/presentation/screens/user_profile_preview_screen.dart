@@ -144,6 +144,7 @@ class _UserProfilePreviewScreenState
       ),
     );
     if (confirmed == true && mounted) {
+      final messenger = ScaffoldMessenger.of(context);
       await ref
           .read(socialGraphProvider.notifier)
           .blockUser(
@@ -156,9 +157,7 @@ class _UserProfilePreviewScreenState
         return;
       }
       await _load();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.usersBlocked)));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.usersBlocked)));
     }
   }
 

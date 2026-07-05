@@ -21,7 +21,7 @@ void main() {
   });
 
   test('maps contact request direction', () {
-    final dto = ContactRequestDto(
+    const dto = ContactRequestDto(
       userId: 'user-1',
       username: 'alice',
       displayName: 'Alice',

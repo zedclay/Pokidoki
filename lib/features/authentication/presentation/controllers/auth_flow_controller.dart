@@ -10,7 +10,6 @@ import '../../data/api/api_authentication_repository.dart';
 import '../../data/auth_providers.dart';
 import '../../data/authentication_repository.dart';
 import '../../domain/auth_models.dart';
-import '../../../messaging/data/messaging_providers.dart';
 import '../../../users/domain/user_failure.dart';
 
 /// In-memory account-setup and unlock state for authentication flows.

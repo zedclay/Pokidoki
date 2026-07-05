@@ -51,7 +51,7 @@ class MockAuthenticationRepository implements AuthenticationRepository {
     if (password == 'wrong') {
       throw const AuthFailure(messageKey: 'authSignInError');
     }
-    return AuthSession(
+    return const AuthSession(
       accessToken: 'mock-access-token',
       refreshToken: 'mock-session.mock-secret',
       accessTokenExpiresIn: 900,

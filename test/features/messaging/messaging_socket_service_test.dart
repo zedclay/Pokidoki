@@ -6,7 +6,10 @@ void main() {
   group('FakeMessagingSocketService', () {
     test('connect requires access token', () async {
       final service = FakeMessagingSocketService();
-      await service.connect(accessToken: '', apiBaseUrl: 'http://127.0.0.1:3000/api/v1');
+      await service.connect(
+        accessToken: '',
+        apiBaseUrl: 'http://127.0.0.1:3000/api/v1',
+      );
       expect(service.status, MessagingSocketStatus.disconnected);
     });
 
@@ -43,7 +46,11 @@ void main() {
         'body': 'Hi',
         'type': 'TEXT',
         'createdAt': '2026-07-05T10:00:00.000Z',
-        'sender': {'userId': 'user-b', 'displayName': 'Peer', 'username': 'peer'},
+        'sender': {
+          'userId': 'user-b',
+          'displayName': 'Peer',
+          'username': 'peer',
+        },
         'senderStatus': 'sent',
       };
 

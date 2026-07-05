@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pokidoki/data/models/message.dart';
 import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
-import 'package:pokidoki/features/messaging/data/realtime/messaging_socket_service.dart';
 
 void main() {
   group('MessagingController', () {
@@ -13,7 +12,9 @@ void main() {
       final controller = container.read(messagingProvider.notifier);
       await controller.sendTextMessage('conv-amira', 'Retry me');
 
-      final messages = container.read(messagingProvider).messagesFor('conv-amira');
+      final messages = container
+          .read(messagingProvider)
+          .messagesFor('conv-amira');
       final outgoing = messages.lastWhere((m) => m.body == 'Retry me');
       expect(outgoing.clientMessageId, isNotNull);
       expect(outgoing.deliveryStatus, isNot(MessageDeliveryStatus.failed));

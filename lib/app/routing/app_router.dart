@@ -47,7 +47,6 @@ import '../../features/verification/presentation/screens/my_qr_code_screen.dart'
 import '../../features/verification/presentation/screens/qr_scanner_screen.dart';
 import '../../features/verification/presentation/screens/safety_number_screen.dart';
 import '../../features/welcome/presentation/screens/welcome_screen.dart';
-import '../../features/users/data/user_providers.dart';
 import 'route_names.dart';
 import 'route_not_found_screen.dart';
 
@@ -55,9 +54,9 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final _routerRefreshListenableProvider = Provider<ValueNotifier<int>>((ref) {
   final notifier = ValueNotifier(0);
-  ref.listen(authPresentationProvider, (_, __) => notifier.value++);
-  ref.listen(appBootstrapProvider, (_, __) => notifier.value++);
-  ref.listen(currentProfileProvider, (_, __) => notifier.value++);
+  ref.listen(authPresentationProvider, (previous, next) => notifier.value++);
+  ref.listen(appBootstrapProvider, (previous, next) => notifier.value++);
+  ref.listen(currentProfileProvider, (previous, next) => notifier.value++);
   ref.onDispose(notifier.dispose);
   return notifier;
 });

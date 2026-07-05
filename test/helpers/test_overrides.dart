@@ -7,7 +7,6 @@ import 'package:pokidoki/data/mock/mock_sample_data.dart';
 import 'package:pokidoki/data/mock/mock_user_repository.dart';
 import 'package:pokidoki/features/authentication/data/auth_providers.dart';
 import 'package:pokidoki/features/authentication/data/authentication_repository.dart';
-import 'package:pokidoki/features/users/data/user_providers.dart';
 
 /// Keeps widget tests offline with the mock authentication repository.
 List<Override> get pokidokiTestOverrides => [
@@ -26,7 +25,7 @@ List<Override> get pokidokiAuthenticatedAppOverrides => [
   ),
   currentProfileProvider.overrideWith((ref) {
     final controller = CurrentProfileController(const MockUserRepository());
-    controller.state = CurrentProfileState(
+    controller.state = const CurrentProfileState(
       profile: MockSampleData.currentUser,
       status: ProfileCompletionStatus.complete,
     );

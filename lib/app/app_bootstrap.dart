@@ -9,7 +9,6 @@ import '../data/models/account_settings.dart';
 import '../data/repositories/user_repository.dart';
 import '../features/authentication/data/auth_providers.dart';
 import '../features/authentication/presentation/controllers/auth_flow_controller.dart';
-import '../features/users/data/user_providers.dart';
 import 'providers/app_providers.dart';
 
 enum BootstrapPhase { idle, loading, ready, failed }

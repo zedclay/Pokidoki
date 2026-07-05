@@ -25,7 +25,7 @@ class MessagingApi {
   }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/conversations',
-      queryParameters: {if (cursor != null) 'cursor': cursor, 'limit': limit},
+      queryParameters: {'cursor': ?cursor, 'limit': limit},
     );
     return PaginatedConversationsDto.fromJson(response.data!);
   }
@@ -46,7 +46,7 @@ class MessagingApi {
   }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/conversations/$conversationId/messages',
-      queryParameters: {if (before != null) 'before': before, 'limit': limit},
+      queryParameters: {'before': ?before, 'limit': limit},
     );
     return PaginatedMessagesDto.fromJson(response.data!);
   }
@@ -109,11 +109,7 @@ class MessagingApi {
   }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/conversations/$conversationId/messages/search',
-      queryParameters: {
-        'query': query,
-        if (cursor != null) 'cursor': cursor,
-        'limit': limit,
-      },
+      queryParameters: {'query': query, 'cursor': ?cursor, 'limit': limit},
     );
     return PaginatedMessagesDto.fromJson(response.data!);
   }
