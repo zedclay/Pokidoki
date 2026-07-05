@@ -164,6 +164,7 @@
   "safetyDoNotCompareOnlyInChat": "Ne comparez pas ce numéro uniquement dans la conversation que vous vérifiez.",
   "chatTypeMessage": "Écrire un message",
   "chatSend": "Envoyer",
+  "chatPeerTyping": "Écrit…",
   "chatAttach": "Pièce jointe",
   "chatReply": "Répondre",
   "chatCopy": "Copier",
@@ -617,5 +618,16 @@
   "contactsUserUnavailable": "Cet utilisateur n’est pas disponible.",
   "contactsAlreadyBlocked": "Cet utilisateur est déjà bloqué.",
   "contactsNotBlocked": "Cet utilisateur n’est pas bloqué.",
-  "contactsRelationshipUnavailable": "Les informations de relation ne sont pas disponibles."
+  "contactsRelationshipUnavailable": "Les informations de relation ne sont pas disponibles.",
+  "messagingUnavailable": "La messagerie est temporairement indisponible. Réessayez.",
+  "conversationUnavailable": "Cette conversation est indisponible.",
+  "conversationContactRequired": "Vous ne pouvez écrire qu'à vos contacts.",
+  "cannotMessageUser": "Vous ne pouvez pas écrire à cet utilisateur.",
+  "messageInvalid": "Ce message n'a pas pu être envoyé.",
+  "messageTooLong": "Ce message est trop long.",
+  "messageFailed": "Échec de l'envoi du message.",
+  "messageTapToRetry": "Appuyez pour réessayer",
+  "messagingReconnecting": "Reconnexion…",
+  "messagingConnectionLost": "Connexion perdue. Les messages peuvent être retardés.",
+  "messageSearchQueryTooShort": "Saisissez au moins 2 caractères pour rechercher."
 }

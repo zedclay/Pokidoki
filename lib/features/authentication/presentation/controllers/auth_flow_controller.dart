@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/app_providers.dart';
@@ -8,7 +10,7 @@ import '../../data/api/api_authentication_repository.dart';
 import '../../data/auth_providers.dart';
 import '../../data/authentication_repository.dart';
 import '../../domain/auth_models.dart';
-import '../../../users/data/user_providers.dart';
+import '../../../messaging/data/messaging_providers.dart';
 import '../../../users/domain/user_failure.dart';
 
 /// In-memory account-setup and unlock state for authentication flows.
@@ -156,6 +158,8 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
 
   Future<void> signOut() async {
     await _repository.logout();
+    _ref.read(messagingProvider.notifier).clearAll();
+    unawaited(_ref.read(messagingSocketCoordinatorProvider).disconnect());
     _ref.read(currentProfileProvider.notifier).clear();
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.unauthenticated;
@@ -164,6 +168,8 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
 
   Future<void> signOutAll() async {
     await _repository.logoutAll();
+    _ref.read(messagingProvider.notifier).clearAll();
+    unawaited(_ref.read(messagingSocketCoordinatorProvider).disconnect());
     _ref.read(currentProfileProvider.notifier).clear();
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.unauthenticated;
@@ -321,6 +327,10 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     _ref.read(authSessionManagerProvider).establishSession(session);
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.authenticated;
+    unawaited(
+      _ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
+    );
+    unawaited(_ref.read(conversationsProvider.notifier).loadInitial());
   }
 }
 

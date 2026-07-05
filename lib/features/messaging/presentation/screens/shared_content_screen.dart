@@ -10,7 +10,7 @@ import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../controllers/messaging_controller.dart';
+import '../../data/messaging_providers.dart';
 
 class SharedContentScreen extends ConsumerWidget {
   const SharedContentScreen({super.key, required this.conversationId});

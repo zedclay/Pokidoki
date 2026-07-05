@@ -124,6 +124,9 @@ class MockUserRepository implements UserRepository {
         );
       }
     }
-    throw const UserFailure(messageKey: 'userNotFound', backendCode: 'USER_NOT_FOUND');
+    throw const UserFailure(
+      messageKey: 'userNotFound',
+      backendCode: 'USER_NOT_FOUND',
+    );
   }
 }

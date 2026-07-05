@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -90,8 +92,14 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
 
     await Future.wait<void>([
       _ref.read(contactsRepositoryProvider).getContacts(),
-      _ref.read(conversationsRepositoryProvider).getConversations(),
+      _ref.read(conversationsProvider.notifier).loadInitial(),
     ]);
+
+    if (_ref.read(authSessionManagerProvider).hasAccessToken) {
+      unawaited(
+        _ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
+      );
+    }
   }
 
   Future<void> _restoreAuthSession() async {

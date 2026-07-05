@@ -15,7 +15,7 @@ import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../messaging/presentation/controllers/messaging_controller.dart';
+import '../../../messaging/data/messaging_providers.dart';
 import '../../../settings/presentation/widgets/settings_app_bar.dart';
 import '../../../settings/presentation/widgets/settings_section_card.dart';
 import '../../../social/presentation/controllers/social_graph_controller.dart';

@@ -348,6 +348,7 @@
   "safetyDoNotCompareOnlyInChat": "Do not compare this number only inside the conversation you are verifying.",
   "chatTypeMessage": "Type a message",
   "chatSend": "Send",
+  "chatPeerTyping": "Typing…",
   "chatAttach": "Attachment",
   "chatReply": "Reply",
   "chatCopy": "Copy",
@@ -939,5 +940,16 @@
   "contactsUserUnavailable": "This user is not available.",
   "contactsAlreadyBlocked": "This user is already blocked.",
   "contactsNotBlocked": "This user is not blocked.",
-  "contactsRelationshipUnavailable": "Relationship information is unavailable."
+  "contactsRelationshipUnavailable": "Relationship information is unavailable.",
+  "messagingUnavailable": "Messaging is temporarily unavailable. Try again.",
+  "conversationUnavailable": "This conversation is unavailable.",
+  "conversationContactRequired": "You can only message people in your contacts.",
+  "cannotMessageUser": "You cannot message this user.",
+  "messageInvalid": "This message could not be sent.",
+  "messageTooLong": "This message is too long.",
+  "messageFailed": "Message failed to send.",
+  "messageTapToRetry": "Tap to retry",
+  "messagingReconnecting": "Reconnecting…",
+  "messagingConnectionLost": "Connection lost. Messages may be delayed.",
+  "messageSearchQueryTooShort": "Enter at least 2 characters to search."
 }

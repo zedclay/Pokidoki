@@ -1,11 +1,14 @@
 import '../../features/authentication/domain/auth_models.dart';
 
+typedef AccessTokenListener = void Function(String? accessToken);
+
 /// Holds access tokens in memory only and coordinates refresh single-flight.
 class AuthSessionManager {
   String? _accessToken;
   int? _accessTokenExpiresIn;
   AuthenticatedUser? _currentUser;
   Future<AuthSession>? _refreshInFlight;
+  final List<AccessTokenListener> _accessTokenListeners = [];
 
   String? get accessToken => _accessToken;
 
@@ -15,10 +18,28 @@ class AuthSessionManager {
 
   bool get hasAccessToken => _accessToken != null && _accessToken!.isNotEmpty;
 
+  void addAccessTokenListener(AccessTokenListener listener) {
+    _accessTokenListeners.add(listener);
+  }
+
+  void removeAccessTokenListener(AccessTokenListener listener) {
+    _accessTokenListeners.remove(listener);
+  }
+
+  void _notifyAccessTokenChanged() {
+    final token = _accessToken;
+    for (final listener in List<AccessTokenListener>.of(
+      _accessTokenListeners,
+    )) {
+      listener(token);
+    }
+  }
+
   void establishSession(AuthSession session, {AuthenticatedUser? user}) {
     _accessToken = session.accessToken;
     _accessTokenExpiresIn = session.accessTokenExpiresIn;
     _currentUser = user ?? session.user;
+    _notifyAccessTokenChanged();
   }
 
   void setCurrentUser(AuthenticatedUser user) {
@@ -31,6 +52,7 @@ class AuthSessionManager {
   }) {
     _accessToken = accessToken;
     _accessTokenExpiresIn = accessTokenExpiresIn;
+    _notifyAccessTokenChanged();
   }
 
   Future<AuthSession> runSingleFlightRefresh(
@@ -52,5 +74,6 @@ class AuthSessionManager {
     _accessTokenExpiresIn = null;
     _currentUser = null;
     _refreshInFlight = null;
+    _notifyAccessTokenChanged();
   }
 }

@@ -20,6 +20,7 @@ class ChatMessage {
     this.replyPreview,
     this.attachmentName,
     this.attachmentSizeBytes,
+    this.clientMessageId,
   });
 
   final String id;
@@ -35,11 +36,17 @@ class ChatMessage {
   final String? replyPreview;
   final String? attachmentName;
   final int? attachmentSizeBytes;
+  final String? clientMessageId;
 
-  ChatMessage copyWith({MessageDeliveryStatus? deliveryStatus, String? body}) {
+  ChatMessage copyWith({
+    MessageDeliveryStatus? deliveryStatus,
+    String? body,
+    String? id,
+  }) {
     return ChatMessage(
-      id: id,
+      id: id ?? this.id,
       conversationId: conversationId,
+      clientMessageId: clientMessageId,
       senderId: senderId,
       body: body ?? this.body,
       sentAt: sentAt,

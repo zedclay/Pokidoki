@@ -567,6 +567,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chatSend => 'Envoyer';
 
   @override
+  String get chatPeerTyping => 'Écrit…';
+
+  @override
   String get chatAttach => 'Pièce jointe';
 
   @override
@@ -2078,4 +2081,42 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get contactsRelationshipUnavailable =>
       'Les informations de relation ne sont pas disponibles.';
+
+  @override
+  String get messagingUnavailable =>
+      'La messagerie est temporairement indisponible. Réessayez.';
+
+  @override
+  String get conversationUnavailable => 'Cette conversation est indisponible.';
+
+  @override
+  String get conversationContactRequired =>
+      'Vous ne pouvez écrire qu\'à vos contacts.';
+
+  @override
+  String get cannotMessageUser =>
+      'Vous ne pouvez pas écrire à cet utilisateur.';
+
+  @override
+  String get messageInvalid => 'Ce message n\'a pas pu être envoyé.';
+
+  @override
+  String get messageTooLong => 'Ce message est trop long.';
+
+  @override
+  String get messageFailed => 'Échec de l\'envoi du message.';
+
+  @override
+  String get messageTapToRetry => 'Appuyez pour réessayer';
+
+  @override
+  String get messagingReconnecting => 'Reconnexion…';
+
+  @override
+  String get messagingConnectionLost =>
+      'Connexion perdue. Les messages peuvent être retardés.';
+
+  @override
+  String get messageSearchQueryTooShort =>
+      'Saisissez au moins 2 caractères pour rechercher.';
 }

@@ -1084,6 +1084,12 @@ abstract class AppLocalizations {
   /// **'Send'**
   String get chatSend;
 
+  /// No description provided for @chatPeerTyping.
+  ///
+  /// In en, this message translates to:
+  /// **'Typing…'**
+  String get chatPeerTyping;
+
   /// No description provided for @chatAttach.
   ///
   /// In en, this message translates to:
@@ -3783,6 +3789,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Relationship information is unavailable.'**
   String get contactsRelationshipUnavailable;
+
+  /// No description provided for @messagingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Messaging is temporarily unavailable. Try again.'**
+  String get messagingUnavailable;
+
+  /// No description provided for @conversationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This conversation is unavailable.'**
+  String get conversationUnavailable;
+
+  /// No description provided for @conversationContactRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only message people in your contacts.'**
+  String get conversationContactRequired;
+
+  /// No description provided for @cannotMessageUser.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot message this user.'**
+  String get cannotMessageUser;
+
+  /// No description provided for @messageInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This message could not be sent.'**
+  String get messageInvalid;
+
+  /// No description provided for @messageTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'This message is too long.'**
+  String get messageTooLong;
+
+  /// No description provided for @messageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Message failed to send.'**
+  String get messageFailed;
+
+  /// No description provided for @messageTapToRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to retry'**
+  String get messageTapToRetry;
+
+  /// No description provided for @messagingReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting…'**
+  String get messagingReconnecting;
+
+  /// No description provided for @messagingConnectionLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost. Messages may be delayed.'**
+  String get messagingConnectionLost;
+
+  /// No description provided for @messageSearchQueryTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least 2 characters to search.'**
+  String get messageSearchQueryTooShort;
 }
 
 class _AppLocalizationsDelegate

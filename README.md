@@ -14,6 +14,8 @@ flutter run
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
+- [Messaging API integration](docs/MESSAGING_API_INTEGRATION.md)
+- [Messaging socket lifecycle](docs/MESSAGING_SOCKET_LIFECYCLE.md)
 - [Design system](docs/DESIGN_SYSTEM.md)
 - [Project setup](docs/PROJECT_SETUP.md)
 - [Screen progress](docs/SCREEN_PROGRESS.md)
@@ -21,6 +23,4 @@ flutter run
 
 ## Current status
 
-Foundation and **Screen 1 — Splash Screen** are implemented.
-
-Next: **Screen 2 — Onboarding Page 1**.
+Real-time text messaging is integrated against the Backend REST and Socket.IO APIs on branch `feature/messaging-realtime-integration`. Widget tests continue to use mock repositories via Riverpod overrides.
