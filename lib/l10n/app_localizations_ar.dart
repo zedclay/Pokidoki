@@ -1934,4 +1934,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportNotEmergency => 'بلاغات Pokidoki ليست خدمة طوارئ.';
+
+  @override
+  String get contactsSelfNotAllowed => 'لا يمكنك إرسال طلب اتصال إلى نفسك.';
+
+  @override
+  String get contactsAlreadyPending => 'يوجد بالفعل طلب اتصال قيد الانتظار.';
+
+  @override
+  String get contactsReversePending =>
+      'أرسل لك هذا الشخص طلبًا بالفعل. اقبله من طلبات الاتصال.';
+
+  @override
+  String get contactsRequestNotFound => 'طلب الاتصال هذا لم يعد متاحًا.';
+
+  @override
+  String get contactsRequestNotPending =>
+      'طلب الاتصال هذا لم يعد قيد الانتظار.';
+
+  @override
+  String get contactsRequestForbidden =>
+      'لا يمكنك تنفيذ هذا الإجراء على هذا الطلب.';
+
+  @override
+  String get contactsAlreadyExists => 'أنت متصل بالفعل بهذا الشخص.';
+
+  @override
+  String get contactsNotFound => 'جهة الاتصال هذه لم تعد متاحة.';
+
+  @override
+  String get contactsUserUnavailable => 'هذا المستخدم غير متاح.';
+
+  @override
+  String get contactsAlreadyBlocked => 'هذا المستخدم محظور بالفعل.';
+
+  @override
+  String get contactsNotBlocked => 'هذا المستخدم غير محظور.';
+
+  @override
+  String get contactsRelationshipUnavailable => 'معلومات العلاقة غير متاحة.';
 }

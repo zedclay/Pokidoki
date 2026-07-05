@@ -2005,4 +2005,48 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get reportNotEmergency =>
       'Les signalements Pokidoki ne sont pas un service d’urgence.';
+
+  @override
+  String get contactsSelfNotAllowed =>
+      'Vous ne pouvez pas vous envoyer une demande de contact.';
+
+  @override
+  String get contactsAlreadyPending =>
+      'Une demande de contact est déjà en attente.';
+
+  @override
+  String get contactsReversePending =>
+      'Cette personne vous a déjà envoyé une demande. Acceptez-la dans Demandes de contact.';
+
+  @override
+  String get contactsRequestNotFound =>
+      'Cette demande de contact n’est plus disponible.';
+
+  @override
+  String get contactsRequestNotPending =>
+      'Cette demande de contact n’est plus en attente.';
+
+  @override
+  String get contactsRequestForbidden =>
+      'Vous ne pouvez pas effectuer cette action sur cette demande.';
+
+  @override
+  String get contactsAlreadyExists =>
+      'Vous êtes déjà connecté avec cette personne.';
+
+  @override
+  String get contactsNotFound => 'Ce contact n’est plus disponible.';
+
+  @override
+  String get contactsUserUnavailable => 'Cet utilisateur n’est pas disponible.';
+
+  @override
+  String get contactsAlreadyBlocked => 'Cet utilisateur est déjà bloqué.';
+
+  @override
+  String get contactsNotBlocked => 'Cet utilisateur n’est pas bloqué.';
+
+  @override
+  String get contactsRelationshipUnavailable =>
+      'Les informations de relation ne sont pas disponibles.';
 }

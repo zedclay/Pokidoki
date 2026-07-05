@@ -123,8 +123,9 @@ void main() {
       await _pumpRouter(tester, router, container: container);
 
       for (final route in _primaryRoutes) {
-        container.read(authPresentationProvider.notifier).state =
-            isProtectedRoute(route)
+        container
+            .read(authPresentationProvider.notifier)
+            .state = isProtectedRoute(route)
             ? AuthPresentationStatus.authenticated
             : AuthPresentationStatus.unauthenticated;
         router.go(route);
@@ -222,8 +223,8 @@ void main() {
         tester,
       ) async {
         final container = ProviderContainer(
-        overrides: pokidokiAuthenticatedAppOverrides,
-      );
+          overrides: pokidokiAuthenticatedAppOverrides,
+        );
         addTearDown(container.dispose);
         final router = container.read(appRouterProvider);
 
@@ -235,16 +236,12 @@ void main() {
           AppRoutes.settingsLanguage: LanguageScreen,
         };
 
-        await _pumpRouter(
-          tester,
-          router,
-          locale: locale,
-          container: container,
-        );
+        await _pumpRouter(tester, router, locale: locale, container: container);
 
         for (final entry in routes.entries) {
-          container.read(authPresentationProvider.notifier).state =
-              isProtectedRoute(entry.key)
+          container
+              .read(authPresentationProvider.notifier)
+              .state = isProtectedRoute(entry.key)
               ? AuthPresentationStatus.authenticated
               : AuthPresentationStatus.unauthenticated;
           router.go(entry.key);
@@ -260,8 +257,8 @@ void main() {
     for (final mode in [ThemeMode.dark, ThemeMode.light]) {
       testWidgets('welcome and settings render in $mode', (tester) async {
         final container = ProviderContainer(
-        overrides: pokidokiAuthenticatedAppOverrides,
-      );
+          overrides: pokidokiAuthenticatedAppOverrides,
+        );
         addTearDown(container.dispose);
         final router = container.read(appRouterProvider);
 
@@ -454,8 +451,8 @@ void main() {
       () async {
         MockAccountSecurityRepository.resetForTests();
         final container = ProviderContainer(
-        overrides: pokidokiAuthenticatedAppOverrides,
-      );
+          overrides: pokidokiAuthenticatedAppOverrides,
+        );
         addTearDown(container.dispose);
         final notifier = container.read(accountSecurityProvider.notifier);
 
@@ -526,9 +523,7 @@ void main() {
 
   group('RTL identifiers', () {
     testWidgets('Arabic settings preserves LTR Pokidoki ID', (tester) async {
-      final container = ProviderContainer(
-        overrides: pokidokiTestOverrides,
-      );
+      final container = ProviderContainer(overrides: pokidokiTestOverrides);
       addTearDown(container.dispose);
 
       await tester.pumpWidget(

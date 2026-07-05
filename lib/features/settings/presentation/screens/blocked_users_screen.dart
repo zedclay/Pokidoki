@@ -161,7 +161,10 @@ class _BlockedUsersScreenState extends ConsumerState<BlockedUsersScreen> {
       ),
     );
     if (confirmed == true && mounted) {
-      ref.read(socialGraphProvider.notifier).unblockUser(user.id);
+      await ref.read(socialGraphProvider.notifier).unblockUser(user.id);
+      if (!mounted) {
+        return;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.settingsUnblockedSnack(firstName))),
       );

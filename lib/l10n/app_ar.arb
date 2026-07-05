@@ -596,5 +596,17 @@
   "reportSubmitAction": "إرسال البلاغ",
   "reportSubmitted": "تم إرسال البلاغ.",
   "reportSubmitFailed": "لم يُرسل بلاغك.",
-  "reportNotEmergency": "بلاغات Pokidoki ليست خدمة طوارئ."
+  "reportNotEmergency": "بلاغات Pokidoki ليست خدمة طوارئ.",
+  "contactsSelfNotAllowed": "لا يمكنك إرسال طلب اتصال إلى نفسك.",
+  "contactsAlreadyPending": "يوجد بالفعل طلب اتصال قيد الانتظار.",
+  "contactsReversePending": "أرسل لك هذا الشخص طلبًا بالفعل. اقبله من طلبات الاتصال.",
+  "contactsRequestNotFound": "طلب الاتصال هذا لم يعد متاحًا.",
+  "contactsRequestNotPending": "طلب الاتصال هذا لم يعد قيد الانتظار.",
+  "contactsRequestForbidden": "لا يمكنك تنفيذ هذا الإجراء على هذا الطلب.",
+  "contactsAlreadyExists": "أنت متصل بالفعل بهذا الشخص.",
+  "contactsNotFound": "جهة الاتصال هذه لم تعد متاحة.",
+  "contactsUserUnavailable": "هذا المستخدم غير متاح.",
+  "contactsAlreadyBlocked": "هذا المستخدم محظور بالفعل.",
+  "contactsNotBlocked": "هذا المستخدم غير محظور.",
+  "contactsRelationshipUnavailable": "معلومات العلاقة غير متاحة."
 }

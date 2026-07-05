@@ -3657,6 +3657,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pokidoki reports are not an emergency service.'**
   String get reportNotEmergency;
+
+  /// No description provided for @contactsSelfNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot send a contact request to yourself.'**
+  String get contactsSelfNotAllowed;
+
+  /// No description provided for @contactsAlreadyPending.
+  ///
+  /// In en, this message translates to:
+  /// **'A contact request is already pending.'**
+  String get contactsAlreadyPending;
+
+  /// No description provided for @contactsReversePending.
+  ///
+  /// In en, this message translates to:
+  /// **'This person already sent you a request. Accept it from Contact requests.'**
+  String get contactsReversePending;
+
+  /// No description provided for @contactsRequestNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This contact request is no longer available.'**
+  String get contactsRequestNotFound;
+
+  /// No description provided for @contactsRequestNotPending.
+  ///
+  /// In en, this message translates to:
+  /// **'This contact request is no longer pending.'**
+  String get contactsRequestNotPending;
+
+  /// No description provided for @contactsRequestForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot perform this action on this request.'**
+  String get contactsRequestForbidden;
+
+  /// No description provided for @contactsAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already connected with this person.'**
+  String get contactsAlreadyExists;
+
+  /// No description provided for @contactsNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This contact is no longer available.'**
+  String get contactsNotFound;
+
+  /// No description provided for @contactsUserUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This user is not available.'**
+  String get contactsUserUnavailable;
+
+  /// No description provided for @contactsAlreadyBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'This user is already blocked.'**
+  String get contactsAlreadyBlocked;
+
+  /// No description provided for @contactsNotBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'This user is not blocked.'**
+  String get contactsNotBlocked;
+
+  /// No description provided for @contactsRelationshipUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship information is unavailable.'**
+  String get contactsRelationshipUnavailable;
 }
 
 class _AppLocalizationsDelegate

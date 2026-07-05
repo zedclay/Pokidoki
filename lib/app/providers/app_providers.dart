@@ -3,15 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/services/secure_messaging_service.dart';
-import '../../data/mock/mock_contacts_repository.dart';
 import '../../data/mock/mock_conversations_repository.dart';
 import '../../data/mock/mock_security_repository.dart';
 import '../../data/mock/mock_user_repository.dart';
 import '../../data/models/user_profile.dart';
-import '../../data/repositories/contacts_repository.dart';
 import '../../data/repositories/conversations_repository.dart';
 import '../../data/repositories/security_repository.dart';
 import '../../data/repositories/user_repository.dart';
+export '../../features/contacts/data/contacts_providers.dart';
 
 final appConfigProvider = Provider<AppConfig>((ref) {
   return AppConfig.fromEnvironment();
@@ -24,10 +23,6 @@ final localeOverrideProvider = StateProvider<Locale?>((ref) => null);
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   return const MockUserRepository();
-});
-
-final contactsRepositoryProvider = Provider<ContactsRepository>((ref) {
-  return const MockContactsRepository();
 });
 
 final conversationsRepositoryProvider = Provider<ConversationsRepository>((

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokidoki/data/mock/mock_contacts_repository.dart';
 import 'package:pokidoki/app/app_bootstrap.dart';
 import 'package:pokidoki/app/providers/app_providers.dart';
 import 'package:pokidoki/core/constants/app_constants.dart';
@@ -10,6 +11,7 @@ List<Override> get pokidokiTestOverrides => [
   authenticationRepositoryProvider.overrideWithValue(
     const MockAuthenticationRepository(),
   ),
+  contactsRepositoryProvider.overrideWithValue(MockContactsRepository()),
 ];
 
 /// App-shell and navigation tests that require authenticated routing.

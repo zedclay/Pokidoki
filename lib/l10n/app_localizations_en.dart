@@ -1961,4 +1961,47 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reportNotEmergency =>
       'Pokidoki reports are not an emergency service.';
+
+  @override
+  String get contactsSelfNotAllowed =>
+      'You cannot send a contact request to yourself.';
+
+  @override
+  String get contactsAlreadyPending => 'A contact request is already pending.';
+
+  @override
+  String get contactsReversePending =>
+      'This person already sent you a request. Accept it from Contact requests.';
+
+  @override
+  String get contactsRequestNotFound =>
+      'This contact request is no longer available.';
+
+  @override
+  String get contactsRequestNotPending =>
+      'This contact request is no longer pending.';
+
+  @override
+  String get contactsRequestForbidden =>
+      'You cannot perform this action on this request.';
+
+  @override
+  String get contactsAlreadyExists =>
+      'You are already connected with this person.';
+
+  @override
+  String get contactsNotFound => 'This contact is no longer available.';
+
+  @override
+  String get contactsUserUnavailable => 'This user is not available.';
+
+  @override
+  String get contactsAlreadyBlocked => 'This user is already blocked.';
+
+  @override
+  String get contactsNotBlocked => 'This user is not blocked.';
+
+  @override
+  String get contactsRelationshipUnavailable =>
+      'Relationship information is unavailable.';
 }
