@@ -4,13 +4,15 @@ import '../../../../app/providers/app_providers.dart';
 import '../../../../data/mock/mock_sample_data.dart';
 import '../../../../data/models/blocked_user.dart';
 import '../../../../data/models/contact.dart';
+import '../../../../data/models/contact_page.dart';
 import '../../../../data/models/contact_request.dart';
 import '../../../../data/models/conversation.dart';
 import '../../../../data/models/user_profile_preview.dart';
 import '../../../../data/models/user_search_result.dart';
-import '../../../../data/models/contact_page.dart';
 import '../../../../data/repositories/contacts_repository.dart';
+import '../../../../data/repositories/user_repository.dart';
 import '../../../contacts/data/contacts_failure.dart';
+import '../../../users/domain/user_failure.dart';
 
 class SocialGraphState {
   const SocialGraphState({
@@ -91,7 +93,7 @@ class SocialGraphState {
 }
 
 class SocialGraphController extends StateNotifier<SocialGraphState> {
-  SocialGraphController(this._repository)
+  SocialGraphController(this._userRepository, this._contactsRepository)
     : super(
         SocialGraphState(
           conversations: List.of(MockSampleData.conversations),
@@ -102,18 +104,20 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
         ),
       );
 
-  final ContactsRepository _repository;
+  final UserRepository _userRepository;
+  final ContactsRepository _contactsRepository;
+  int _searchRequestId = 0;
 
-  ContactsRepository get repository => _repository;
+  ContactsRepository get repository => _contactsRepository;
 
   Future<void> refresh() async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final results = await Future.wait([
-        _repository.getContacts(),
-        _repository.getIncomingRequests(),
-        _repository.getOutgoingRequests(),
-        _repository.getBlockedUsers(),
+        _contactsRepository.getContacts(),
+        _contactsRepository.getIncomingRequests(),
+        _contactsRepository.getOutgoingRequests(),
+        _contactsRepository.getBlockedUsers(),
       ]);
       final contactsPage = results[0] as ContactPage;
       final incomingPage = results[1] as ContactRequestPage;
@@ -185,97 +189,149 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
   }
 
   Future<void> searchUsers(String query) async {
+    final requestId = ++_searchRequestId;
     final q = query.trim();
     state = state.copyWith(
       searchQuery: query,
       isSearching: true,
       clearError: true,
     );
-    if (q.isEmpty) {
+    if (q.length < 2) {
       state = state.copyWith(searchResults: const [], isSearching: false);
       return;
     }
     try {
-      final results = await _repository.searchUsers(q);
-      state = state.copyWith(searchResults: results, isSearching: false);
-    } on ContactsFailure catch (error) {
+      final page = await _userRepository.searchUsers(query: q);
+      if (requestId != _searchRequestId) {
+        return;
+      }
+      state = state.copyWith(searchResults: page.items, isSearching: false);
+    } on UserFailure catch (failure) {
+      if (requestId != _searchRequestId) {
+        return;
+      }
       state = state.copyWith(
-        searchResults: const [],
         isSearching: false,
-        errorKey: error.messageKey,
-      );
-    } on Object {
-      state = state.copyWith(
+        errorKey: failure.messageKey,
         searchResults: const [],
-        isSearching: false,
-        errorKey: 'stateError',
       );
     }
   }
 
   UserProfilePreview? profileFor(String userId) {
-    return state.profiles[userId];
+    final existing = state.profiles[userId];
+    if (existing != null) {
+      return existing;
+    }
+    UserSearchResult? directory;
+    for (final user in MockSampleData.directoryUsers) {
+      if (user.id == userId) {
+        directory = user;
+        break;
+      }
+    }
+    final matched = directory;
+    if (matched == null) {
+      return null;
+    }
+    final isContact = state.contacts.any((c) => c.username == matched.username);
+    final pending = state.sentRequests.any((r) => r.userId == userId);
+    return UserProfilePreview(
+      id: matched.id,
+      displayName: matched.displayName,
+      username: matched.username,
+      pokidokiId: matched.pokidokiId,
+      bio: matched.bio,
+      isVerified: matched.isVerified,
+      relationship: isContact
+          ? ProfileRelationship.contact
+          : pending
+          ? ProfileRelationship.pendingOutgoing
+          : ProfileRelationship.none,
+      sharedContext: 'Found through username search',
+    );
   }
 
   Future<UserProfilePreview?> loadProfilePreview(String userId) async {
     try {
-      final profile = await _repository.getProfilePreview(userId);
+      final profile = await _contactsRepository.getProfilePreview(userId);
       final profiles = Map<String, UserProfilePreview>.of(state.profiles);
       profiles[userId] = profile;
       state = state.copyWith(profiles: profiles, clearError: true);
       return profile;
     } on ContactsFailure catch (error) {
       state = state.copyWith(errorKey: error.messageKey);
-      return null;
+      return profileFor(userId);
     } on Object {
-      state = state.copyWith(errorKey: 'stateError');
-      return null;
+      return profileFor(userId);
     }
   }
 
   Future<void> acceptRequest(String requestId) async {
+    final userId = _requestUserId(requestId);
     try {
-      await _repository.acceptRequest(requestId);
+      await _contactsRepository.acceptRequest(requestId);
       await refresh();
+      if (userId != null) {
+        await loadProfilePreview(userId);
+      }
     } on ContactsFailure catch (error) {
       state = state.copyWith(errorKey: error.messageKey);
     }
   }
 
   Future<void> declineRequest(String requestId) async {
+    final userId = _requestUserId(requestId);
     try {
-      await _repository.declineRequest(requestId);
+      await _contactsRepository.declineRequest(requestId);
       state = state.copyWith(
         requests: state.requests.where((r) => r.id != requestId).toList(),
       );
+      if (userId != null) {
+        await loadProfilePreview(userId);
+      }
     } on ContactsFailure catch (error) {
       state = state.copyWith(errorKey: error.messageKey);
     }
   }
 
   Future<void> cancelSentRequest(String requestId) async {
+    final userId = _requestUserId(requestId);
     try {
-      await _repository.cancelRequest(requestId);
+      await _contactsRepository.cancelRequest(requestId);
       state = state.copyWith(
         requests: state.requests.where((r) => r.id != requestId).toList(),
       );
       final profiles = Map<String, UserProfilePreview>.of(state.profiles);
-      for (final entry in profiles.entries.toList()) {
-        if (entry.value.relationship == ProfileRelationship.pendingOutgoing) {
-          profiles[entry.key] = entry.value.copyWith(
+      if (userId != null) {
+        final existing = profiles[userId];
+        if (existing != null) {
+          profiles[userId] = existing.copyWith(
             relationship: ProfileRelationship.none,
           );
         }
       }
       state = state.copyWith(profiles: profiles);
+      if (userId != null) {
+        await loadProfilePreview(userId);
+      }
     } on ContactsFailure catch (error) {
       state = state.copyWith(errorKey: error.messageKey);
     }
   }
 
+  String? _requestUserId(String requestId) {
+    for (final request in state.requests) {
+      if (request.id == requestId) {
+        return request.userId;
+      }
+    }
+    return null;
+  }
+
   Future<bool> sendContactRequest(String userId) async {
     try {
-      final request = await _repository.sendContactRequest(userId);
+      final request = await _contactsRepository.sendContactRequest(userId);
       state = state.copyWith(
         requests: [...state.requests, request],
         clearError: true,
@@ -287,6 +343,8 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
           relationship: ProfileRelationship.pendingOutgoing,
         );
         state = state.copyWith(profiles: profiles);
+      } else {
+        await loadProfilePreview(userId);
       }
       return true;
     } on ContactsFailure catch (error) {
@@ -401,7 +459,7 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
   Future<void> loadBlockedUsers() async {
     state = state.copyWith(isLoadingBlocked: true, blockedError: false);
     try {
-      final page = await _repository.getBlockedUsers();
+      final page = await _contactsRepository.getBlockedUsers();
       state = state.copyWith(blockedUsers: page.items, isLoadingBlocked: false);
     } on Object {
       state = state.copyWith(isLoadingBlocked: false, blockedError: true);
@@ -432,14 +490,19 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
     );
     state = state.copyWith(
       blockedUsers: [blocked, ...state.blockedUsers],
-      contacts: state.contacts.where((contact) => contact.id != userId).toList(),
-      requests: state.requests.where((request) => request.userId != userId).toList(),
+      contacts: state.contacts
+          .where((contact) => contact.id != userId)
+          .toList(),
+      requests: state.requests
+          .where((request) => request.userId != userId)
+          .toList(),
       clearError: true,
     );
     _setConversationBlockedForPeer(userId, true);
+    _updateProfileRelationship(userId, ProfileRelationship.blockedByMe);
 
     try {
-      await _repository.blockUser(userId);
+      await _contactsRepository.blockUser(userId);
     } on ContactsFailure catch (error) {
       state = state.copyWith(
         blockedUsers: state.blockedUsers
@@ -448,6 +511,7 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
         errorKey: error.messageKey,
       );
       _setConversationBlockedForPeer(userId, false);
+      _updateProfileRelationship(userId, ProfileRelationship.none);
     }
   }
 
@@ -460,9 +524,10 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
       clearError: true,
     );
     _setConversationBlockedForPeer(userId, false);
+    _updateProfileRelationship(userId, ProfileRelationship.none);
 
     try {
-      await _repository.unblockUser(userId);
+      await _contactsRepository.unblockUser(userId);
     } on ContactsFailure catch (error) {
       state = state.copyWith(
         blockedUsers: previousBlocked,
@@ -474,12 +539,25 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
 
   Future<void> removeContact(String userId) async {
     try {
-      await _repository.removeContact(userId);
+      await _contactsRepository.removeContact(userId);
       state = state.copyWith(
         contacts: state.contacts.where((c) => c.id != userId).toList(),
       );
+      await loadProfilePreview(userId);
     } on ContactsFailure catch (error) {
       state = state.copyWith(errorKey: error.messageKey);
+    }
+  }
+
+  void _updateProfileRelationship(
+    String userId,
+    ProfileRelationship relationship,
+  ) {
+    final profiles = Map<String, UserProfilePreview>.of(state.profiles);
+    final existing = profiles[userId];
+    if (existing != null) {
+      profiles[userId] = existing.copyWith(relationship: relationship);
+      state = state.copyWith(profiles: profiles);
     }
   }
 
@@ -506,5 +584,8 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
 
 final socialGraphProvider =
     StateNotifierProvider<SocialGraphController, SocialGraphState>((ref) {
-      return SocialGraphController(ref.watch(contactsRepositoryProvider));
+      return SocialGraphController(
+        ref.watch(userRepositoryProvider),
+        ref.watch(contactsRepositoryProvider),
+      );
     });

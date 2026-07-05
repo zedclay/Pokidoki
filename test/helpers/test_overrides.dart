@@ -1,16 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pokidoki/data/mock/mock_contacts_repository.dart';
 import 'package:pokidoki/app/app_bootstrap.dart';
 import 'package:pokidoki/app/providers/app_providers.dart';
 import 'package:pokidoki/core/constants/app_constants.dart';
+import 'package:pokidoki/data/mock/mock_contacts_repository.dart';
+import 'package:pokidoki/data/mock/mock_sample_data.dart';
+import 'package:pokidoki/data/mock/mock_user_repository.dart';
 import 'package:pokidoki/features/authentication/data/auth_providers.dart';
 import 'package:pokidoki/features/authentication/data/authentication_repository.dart';
+import 'package:pokidoki/features/users/data/user_providers.dart';
 
 /// Keeps widget tests offline with the mock authentication repository.
 List<Override> get pokidokiTestOverrides => [
   authenticationRepositoryProvider.overrideWithValue(
     const MockAuthenticationRepository(),
   ),
+  userRepositoryProvider.overrideWithValue(const MockUserRepository()),
   contactsRepositoryProvider.overrideWithValue(MockContactsRepository()),
 ];
 
@@ -20,6 +24,14 @@ List<Override> get pokidokiAuthenticatedAppOverrides => [
   authPresentationProvider.overrideWith(
     (ref) => AuthPresentationStatus.authenticated,
   ),
+  currentProfileProvider.overrideWith((ref) {
+    final controller = CurrentProfileController(const MockUserRepository());
+    controller.state = CurrentProfileState(
+      profile: MockSampleData.currentUser,
+      status: ProfileCompletionStatus.complete,
+    );
+    return controller;
+  }),
   appBootstrapProvider.overrideWith((ref) => _ReadyAppBootstrap(ref)),
 ];
 
@@ -52,6 +64,13 @@ class _ReadyAppBootstrap extends AppBootstrap {
 /// Splash and onboarding tests that finish bootstrap without network calls.
 List<Override> get pokidokiBootstrapTestOverrides => [
   ...pokidokiTestOverrides,
+  currentProfileProvider.overrideWith((ref) {
+    final controller = CurrentProfileController(const MockUserRepository());
+    controller.state = const CurrentProfileState(
+      status: ProfileCompletionStatus.missing,
+    );
+    return controller;
+  }),
   appBootstrapProvider.overrideWith((ref) => _FastAppBootstrap(ref)),
 ];
 

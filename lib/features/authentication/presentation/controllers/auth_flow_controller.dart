@@ -2,10 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/app_providers.dart';
 import '../../../../data/mock/mock_development_credentials.dart';
+import '../../../../data/models/user_profile.dart';
+import '../../../../data/repositories/user_repository.dart';
 import '../../data/api/api_authentication_repository.dart';
 import '../../data/auth_providers.dart';
 import '../../data/authentication_repository.dart';
 import '../../domain/auth_models.dart';
+import '../../../users/data/user_providers.dart';
+import '../../../users/domain/user_failure.dart';
 
 /// In-memory account-setup and unlock state for authentication flows.
 ///
@@ -95,11 +99,12 @@ class AuthFlowState {
 }
 
 class AuthFlowController extends StateNotifier<AuthFlowState> {
-  AuthFlowController(this._ref, this._repository)
+  AuthFlowController(this._ref, this._repository, this._userRepository)
     : super(const AuthFlowState());
 
   final Ref _ref;
   final AuthenticationRepository _repository;
+  final UserRepository _userRepository;
 
   void setEmail(String value) {
     state = state.copyWith(email: value.trim(), clearError: true);
@@ -140,8 +145,18 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(clearPins: true, clearError: true);
   }
 
+  void hydrateFromProfile(UserProfile profile) {
+    state = state.copyWith(
+      username: profile.username,
+      displayName: profile.displayName,
+      bio: profile.bio ?? '',
+      clearError: true,
+    );
+  }
+
   Future<void> signOut() async {
     await _repository.logout();
+    _ref.read(currentProfileProvider.notifier).clear();
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.unauthenticated;
     state = const AuthFlowState();
@@ -149,6 +164,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
 
   Future<void> signOutAll() async {
     await _repository.logoutAll();
+    _ref.read(currentProfileProvider.notifier).clear();
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.unauthenticated;
     state = const AuthFlowState();
@@ -203,15 +219,19 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
         deviceLabel: defaultDeviceLabel(),
       );
       _applyAuthenticatedSession(session);
+      await _ref.read(currentProfileProvider.notifier).loadProfile();
+      final profile = _ref.read(currentProfileProvider).profile;
       state = state.copyWith(
         email: email.trim(),
         emailVerified: session.user.emailVerified,
-        displayName: state.displayName.isEmpty
-            ? 'Pokidoki User'
-            : state.displayName,
-        username: state.username.isEmpty ? 'pokidoki_user' : state.username,
+        displayName: profile?.displayName ?? state.displayName,
+        username: profile?.username ?? state.username,
+        bio: profile?.bio ?? state.bio,
         isLoading: false,
       );
+      if (profile != null) {
+        hydrateFromProfile(profile);
+      }
       return true;
     } on AuthFailure catch (failure) {
       state = state.copyWith(
@@ -240,8 +260,34 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     }
   }
 
-  Future<bool> checkUsernameAvailable(String username) {
-    return _repository.isUsernameAvailable(username);
+  Future<bool> checkUsernameAvailable(String username) async {
+    try {
+      final result = await _userRepository.checkUsernameAvailability(username);
+      return result.available;
+    } on UserFailure {
+      return false;
+    }
+  }
+
+  Future<bool> createProfile() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      await _ref
+          .read(currentProfileProvider.notifier)
+          .createProfile(
+            username: state.username,
+            displayName: state.displayName,
+            bio: state.bio.isEmpty ? null : state.bio,
+          );
+      state = state.copyWith(isLoading: false);
+      return true;
+    } on UserFailure catch (failure) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessageKey: failure.messageKey,
+      );
+      return false;
+    }
   }
 
   bool confirmPinMatches(String confirmation) {
@@ -283,5 +329,6 @@ final authFlowProvider =
       return AuthFlowController(
         ref,
         ref.watch(authenticationRepositoryProvider),
+        ref.watch(userRepositoryProvider),
       );
     });

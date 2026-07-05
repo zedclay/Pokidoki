@@ -22,15 +22,11 @@ abstract interface class AuthenticationRepository {
   Future<void> logout();
 
   Future<void> logoutAll();
-
-  Future<bool> isUsernameAvailable(String username);
 }
 
 /// Development-only authentication stand-in for tests and previews.
 class MockAuthenticationRepository implements AuthenticationRepository {
   const MockAuthenticationRepository();
-
-  static const _reservedUsernames = {'admin', 'pokidoki', 'support'};
 
   @override
   Future<void> createAccount({
@@ -77,12 +73,6 @@ class MockAuthenticationRepository implements AuthenticationRepository {
     if (code != MockDevelopmentCredentials.emailVerificationCode) {
       throw const AuthFailure(messageKey: 'authVerificationError');
     }
-  }
-
-  @override
-  Future<bool> isUsernameAvailable(String username) async {
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    return !_reservedUsernames.contains(username.toLowerCase());
   }
 
   @override

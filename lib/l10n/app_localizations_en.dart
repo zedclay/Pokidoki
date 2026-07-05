@@ -829,6 +829,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authUnexpectedError => 'Something went wrong. Try again.';
 
   @override
+  String get profileNotCreated => 'Your profile has not been set up yet.';
+
+  @override
+  String get profileAlreadyExists =>
+      'A profile already exists for this account.';
+
+  @override
+  String get profileNotFound => 'Profile not found.';
+
+  @override
+  String get profileNotDiscoverable => 'This profile is not available.';
+
+  @override
+  String get usernameInvalid => 'That username is not valid.';
+
+  @override
+  String get usernameChangeTooSoon =>
+      'You changed your username recently. Try again later.';
+
+  @override
+  String get userSearchQueryTooShort =>
+      'Enter at least two characters to search.';
+
+  @override
+  String get userNotFound => 'User not found.';
+
+  @override
+  String get userUnexpectedError => 'Something went wrong. Try again.';
+
+  @override
   String get authSignedOut => 'You have been signed out.';
 
   @override

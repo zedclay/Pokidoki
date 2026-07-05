@@ -814,6 +814,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authUnexpectedError => 'حدث خطأ ما. حاول مرة أخرى.';
 
   @override
+  String get profileNotCreated => 'لم يتم إعداد ملفك الشخصي بعد.';
+
+  @override
+  String get profileAlreadyExists => 'يوجد ملف شخصي لهذا الحساب بالفعل.';
+
+  @override
+  String get profileNotFound => 'الملف الشخصي غير موجود.';
+
+  @override
+  String get profileNotDiscoverable => 'هذا الملف الشخصي غير متاح.';
+
+  @override
+  String get usernameInvalid => 'اسم المستخدم غير صالح.';
+
+  @override
+  String get usernameChangeTooSoon => 'غيّرت اسم المستخدم مؤخراً. حاول لاحقاً.';
+
+  @override
+  String get userSearchQueryTooShort => 'أدخل حرفين على الأقل للبحث.';
+
+  @override
+  String get userNotFound => 'المستخدم غير موجود.';
+
+  @override
+  String get userUnexpectedError => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
   String get authSignedOut => 'تم تسجيل خروجك.';
 
   @override

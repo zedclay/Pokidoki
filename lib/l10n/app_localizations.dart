@@ -1588,6 +1588,60 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Try again.'**
   String get authUnexpectedError;
 
+  /// No description provided for @profileNotCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile has not been set up yet.'**
+  String get profileNotCreated;
+
+  /// No description provided for @profileAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A profile already exists for this account.'**
+  String get profileAlreadyExists;
+
+  /// No description provided for @profileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile not found.'**
+  String get profileNotFound;
+
+  /// No description provided for @profileNotDiscoverable.
+  ///
+  /// In en, this message translates to:
+  /// **'This profile is not available.'**
+  String get profileNotDiscoverable;
+
+  /// No description provided for @usernameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That username is not valid.'**
+  String get usernameInvalid;
+
+  /// No description provided for @usernameChangeTooSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'You changed your username recently. Try again later.'**
+  String get usernameChangeTooSoon;
+
+  /// No description provided for @userSearchQueryTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least two characters to search.'**
+  String get userSearchQueryTooShort;
+
+  /// No description provided for @userNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found.'**
+  String get userNotFound;
+
+  /// No description provided for @userUnexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get userUnexpectedError;
+
   /// No description provided for @authSignedOut.
   ///
   /// In en, this message translates to:

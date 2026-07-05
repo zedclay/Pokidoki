@@ -523,7 +523,9 @@ void main() {
 
   group('RTL identifiers', () {
     testWidgets('Arabic settings preserves LTR Pokidoki ID', (tester) async {
-      final container = ProviderContainer(overrides: pokidokiTestOverrides);
+      final container = ProviderContainer(
+        overrides: pokidokiAuthenticatedAppOverrides,
+      );
       addTearDown(container.dispose);
 
       await tester.pumpWidget(

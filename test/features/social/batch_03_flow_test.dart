@@ -16,6 +16,8 @@ import 'package:pokidoki/features/users/presentation/screens/user_profile_previe
 import 'package:pokidoki/features/users/presentation/screens/user_search_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../../helpers/test_overrides.dart';
+
 GoRouter _router() {
   return GoRouter(
     initialLocation: AppRoutes.appChats,
@@ -88,6 +90,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp.router(
           theme: PokidokiTheme.dark(),
           locale: const Locale('en'),
@@ -113,6 +116,7 @@ void main() {
     final router = _router();
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp.router(
           theme: PokidokiTheme.dark(),
           locale: const Locale('en'),
@@ -153,6 +157,7 @@ void main() {
     final router = _router();
     await tester.pumpWidget(
       ProviderScope(
+        overrides: pokidokiTestOverrides,
         child: MaterialApp.router(
           theme: PokidokiTheme.dark(),
           locale: const Locale('en'),

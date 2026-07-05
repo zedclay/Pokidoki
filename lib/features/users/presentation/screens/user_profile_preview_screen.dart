@@ -30,30 +30,21 @@ class _UserProfilePreviewScreenState
     extends ConsumerState<UserProfilePreviewScreen> {
   bool _sending = false;
   bool _loading = true;
-  String? _incomingRequestId;
 
   @override
   void initState() {
     super.initState();
-    Future<void>.microtask(_loadProfile);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
   }
 
-  Future<void> _loadProfile() async {
+  Future<void> _load() async {
     setState(() => _loading = true);
-    final profile = await ref
+    await ref
         .read(socialGraphProvider.notifier)
         .loadProfilePreview(widget.userId);
-    if (!mounted) {
-      return;
+    if (mounted) {
+      setState(() => _loading = false);
     }
-    if (profile != null) {
-      final relationship = await ref
-          .read(socialGraphProvider.notifier)
-          .repository
-          .getRelationship(widget.userId);
-      _incomingRequestId = relationship.incomingRequestId;
-    }
-    setState(() => _loading = false);
   }
 
   Future<void> _sendRequest() async {
@@ -66,7 +57,7 @@ class _UserProfilePreviewScreenState
     }
     setState(() => _sending = false);
     if (ok) {
-      await _loadProfile();
+      await _load();
       if (!mounted) {
         return;
       }
@@ -77,16 +68,20 @@ class _UserProfilePreviewScreenState
     }
   }
 
-  Future<void> _acceptIncoming() async {
-    final requestId = _incomingRequestId;
-    if (requestId == null) {
+  Future<void> _acceptIncoming(UserProfilePreview profile) async {
+    final request = ref
+        .read(socialGraphProvider)
+        .receivedRequests
+        .where((item) => item.userId == profile.id)
+        .firstOrNull;
+    if (request == null) {
       return;
     }
-    await ref.read(socialGraphProvider.notifier).acceptRequest(requestId);
+    await ref.read(socialGraphProvider.notifier).acceptRequest(request.id);
     if (!mounted) {
       return;
     }
-    await _loadProfile();
+    await _load();
     if (!mounted) {
       return;
     }
@@ -97,21 +92,26 @@ class _UserProfilePreviewScreenState
     );
   }
 
-  Future<void> _declineIncoming() async {
-    final requestId = _incomingRequestId;
-    if (requestId == null) {
+  Future<void> _declineIncoming(UserProfilePreview profile) async {
+    final request = ref
+        .read(socialGraphProvider)
+        .receivedRequests
+        .where((item) => item.userId == profile.id)
+        .firstOrNull;
+    if (request == null) {
       return;
     }
-    await ref.read(socialGraphProvider.notifier).declineRequest(requestId);
+    await ref.read(socialGraphProvider.notifier).declineRequest(request.id);
     if (!mounted) {
       return;
     }
-    await _loadProfile();
+    await _load();
   }
 
   Future<void> _cancelOutgoing(UserProfilePreview profile) async {
-    final graph = ref.read(socialGraphProvider);
-    final outgoing = graph.sentRequests
+    final outgoing = ref
+        .read(socialGraphProvider)
+        .sentRequests
         .where((request) => request.userId == profile.id)
         .firstOrNull;
     if (outgoing == null) {
@@ -121,7 +121,7 @@ class _UserProfilePreviewScreenState
     if (!mounted) {
       return;
     }
-    await _loadProfile();
+    await _load();
   }
 
   Future<void> _block(UserProfilePreview profile) async {
@@ -155,7 +155,7 @@ class _UserProfilePreviewScreenState
       if (!mounted) {
         return;
       }
-      await _loadProfile();
+      await _load();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.usersBlocked)));
@@ -167,7 +167,7 @@ class _UserProfilePreviewScreenState
     if (!mounted) {
       return;
     }
-    await _loadProfile();
+    await _load();
   }
 
   @override
@@ -175,15 +175,16 @@ class _UserProfilePreviewScreenState
     final l10n = AppLocalizations.of(context);
     final typography = context.pokidokiTypography;
     ref.watch(socialGraphProvider);
-    final profile = ref
-        .read(socialGraphProvider.notifier)
-        .profileFor(widget.userId);
 
     if (_loading) {
       return const PokidokiScaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
+    final profile = ref
+        .read(socialGraphProvider.notifier)
+        .profileFor(widget.userId);
 
     if (profile == null) {
       return PokidokiScaffold(
@@ -351,14 +352,14 @@ class _UserProfilePreviewScreenState
           Expanded(
             child: PokidokiButton.primary(
               label: l10n.contactsAccept,
-              onPressed: _acceptIncoming,
+              onPressed: () => _acceptIncoming(profile),
             ),
           ),
           const SizedBox(width: PokidokiSpacing.sm),
           Expanded(
             child: PokidokiButton.secondary(
               label: l10n.contactsDecline,
-              onPressed: _declineIncoming,
+              onPressed: () => _declineIncoming(profile),
             ),
           ),
         ],
