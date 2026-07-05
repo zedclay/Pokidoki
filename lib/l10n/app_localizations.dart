@@ -3855,6 +3855,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter at least 2 characters to search.'**
   String get messageSearchQueryTooShort;
+
+  /// No description provided for @localDatabaseUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Local message storage is unavailable. Try again after signing in.'**
+  String get localDatabaseUnavailable;
+
+  /// No description provided for @localDatabaseKeyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure storage is unavailable. Local messages cannot be loaded.'**
+  String get localDatabaseKeyUnavailable;
+
+  /// No description provided for @localDatabaseCorrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'Local message storage was reset. Your conversations will resync.'**
+  String get localDatabaseCorrupt;
+
+  /// No description provided for @localDatabaseEncryptionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted storage is unavailable on this device.'**
+  String get localDatabaseEncryptionUnavailable;
+
+  /// No description provided for @syncTemporarilyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync is temporarily unavailable. Cached messages remain available.'**
+  String get syncTemporarilyUnavailable;
+
+  /// No description provided for @messageQueuedOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Message queued. It will send when you are back online.'**
+  String get messageQueuedOffline;
+
+  /// No description provided for @messageRetryScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Send failed. Retrying automatically.'**
+  String get messageRetryScheduled;
+
+  /// No description provided for @messageFailedPermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'This message could not be sent.'**
+  String get messageFailedPermanently;
 }
 
 class _AppLocalizationsDelegate

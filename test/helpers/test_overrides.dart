@@ -5,6 +5,8 @@ import 'package:pokidoki/core/constants/app_constants.dart';
 import 'package:pokidoki/data/mock/mock_contacts_repository.dart';
 import 'package:pokidoki/data/mock/mock_sample_data.dart';
 import 'package:pokidoki/data/mock/mock_user_repository.dart';
+import 'package:pokidoki/core/security/app_pin_providers.dart';
+import 'package:pokidoki/core/security/app_pin_storage.dart';
 import 'package:pokidoki/features/authentication/data/auth_providers.dart';
 import 'package:pokidoki/features/authentication/data/authentication_repository.dart';
 
@@ -13,6 +15,7 @@ List<Override> get pokidokiTestOverrides => [
   authenticationRepositoryProvider.overrideWithValue(
     const MockAuthenticationRepository(),
   ),
+  appPinStorageProvider.overrideWithValue(InMemoryAppPinStorage()),
   userRepositoryProvider.overrideWithValue(const MockUserRepository()),
   contactsRepositoryProvider.overrideWithValue(MockContactsRepository()),
 ];

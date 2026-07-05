@@ -14,6 +14,7 @@ class MessagingSocketEvents {
   static const messageRead = 'message.read';
   static const conversationUpdated = 'conversation.updated';
   static const conversationSettingsUpdated = 'conversation.settings.updated';
+  static const messageDeleted = 'message.deleted';
   static const typingStarted = 'typing.started';
   static const typingStopped = 'typing.stopped';
 }

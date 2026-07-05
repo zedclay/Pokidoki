@@ -25,6 +25,7 @@ import 'package:pokidoki/features/settings/presentation/screens/linked_devices_s
 import 'package:pokidoki/features/settings/presentation/screens/security_activity_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/settings_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/storage_usage_screen.dart';
+import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/social/presentation/controllers/social_graph_controller.dart';
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
@@ -289,6 +290,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
+    await container.read(conversationsProvider.notifier).loadInitial();
     container
         .read(socialGraphProvider.notifier)
         .blockUser(
@@ -297,6 +299,7 @@ void main() {
           username: 'amira',
           pokidokiId: 'PKD-AM84-2LX7',
         );
+    await container.read(conversationsProvider.notifier).loadInitial();
 
     final router = _settingsRouter(initial: AppRoutes.settingsBlockedUsers);
     await tester.pumpWidget(
@@ -335,7 +338,7 @@ void main() {
     );
     expect(
       container
-          .read(socialGraphProvider)
+          .read(conversationsProvider)
           .conversations
           .firstWhere((c) => c.id == 'conv-amira')
           .isBlocked,
@@ -565,10 +568,11 @@ void main() {
 
     await tester.tap(find.text('Contacts'));
     await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(ContactsScreen), findsOneWidget);
 
     await tester.tap(find.text('Settings'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(SettingsScreen), findsOneWidget);
   });
 }

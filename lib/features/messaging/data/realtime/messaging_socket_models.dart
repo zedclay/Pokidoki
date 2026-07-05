@@ -30,6 +30,28 @@ class SocketConversationUpdatedEvent {
   final Map<String, dynamic> rawConversation;
 }
 
+class SocketConversationSettingsUpdatedEvent {
+  const SocketConversationSettingsUpdatedEvent({
+    required this.conversationId,
+    required this.disappearingSeconds,
+    this.rawSystemMessage,
+  });
+
+  final String conversationId;
+  final int? disappearingSeconds;
+  final Map<String, dynamic>? rawSystemMessage;
+}
+
+class SocketMessageDeletedEvent {
+  const SocketMessageDeletedEvent({
+    required this.messageId,
+    required this.conversationId,
+  });
+
+  final String messageId;
+  final String conversationId;
+}
+
 class SocketTypingEvent {
   const SocketTypingEvent({required this.conversationId, required this.userId});
 

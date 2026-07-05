@@ -169,12 +169,14 @@ void main() {
     );
   });
 
-  test('app lock accepts configured PIN and rejects others', () {
+  test('app lock accepts configured PIN and rejects others', () async {
     final container = ProviderContainer(overrides: pokidokiTestOverrides);
     addTearDown(container.dispose);
     final auth = container.read(authFlowProvider.notifier);
     auth.setPendingPin('654321');
-    expect(auth.confirmPinMatches('654321'), isTrue);
+    expect(await auth.confirmPinMatches('654321'), isTrue);
+    expect(auth.unlockWithPin('654321'), isTrue);
+    auth.clearSensitiveFlow();
     expect(auth.unlockWithPin('654321'), isTrue);
     expect(auth.unlockWithPin('000000'), isFalse);
     expect(
@@ -224,7 +226,7 @@ void main() {
       ..setUsername('zedclay')
       ..setDisplayName('Zed Clay')
       ..setPendingPin('654321');
-    expect(auth.confirmPinMatches('654321'), isTrue);
+    expect(await auth.confirmPinMatches('654321'), isTrue);
     auth.setBiometricsEnabled(true);
 
     router.go(AppRoutes.appLock);

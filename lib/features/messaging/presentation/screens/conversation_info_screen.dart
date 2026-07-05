@@ -13,6 +13,7 @@ import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/messaging_providers.dart';
+import '../utils/disappearing_duration_label.dart';
 
 class ConversationInfoScreen extends ConsumerWidget {
   const ConversationInfoScreen({super.key, required this.conversationId});
@@ -37,6 +38,10 @@ class ConversationInfoScreen extends ConsumerWidget {
         : ref.read(socialGraphProvider.notifier).isContactVerified(peerId);
     final muted = conversation?.isMuted ?? false;
     final disappearing = conversation?.disappearingDurationHours;
+    final blockedByMe = peerId.isEmpty
+        ? false
+        : ref.read(socialGraphProvider.notifier).isUserBlocked(peerId);
+    final messagingDisabled = !(conversation?.canSend ?? true);
     final mediaCount = ref
         .read(messagingProvider.notifier)
         .sharedMedia(conversationId)
@@ -115,9 +120,7 @@ class ConversationInfoScreen extends ConsumerWidget {
                   _Row(
                     icon: Icons.timer_outlined,
                     title: l10n.chatDisappearingMessages,
-                    value: disappearing == null
-                        ? l10n.chatDisappearingOff
-                        : l10n.chatDisappearingOneDay,
+                    value: disappearingDurationLabel(l10n, disappearing),
                     onTap: () => context.push(
                       AppRoutes.disappearingMessagesPath(conversationId),
                     ),
@@ -161,37 +164,138 @@ class ConversationInfoScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: PokidokiSpacing.lg),
-                  PokidokiButton.secondary(
-                    label: l10n.usersBlockAction,
-                    onPressed: () async {
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(
-                            l10n.usersBlockTitle(displayName.split(' ').first),
-                          ),
-                          content: Text(
-                            l10n.usersBlockBody(displayName.split(' ').first),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: Text(l10n.actionCancel),
+                  if (messagingDisabled)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: PokidokiSpacing.md),
+                      padding: const EdgeInsets.all(PokidokiSpacing.md),
+                      decoration: BoxDecoration(
+                        color: colors.surfaceElevated,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.block_rounded, color: colors.warning),
+                          const SizedBox(width: PokidokiSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              blockedByMe
+                                  ? l10n.chatBlockedNotice(
+                                      displayName.split(' ').first,
+                                    )
+                                  : l10n.cannotMessageUser,
+                              style: typography.supportingBody,
                             ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: Text(l10n.usersBlockAction),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (blockedByMe)
+                    PokidokiButton.primary(
+                      label: l10n.settingsUnblockAction,
+                      onPressed: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              l10n.settingsUnblockTitle(
+                                displayName.split(' ').first,
+                              ),
                             ),
-                          ],
-                        ),
-                      );
-                      if (confirmed == true) {
-                        ref
-                            .read(messagingProvider.notifier)
-                            .setBlocked(conversationId, true);
-                      }
-                    },
-                  ),
+                            content: Text(
+                              l10n.settingsUnblockBody(
+                                displayName.split(' ').first,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: Text(l10n.actionCancel),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: Text(l10n.settingsUnblockAction),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true && context.mounted) {
+                          try {
+                            await ref
+                                .read(messagingProvider.notifier)
+                                .setBlocked(conversationId, false);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    l10n.settingsUnblockedSnack(
+                                      displayName.split(' ').first,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                          } on Object {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.messagingUnavailable),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
+                    )
+                  else
+                    PokidokiButton.secondary(
+                      label: l10n.usersBlockAction,
+                      onPressed: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              l10n.usersBlockTitle(
+                                displayName.split(' ').first,
+                              ),
+                            ),
+                            content: Text(
+                              l10n.usersBlockBody(displayName.split(' ').first),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: Text(l10n.actionCancel),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: Text(l10n.usersBlockAction),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true && context.mounted) {
+                          try {
+                            await ref
+                                .read(messagingProvider.notifier)
+                                .setBlocked(conversationId, true);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(l10n.usersBlocked)),
+                              );
+                            }
+                          } on Object {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.messagingUnavailable),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
+                    ),
                   const SizedBox(height: PokidokiSpacing.sm),
                   PokidokiButton.secondary(
                     label: l10n.usersReportAction,

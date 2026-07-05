@@ -165,6 +165,7 @@ void main() {
     final container = ProviderScope.containerOf(
       tester.element(find.byType(MaterialApp)),
     );
+    await container.read(socialGraphProvider.notifier).refresh();
     expect(
       container
           .read(socialGraphProvider.notifier)

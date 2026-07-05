@@ -46,9 +46,11 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     });
   }
 
-  void _confirm() {
+  void _confirm() async {
     final l10n = AppLocalizations.of(context);
-    final ok = ref.read(authFlowProvider.notifier).confirmPinMatches(_pin);
+    final ok = await ref
+        .read(authFlowProvider.notifier)
+        .confirmPinMatches(_pin);
     if (!ok) {
       setState(() {
         _pin = '';

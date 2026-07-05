@@ -951,5 +951,13 @@
   "messageTapToRetry": "Tap to retry",
   "messagingReconnecting": "Reconnecting…",
   "messagingConnectionLost": "Connection lost. Messages may be delayed.",
-  "messageSearchQueryTooShort": "Enter at least 2 characters to search."
+  "messageSearchQueryTooShort": "Enter at least 2 characters to search.",
+  "localDatabaseUnavailable": "Local message storage is unavailable. Try again after signing in.",
+  "localDatabaseKeyUnavailable": "Secure storage is unavailable. Local messages cannot be loaded.",
+  "localDatabaseCorrupt": "Local message storage was reset. Your conversations will resync.",
+  "localDatabaseEncryptionUnavailable": "Encrypted storage is unavailable on this device.",
+  "syncTemporarilyUnavailable": "Sync is temporarily unavailable. Cached messages remain available.",
+  "messageQueuedOffline": "Message queued. It will send when you are back online.",
+  "messageRetryScheduled": "Send failed. Retrying automatically.",
+  "messageFailedPermanently": "This message could not be sent."
 }

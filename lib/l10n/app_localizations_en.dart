@@ -2074,4 +2074,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get messageSearchQueryTooShort =>
       'Enter at least 2 characters to search.';
+
+  @override
+  String get localDatabaseUnavailable =>
+      'Local message storage is unavailable. Try again after signing in.';
+
+  @override
+  String get localDatabaseKeyUnavailable =>
+      'Secure storage is unavailable. Local messages cannot be loaded.';
+
+  @override
+  String get localDatabaseCorrupt =>
+      'Local message storage was reset. Your conversations will resync.';
+
+  @override
+  String get localDatabaseEncryptionUnavailable =>
+      'Encrypted storage is unavailable on this device.';
+
+  @override
+  String get syncTemporarilyUnavailable =>
+      'Sync is temporarily unavailable. Cached messages remain available.';
+
+  @override
+  String get messageQueuedOffline =>
+      'Message queued. It will send when you are back online.';
+
+  @override
+  String get messageRetryScheduled => 'Send failed. Retrying automatically.';
+
+  @override
+  String get messageFailedPermanently => 'This message could not be sent.';
 }

@@ -629,5 +629,13 @@
   "messageTapToRetry": "اضغط لإعادة المحاولة",
   "messagingReconnecting": "جارٍ إعادة الاتصال…",
   "messagingConnectionLost": "انقطع الاتصال. قد تتأخر الرسائل.",
-  "messageSearchQueryTooShort": "أدخل حرفين على الأقل للبحث."
+  "messageSearchQueryTooShort": "أدخل حرفين على الأقل للبحث.",
+  "localDatabaseUnavailable": "تخزين الرسائل المحلي غير متاح. حاول مرة أخرى بعد تسجيل الدخول.",
+  "localDatabaseKeyUnavailable": "التخزين الآمن غير متاح. لا يمكن تحميل الرسائل المحلية.",
+  "localDatabaseCorrupt": "تمت إعادة تعيين تخزين الرسائل المحلي. ستتم مزامنة محادثاتك.",
+  "localDatabaseEncryptionUnavailable": "التخزين المشفر غير متاح على هذا الجهاز.",
+  "syncTemporarilyUnavailable": "المزامنة غير متاحة مؤقتًا. تظل الرسائل المخزنة محليًا متاحة.",
+  "messageQueuedOffline": "تمت إضافة الرسالة إلى قائمة الانتظار. سيتم إرسالها عند عودة الاتصال.",
+  "messageRetryScheduled": "فشل الإرسال. سيتم إعادة المحاولة تلقائيًا.",
+  "messageFailedPermanently": "تعذر إرسال هذه الرسالة."
 }

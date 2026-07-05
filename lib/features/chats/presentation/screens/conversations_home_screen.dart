@@ -26,7 +26,8 @@ class ConversationsHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _ConversationsHomeScreenState
-    extends ConsumerState<ConversationsHomeScreen> {
+    extends ConsumerState<ConversationsHomeScreen>
+    with WidgetsBindingObserver {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
   bool _searchOpen = false;
@@ -34,17 +35,31 @@ class _ConversationsHomeScreenState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(conversationsProvider.notifier).loadInitial();
-      unawaited(
-        ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
-      );
+      _refreshConversations();
     });
+  }
+
+  void _refreshConversations() {
+    ref.read(messagingProvider);
+    ref.read(conversationsProvider.notifier).loadInitial();
+    unawaited(
+      ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshConversations();
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -84,6 +99,7 @@ class _ConversationsHomeScreenState
     final colors = context.pokidokiColors;
     final typography = context.pokidokiTypography;
     final conversationsState = ref.watch(conversationsProvider);
+    ref.watch(messagingProvider);
     final query = _searchController.text;
     final conversations = ref
         .read(conversationsProvider.notifier)

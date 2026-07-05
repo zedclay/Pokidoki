@@ -23,11 +23,23 @@ dependencies:
   flutter_secure_storage: ^10.3.1
   socket_io_client: ^3.1.6
   uuid: ^4.5.3
+  drift: ^2.28.1
+  sqlite3: ^2.7.6
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  connectivity_plus: ^6.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  drift_dev: ^2.28.1
+  build_runner: ^2.5.4
+
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc
 
 flutter:
   uses-material-design: true

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../messaging/data/messaging_providers.dart';
 import '../widgets/main_bottom_nav.dart';
 
 /// Authenticated three-tab shell: Chats, Contacts, Settings.
-class MainShellScreen extends StatelessWidget {
+class MainShellScreen extends ConsumerWidget {
   const MainShellScreen({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -17,7 +19,10 @@ class MainShellScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Subscribe to message and conversation socket events app-wide.
+    ref.watch(messagingProvider);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: MainBottomNav(

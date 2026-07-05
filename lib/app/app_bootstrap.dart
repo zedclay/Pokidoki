@@ -9,6 +9,8 @@ import '../data/models/account_settings.dart';
 import '../data/repositories/user_repository.dart';
 import '../features/authentication/data/auth_providers.dart';
 import '../features/authentication/presentation/controllers/auth_flow_controller.dart';
+import '../features/messaging/data/messaging_providers.dart';
+import '../features/social/presentation/controllers/social_graph_controller.dart';
 import 'providers/app_providers.dart';
 
 enum BootstrapPhase { idle, loading, ready, failed }
@@ -103,12 +105,19 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
       await Future.wait<void>([
         _ref.read(contactsRepositoryProvider).getContacts(),
         _ref.read(conversationsProvider.notifier).loadInitial(),
+        _ref.read(socialGraphProvider.notifier).loadBlockedUsers(),
+        _ref
+            .read(messagingOfflineCoordinatorProvider)
+            .onAuthenticatedBootstrap(),
       ]).timeout(const Duration(seconds: 6));
+      _ref.read(socialGraphProvider.notifier).syncBlockedToConversations();
     } on Object {
       // Screens reload data on demand when prefetch fails (offline backend, etc.).
     }
 
     if (_ref.read(authSessionManagerProvider).hasAccessToken) {
+      // Keep socket event listeners alive for conversation list updates.
+      _ref.read(messagingProvider);
       unawaited(
         _ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
       );
@@ -131,6 +140,7 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
         if (profile != null) {
           _ref.read(authFlowProvider.notifier).hydrateFromProfile(profile);
         }
+        await _ref.read(authFlowProvider.notifier).loadPersistedPin();
       } else {
         _ref.read(authPresentationProvider.notifier).state =
             AuthPresentationStatus.unauthenticated;

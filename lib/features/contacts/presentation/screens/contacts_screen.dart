@@ -11,6 +11,8 @@ import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/messaging/data/messaging_failure.dart';
+import '../../../../features/messaging/data/messaging_providers.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -23,6 +25,14 @@ class ContactsScreen extends ConsumerStatefulWidget {
 
 class _ContactsScreenState extends ConsumerState<ContactsScreen> {
   final _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(socialGraphProvider.notifier).refresh();
+    });
+  }
 
   @override
   void dispose() {
@@ -187,13 +197,38 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
   }
 }
 
-class _ContactRow extends StatelessWidget {
+class _ContactRow extends ConsumerWidget {
   const _ContactRow({required this.contact});
 
   final Contact contact;
 
+  Future<void> _openChat(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final conversation = await ref
+          .read(conversationsProvider.notifier)
+          .createOrGet(contact.id);
+      if (context.mounted && conversation != null) {
+        context.push(AppRoutes.chatPath(conversation.id));
+      }
+    } on MessagingFailure catch (failure) {
+      if (!context.mounted) {
+        return;
+      }
+      final message = switch (failure.messageKey) {
+        'conversationContactRequired' => l10n.conversationContactRequired,
+        'conversationUnavailable' => l10n.conversationUnavailable,
+        'conversationSelfNotAllowed' => l10n.cannotMessageUser,
+        _ => l10n.messagingUnavailable,
+      };
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final typography = context.pokidokiTypography;
     return ListTile(
@@ -216,14 +251,10 @@ class _ContactRow extends StatelessWidget {
       ),
       trailing: IconButton(
         tooltip: l10n.usersMessage,
-        onPressed: () => context.push(
-          AppRoutes.chatPath('conv-${contact.id.replaceFirst('c-', '')}'),
-        ),
+        onPressed: () => _openChat(context, ref),
         icon: const Icon(Icons.chat_bubble_outline_rounded),
       ),
-      onTap: () => context.push(
-        AppRoutes.chatPath('conv-${contact.id.replaceFirst('c-', '')}'),
-      ),
+      onTap: () => _openChat(context, ref),
     );
   }
 }

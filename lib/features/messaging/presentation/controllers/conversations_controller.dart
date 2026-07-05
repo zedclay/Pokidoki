@@ -1,10 +1,14 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/models/conversation.dart';
 import '../../../../data/repositories/conversations_repository.dart';
+import '../../data/messaging_failure.dart';
+import '../../data/messaging_stream_providers.dart';
 import '../../data/api/messaging_api_mapper.dart';
 import '../../data/api/messaging_api_models.dart';
-import '../../data/messaging_failure.dart';
 
 class ConversationsState {
   const ConversationsState({
@@ -44,9 +48,28 @@ class ConversationsState {
 }
 
 class ConversationsController extends StateNotifier<ConversationsState> {
-  ConversationsController(this._repository) : super(const ConversationsState());
+  ConversationsController(this._repository, {required Ref ref})
+    : _ref = ref,
+      super(const ConversationsState()) {
+    _bindLocalStream();
+  }
 
   final ConversationsRepository _repository;
+  final Ref _ref;
+
+  void _bindLocalStream() {
+    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      return;
+    }
+    _ref.listen<AsyncValue<List<Conversation>>>(conversationsWatchProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((conversations) {
+        state = state.copyWith(conversations: conversations);
+      });
+    }, fireImmediately: true);
+  }
 
   Future<void> loadInitial({String? currentUserId}) async {
     state = state.copyWith(isLoading: true, clearError: true);
@@ -130,6 +153,37 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   }) {
     final dto = ConversationDto.fromJson(raw);
     upsertConversation(mapConversationDto(dto, currentUserId: currentUserId));
+  }
+
+  Future<void> refreshConversation(String conversationId) async {
+    try {
+      final conversation = await _repository.getConversation(conversationId);
+      upsertConversation(conversation);
+    } on Object {
+      // Conversation may have been deleted locally.
+    }
+  }
+
+  Future<void> refreshConversationsForPeer(String peerId) async {
+    final matches = state.conversations
+        .where((conversation) => conversation.peerId == peerId)
+        .toList();
+    for (final conversation in matches) {
+      await refreshConversation(conversation.id);
+    }
+  }
+
+  void applyBlockedByMe(Set<String> blockedPeerIds) {
+    if (blockedPeerIds.isEmpty) {
+      return;
+    }
+    final updated = state.conversations.map((conversation) {
+      if (!blockedPeerIds.contains(conversation.peerId)) {
+        return conversation;
+      }
+      return conversation.copyWith(isBlocked: true, canSend: false);
+    }).toList();
+    state = state.copyWith(conversations: updated);
   }
 
   void removeConversation(String conversationId) {

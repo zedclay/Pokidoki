@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/app_providers.dart';
@@ -12,6 +14,7 @@ import '../../../../data/models/user_search_result.dart';
 import '../../../../data/repositories/contacts_repository.dart';
 import '../../../../data/repositories/user_repository.dart';
 import '../../../contacts/data/contacts_failure.dart';
+import '../../../messaging/data/messaging_providers.dart';
 import '../../../users/domain/user_failure.dart';
 
 class SocialGraphState {
@@ -93,19 +96,23 @@ class SocialGraphState {
 }
 
 class SocialGraphController extends StateNotifier<SocialGraphState> {
-  SocialGraphController(this._userRepository, this._contactsRepository)
-    : super(
+  SocialGraphController(
+    this._userRepository,
+    this._contactsRepository,
+    this._ref,
+  ) : super(
         SocialGraphState(
-          conversations: List.of(MockSampleData.conversations),
-          contacts: List.of(MockSampleData.contacts),
-          requests: List.of(MockSampleData.contactRequests),
-          profiles: Map.of(MockSampleData.profiles),
-          blockedUsers: List.of(MockSampleData.blockedUsers),
+          conversations: const [],
+          contacts: const [],
+          requests: const [],
+          profiles: const {},
+          blockedUsers: const [],
         ),
       );
 
   final UserRepository _userRepository;
   final ContactsRepository _contactsRepository;
+  final Ref _ref;
   int _searchRequestId = 0;
 
   ContactsRepository get repository => _contactsRepository;
@@ -130,6 +137,7 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
         isLoading: false,
       );
       _syncConversationBlockedState();
+      syncBlockedToConversations();
     } on ContactsFailure catch (error) {
       state = state.copyWith(isLoading: false, errorKey: error.messageKey);
     } on Object {
@@ -385,7 +393,11 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
       return contact;
     }).toList();
 
-    final conversations = state.conversations.map((conversation) {
+    final liveConversations = _ref.read(conversationsProvider).conversations;
+    final conversationSource = liveConversations.isNotEmpty
+        ? liveConversations
+        : state.conversations;
+    final conversations = conversationSource.map((conversation) {
       if (_matchesUser(
         userId,
         id: conversation.peerId,
@@ -412,6 +424,18 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
       conversations: conversations,
       profiles: profiles,
     );
+
+    for (final conversation in conversations) {
+      if (_matchesUser(
+        userId,
+        id: conversation.peerId,
+        username: conversation.peerUsername,
+      )) {
+        _ref
+            .read(conversationsProvider.notifier)
+            .upsertConversation(conversation);
+      }
+    }
   }
 
   Future<void> resetVerification(String userId) async {
@@ -461,6 +485,7 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
     try {
       final page = await _contactsRepository.getBlockedUsers();
       state = state.copyWith(blockedUsers: page.items, isLoadingBlocked: false);
+      syncBlockedToConversations();
     } on Object {
       state = state.copyWith(isLoadingBlocked: false, blockedError: true);
     }
@@ -512,6 +537,7 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
       );
       _setConversationBlockedForPeer(userId, false);
       _updateProfileRelationship(userId, ProfileRelationship.none);
+      rethrow;
     }
   }
 
@@ -528,12 +554,20 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
 
     try {
       await _contactsRepository.unblockUser(userId);
+      try {
+        await _ref
+            .read(conversationsProvider.notifier)
+            .refreshConversationsForPeer(userId);
+      } on Object {
+        // Messaging providers may be absent in isolated widget/unit tests.
+      }
     } on ContactsFailure catch (error) {
       state = state.copyWith(
         blockedUsers: previousBlocked,
         errorKey: error.messageKey,
       );
       _setConversationBlockedForPeer(userId, true);
+      rethrow;
     }
   }
 
@@ -566,9 +600,46 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
       if (conversation.peerId != peerId) {
         return conversation;
       }
-      return conversation.copyWith(isBlocked: blocked);
+      return conversation.copyWith(
+        isBlocked: blocked,
+        canSend: blocked ? false : conversation.canSend,
+      );
     }).toList();
     state = state.copyWith(conversations: conversations);
+
+    try {
+      final liveConversations = _ref.read(conversationsProvider).conversations;
+      for (final conversation in liveConversations.where(
+        (item) => item.peerId == peerId,
+      )) {
+        if (blocked) {
+          _ref
+              .read(conversationsProvider.notifier)
+              .upsertConversation(
+                conversation.copyWith(isBlocked: true, canSend: false),
+              );
+        } else {
+          unawaited(
+            _ref
+                .read(conversationsProvider.notifier)
+                .refreshConversation(conversation.id),
+          );
+        }
+      }
+    } on Object {
+      // Messaging providers may be absent in isolated widget/unit tests.
+    }
+  }
+
+  void syncBlockedToConversations() {
+    final blockedPeerIds = state.blockedUsers.map((user) => user.id).toSet();
+    try {
+      _ref
+          .read(conversationsProvider.notifier)
+          .applyBlockedByMe(blockedPeerIds);
+    } on Object {
+      // Messaging providers may be absent in isolated widget/unit tests.
+    }
   }
 
   void _syncConversationBlockedState() {
@@ -587,5 +658,6 @@ final socialGraphProvider =
       return SocialGraphController(
         ref.watch(userRepositoryProvider),
         ref.watch(contactsRepositoryProvider),
+        ref,
       );
     });

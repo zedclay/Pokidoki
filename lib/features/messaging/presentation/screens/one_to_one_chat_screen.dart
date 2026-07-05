@@ -13,11 +13,13 @@ import '../../../../design_system/components/identity/pokidoki_identity.dart';
 import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/settings/presentation/controllers/settings_controller.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/messaging_providers.dart';
 import '../widgets/chat_composer.dart';
 import '../widgets/chat_message_bubble.dart';
+import '../widgets/typing_indicator.dart';
 
 class OneToOneChatScreen extends ConsumerStatefulWidget {
   const OneToOneChatScreen({super.key, required this.conversationId});
@@ -197,9 +199,33 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
               .read(socialGraphProvider.notifier)
               .isContactVerified(conversation.peerId);
     final displayName = conversation?.peerDisplayName ?? 'Chat';
-    final blocked = conversation?.isBlocked ?? false;
+    final blockedByMe = conversation == null
+        ? false
+        : ref
+              .read(socialGraphProvider.notifier)
+              .isUserBlocked(conversation.peerId);
+    final messagingDisabled = !(conversation?.canSend ?? true);
     final reply = messaging.replyTo;
-    final isTyping = messaging.isPeerTyping;
+    final typingEnabled = ref.watch(settingsProvider).typingIndicatorsEnabled;
+    final showTyping = typingEnabled && messaging.isPeerTyping;
+
+    ref.listen(messagingProvider, (previous, next) {
+      if (previous?.isPeerTyping == next.isPeerTyping || !next.isPeerTyping) {
+        return;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_scrollController.hasClients) {
+          return;
+        }
+        unawaited(
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          ),
+        );
+      });
+    });
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -259,10 +285,14 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                                     ],
                                   ),
                                   Text(
-                                    verified
+                                    showTyping
+                                        ? l10n.chatPeerTyping
+                                        : verified
                                         ? l10n.semanticVerified
                                         : l10n.verifyNotVerified,
-                                    style: typography.caption,
+                                    style: typography.caption.copyWith(
+                                      color: showTyping ? colors.primary : null,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -310,7 +340,7 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(PokidokiSpacing.lg),
-                itemCount: messages.length + 1,
+                itemCount: messages.length + 1 + (showTyping ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Padding(
@@ -320,6 +350,12 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                       child: Center(
                         child: Text(l10n.chatToday, style: typography.caption),
                       ),
+                    );
+                  }
+                  if (showTyping && index == messages.length + 1) {
+                    return const Padding(
+                      padding: EdgeInsets.only(bottom: PokidokiSpacing.sm),
+                      child: TypingIndicator(),
                     );
                   }
                   final message = messages[index - 1];
@@ -334,25 +370,18 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                 },
               ),
             ),
-            if (isTyping)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: PokidokiSpacing.lg,
-                  vertical: PokidokiSpacing.xs,
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(l10n.chatPeerTyping, style: typography.caption),
-                ),
-              ),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _composer,
               builder: (context, value, child) {
                 return ChatComposer(
                   controller: _composer,
-                  enabled: !blocked,
-                  disabledNotice: blocked
-                      ? l10n.chatBlockedNotice(displayName.split(' ').first)
+                  enabled: !messagingDisabled,
+                  disabledNotice: messagingDisabled
+                      ? blockedByMe
+                            ? l10n.chatBlockedNotice(
+                                displayName.split(' ').first,
+                              )
+                            : l10n.cannotMessageUser
                       : null,
                   replyPreview: reply?.body,
                   onCancelReply: () {

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/app_providers.dart';
+import '../../../../core/security/app_pin_providers.dart';
+import '../../../../core/security/app_pin_storage.dart';
 import '../../../../data/mock/mock_development_credentials.dart';
 import '../../../../data/models/user_profile.dart';
 import '../../../../data/repositories/user_repository.dart';
@@ -10,6 +12,7 @@ import '../../data/api/api_authentication_repository.dart';
 import '../../data/auth_providers.dart';
 import '../../data/authentication_repository.dart';
 import '../../domain/auth_models.dart';
+import '../../../messaging/data/messaging_providers.dart';
 import '../../../users/domain/user_failure.dart';
 
 /// In-memory account-setup and unlock state for authentication flows.
@@ -24,6 +27,7 @@ class AuthFlowState {
     this.pendingPassword = '',
     this.pendingPin = '',
     this.confirmedPin = '',
+    this.persistedUnlockPin = '',
     this.biometricsEnabled = false,
     this.isLoading = false,
     this.errorMessageKey,
@@ -37,6 +41,7 @@ class AuthFlowState {
   final String pendingPassword;
   final String pendingPin;
   final String confirmedPin;
+  final String persistedUnlockPin;
   final bool biometricsEnabled;
   final bool isLoading;
   final String? errorMessageKey;
@@ -44,6 +49,8 @@ class AuthFlowState {
 
   String get unlockPin => confirmedPin.isNotEmpty
       ? confirmedPin
+      : persistedUnlockPin.isNotEmpty
+      ? persistedUnlockPin
       : MockDevelopmentCredentials.appPinFallback;
 
   String get maskedEmail {
@@ -78,12 +85,14 @@ class AuthFlowState {
     String? pendingPassword,
     String? pendingPin,
     String? confirmedPin,
+    String? persistedUnlockPin,
     bool? biometricsEnabled,
     bool? isLoading,
     String? errorMessageKey,
     bool? emailVerified,
     bool clearError = false,
     bool clearPins = false,
+    bool clearPersistedUnlockPin = false,
     bool clearPendingPassword = false,
   }) {
     return AuthFlowState(
@@ -96,6 +105,9 @@ class AuthFlowState {
           : (pendingPassword ?? this.pendingPassword),
       pendingPin: clearPins ? '' : (pendingPin ?? this.pendingPin),
       confirmedPin: clearPins ? '' : (confirmedPin ?? this.confirmedPin),
+      persistedUnlockPin: clearPersistedUnlockPin
+          ? ''
+          : (persistedUnlockPin ?? this.persistedUnlockPin),
       biometricsEnabled: biometricsEnabled ?? this.biometricsEnabled,
       isLoading: isLoading ?? this.isLoading,
       errorMessageKey: clearError
@@ -107,12 +119,17 @@ class AuthFlowState {
 }
 
 class AuthFlowController extends StateNotifier<AuthFlowState> {
-  AuthFlowController(this._ref, this._repository, this._userRepository)
-    : super(const AuthFlowState());
+  AuthFlowController(
+    this._ref,
+    this._repository,
+    this._userRepository,
+    this._appPinStorage,
+  ) : super(const AuthFlowState());
 
   final Ref _ref;
   final AuthenticationRepository _repository;
   final UserRepository _userRepository;
+  final AppPinStorage _appPinStorage;
 
   void setEmail(String value) {
     state = state.copyWith(email: value.trim(), clearError: true);
@@ -153,6 +170,13 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     state = state.copyWith(clearPins: true, clearError: true);
   }
 
+  Future<void> loadPersistedPin() async {
+    final pin = await _appPinStorage.readPin();
+    if (pin != null && pin.isNotEmpty) {
+      state = state.copyWith(persistedUnlockPin: pin, clearError: true);
+    }
+  }
+
   void hydrateFromProfile(UserProfile profile) {
     state = state.copyWith(
       username: profile.username,
@@ -164,6 +188,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
 
   Future<void> signOut() async {
     await _repository.logout();
+    await _ref.read(messagingOfflineCoordinatorProvider).wipeOnLogout();
     _ref.read(messagingProvider.notifier).clearAll();
     unawaited(_ref.read(messagingSocketCoordinatorProvider).disconnect());
     _ref.read(currentProfileProvider.notifier).clear();
@@ -174,6 +199,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
 
   Future<void> signOutAll() async {
     await _repository.logoutAll();
+    await _ref.read(messagingOfflineCoordinatorProvider).wipeOnLogout();
     _ref.read(messagingProvider.notifier).clearAll();
     unawaited(_ref.read(messagingSocketCoordinatorProvider).disconnect());
     _ref.read(currentProfileProvider.notifier).clear();
@@ -245,6 +271,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
       if (profile != null) {
         hydrateFromProfile(profile);
       }
+      await loadPersistedPin();
       return true;
     } on AuthFailure catch (failure) {
       state = state.copyWith(
@@ -344,12 +371,17 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     }
   }
 
-  bool confirmPinMatches(String confirmation) {
+  Future<bool> confirmPinMatches(String confirmation) async {
     if (confirmation != state.pendingPin) {
       state = state.copyWith(errorMessageKey: 'authPinMismatch');
       return false;
     }
-    state = state.copyWith(confirmedPin: confirmation, clearError: true);
+    await _appPinStorage.savePin(confirmation);
+    state = state.copyWith(
+      confirmedPin: confirmation,
+      persistedUnlockPin: confirmation,
+      clearError: true,
+    );
     return true;
   }
 
@@ -381,6 +413,7 @@ class AuthFlowController extends StateNotifier<AuthFlowState> {
     _ref.read(authSessionManagerProvider).establishSession(session);
     _ref.read(authPresentationProvider.notifier).state =
         AuthPresentationStatus.authenticated;
+    _ref.read(messagingProvider);
     unawaited(
       _ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
     );
@@ -394,5 +427,6 @@ final authFlowProvider =
         ref,
         ref.watch(authenticationRepositoryProvider),
         ref.watch(userRepositoryProvider),
+        ref.watch(appPinStorageProvider),
       );
     });

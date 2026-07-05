@@ -14,6 +14,10 @@ flutter run
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
+- [Local messaging database](docs/LOCAL_MESSAGING_DATABASE.md)
+- [Local database encryption](docs/LOCAL_DATABASE_ENCRYPTION.md)
+- [Offline messaging sync](docs/OFFLINE_MESSAGING_SYNC.md)
+- [Durable message queue](docs/DURABLE_MESSAGE_QUEUE.md)
 - [Messaging API integration](docs/MESSAGING_API_INTEGRATION.md)
 - [Messaging socket lifecycle](docs/MESSAGING_SOCKET_LIFECYCLE.md)
 - [Design system](docs/DESIGN_SYSTEM.md)
@@ -23,4 +27,4 @@ flutter run
 
 ## Current status
 
-Real-time text messaging is integrated against the Backend REST and Socket.IO APIs on branch `feature/messaging-realtime-integration`. Widget tests continue to use mock repositories via Riverpod overrides.
+Encrypted offline messaging persistence is implemented on branch `feature/encrypted-offline-messaging`. Production messaging uses an encrypted Drift/SQLite cache, durable outbound queue, and REST/Socket.IO synchronization. Widget tests continue to use mock repositories via Riverpod overrides.

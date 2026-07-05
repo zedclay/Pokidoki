@@ -30,6 +30,7 @@ Conversation mapConversationDto(
     unreadCount: dto.unreadCount,
     isMuted: dto.isMuted,
     isBlocked: !dto.canSend,
+    canSend: dto.canSend,
     isOutgoingPreview: isOutgoingPreview,
     disappearingDurationHours: hours,
     disappearingMessagesEnabled: hours != null,
@@ -82,6 +83,7 @@ ChatMessage mapMessageDto(MessageDto dto, {required String? currentUserId}) {
     deliveryStatus: isOutgoing
         ? mapSenderStatus(dto.senderStatus)
         : MessageDeliveryStatus.sent,
+    expiresAt: dto.expiresAt == null ? null : DateTime.parse(dto.expiresAt!),
   );
 }
 

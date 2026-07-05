@@ -12,6 +12,9 @@ abstract class MessagingSocketService {
   Stream<SocketMessageReceiptEvent> get messageDeliveredStream;
   Stream<SocketMessageReceiptEvent> get messageReadStream;
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream;
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream;
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream;
   Stream<SocketTypingEvent> get typingStartedStream;
   Stream<SocketTypingEvent> get typingStoppedStream;
 
@@ -59,6 +62,10 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
       StreamController<SocketMessageReceiptEvent>.broadcast();
   final _conversationUpdatedController =
       StreamController<SocketConversationUpdatedEvent>.broadcast();
+  final _conversationSettingsUpdatedController =
+      StreamController<SocketConversationSettingsUpdatedEvent>.broadcast();
+  final _messageDeletedController =
+      StreamController<SocketMessageDeletedEvent>.broadcast();
   final _typingStartedController =
       StreamController<SocketTypingEvent>.broadcast();
   final _typingStoppedController =
@@ -84,6 +91,15 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
   @override
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream =>
       _conversationUpdatedController.stream;
+
+  @override
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream =>
+      _conversationSettingsUpdatedController.stream;
+
+  @override
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream =>
+      _messageDeletedController.stream;
 
   @override
   Stream<SocketTypingEvent> get typingStartedStream =>
@@ -223,6 +239,45 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
           _conversationUpdatedController.add(
             SocketConversationUpdatedEvent(
               rawConversation: Map<String, dynamic>.from(conversation),
+            ),
+          );
+        }
+      }
+    });
+
+    socket.on(MessagingSocketEvents.conversationSettingsUpdated, (data) {
+      if (data is Map) {
+        final map = Map<String, dynamic>.from(data);
+        final conversationId = map['conversationId']?.toString();
+        if (conversationId == null) {
+          return;
+        }
+        final disappearingSeconds = map['disappearingSeconds'];
+        final systemMessage = map['systemMessage'];
+        _conversationSettingsUpdatedController.add(
+          SocketConversationSettingsUpdatedEvent(
+            conversationId: conversationId,
+            disappearingSeconds: disappearingSeconds is int
+                ? disappearingSeconds
+                : int.tryParse(disappearingSeconds?.toString() ?? ''),
+            rawSystemMessage: systemMessage is Map
+                ? Map<String, dynamic>.from(systemMessage)
+                : null,
+          ),
+        );
+      }
+    });
+
+    socket.on(MessagingSocketEvents.messageDeleted, (data) {
+      if (data is Map) {
+        final map = Map<String, dynamic>.from(data);
+        final messageId = map['messageId']?.toString();
+        final conversationId = map['conversationId']?.toString();
+        if (messageId != null && conversationId != null) {
+          _messageDeletedController.add(
+            SocketMessageDeletedEvent(
+              messageId: messageId,
+              conversationId: conversationId,
             ),
           );
         }
@@ -379,6 +434,10 @@ class FakeMessagingSocketService implements MessagingSocketService {
       StreamController<SocketMessageReceiptEvent>.broadcast();
   final _conversationUpdatedController =
       StreamController<SocketConversationUpdatedEvent>.broadcast();
+  final _conversationSettingsUpdatedController =
+      StreamController<SocketConversationSettingsUpdatedEvent>.broadcast();
+  final _messageDeletedController =
+      StreamController<SocketMessageDeletedEvent>.broadcast();
   final _typingStartedController =
       StreamController<SocketTypingEvent>.broadcast();
   final _typingStoppedController =
@@ -405,6 +464,15 @@ class FakeMessagingSocketService implements MessagingSocketService {
   @override
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream =>
       _conversationUpdatedController.stream;
+
+  @override
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream =>
+      _conversationSettingsUpdatedController.stream;
+
+  @override
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream =>
+      _messageDeletedController.stream;
 
   @override
   Stream<SocketTypingEvent> get typingStartedStream =>

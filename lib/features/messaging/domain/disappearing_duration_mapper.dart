@@ -27,4 +27,15 @@ class DisappearingDurationMapper {
       _ => null,
     };
   }
+
+  static DateTime? expiresAtForSend(int? durationHours, DateTime sentAt) {
+    if (durationHours == null) {
+      return null;
+    }
+    final seconds = hoursToSeconds(durationHours);
+    if (seconds == null || seconds == 0) {
+      return null;
+    }
+    return sentAt.add(Duration(seconds: seconds));
+  }
 }

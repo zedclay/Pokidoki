@@ -55,3 +55,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local encrypted messaging database (runtime cache)
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+**/pokidoki_messages_v1.sqlite*

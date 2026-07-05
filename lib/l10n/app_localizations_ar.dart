@@ -2037,4 +2037,35 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get messageSearchQueryTooShort => 'أدخل حرفين على الأقل للبحث.';
+
+  @override
+  String get localDatabaseUnavailable =>
+      'تخزين الرسائل المحلي غير متاح. حاول مرة أخرى بعد تسجيل الدخول.';
+
+  @override
+  String get localDatabaseKeyUnavailable =>
+      'التخزين الآمن غير متاح. لا يمكن تحميل الرسائل المحلية.';
+
+  @override
+  String get localDatabaseCorrupt =>
+      'تمت إعادة تعيين تخزين الرسائل المحلي. ستتم مزامنة محادثاتك.';
+
+  @override
+  String get localDatabaseEncryptionUnavailable =>
+      'التخزين المشفر غير متاح على هذا الجهاز.';
+
+  @override
+  String get syncTemporarilyUnavailable =>
+      'المزامنة غير متاحة مؤقتًا. تظل الرسائل المخزنة محليًا متاحة.';
+
+  @override
+  String get messageQueuedOffline =>
+      'تمت إضافة الرسالة إلى قائمة الانتظار. سيتم إرسالها عند عودة الاتصال.';
+
+  @override
+  String get messageRetryScheduled =>
+      'فشل الإرسال. سيتم إعادة المحاولة تلقائيًا.';
+
+  @override
+  String get messageFailedPermanently => 'تعذر إرسال هذه الرسالة.';
 }

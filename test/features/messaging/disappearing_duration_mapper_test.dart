@@ -24,5 +24,14 @@ void main() {
         throwsArgumentError,
       );
     });
+
+    test('expiresAtForSend returns null when disabled', () {
+      final sentAt = DateTime.utc(2026, 7, 5, 12);
+      expect(DisappearingDurationMapper.expiresAtForSend(null, sentAt), isNull);
+      expect(
+        DisappearingDurationMapper.expiresAtForSend(1, sentAt)?.toUtc(),
+        DateTime.utc(2026, 7, 5, 13),
+      );
+    });
   });
 }

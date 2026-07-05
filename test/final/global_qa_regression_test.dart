@@ -356,6 +356,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
+      await container.read(socialGraphProvider.notifier).refresh();
+      await container.read(conversationsProvider.notifier).loadInitial();
       await container
           .read(socialGraphProvider.notifier)
           .markVerified('c-amira');
@@ -366,7 +368,9 @@ void main() {
         isTrue,
       );
       expect(
-        graph.conversations
+        container
+            .read(conversationsProvider)
+            .conversations
             .firstWhere((c) => c.peerId == 'c-amira')
             .isPeerVerified,
         isTrue,
