@@ -38,9 +38,23 @@ class MessagingDatabaseFactory {
   MessagingDatabase openInMemoryForTests({String? hexKey}) {
     final key = hexKey ?? MessagingDatabaseKeyGenerator.generateHexKey();
     final executor = LazyDatabase(() async {
-      final db = sqlite3.openInMemory();
-      _applyKey(db, key);
-      return NativeDatabase.opened(db);
+      final directory = await Directory.systemTemp.createTemp(
+        'pokidoki-db-test-',
+      );
+      final file = File(p.join(directory.path, 'test.sqlite'));
+      final db = sqlite3.open(file.path);
+      try {
+        MessagingDatabaseHealth.verifyCipherAvailable(db);
+        _applyKey(db, key);
+        db.execute('SELECT count(*) FROM sqlite_master');
+        return NativeDatabase.opened(db);
+      } on Object {
+        db.dispose();
+        if (directory.existsSync()) {
+          await directory.delete(recursive: true);
+        }
+        rethrow;
+      }
     });
     return MessagingDatabase(executor);
   }
@@ -110,6 +124,7 @@ class MessagingDatabaseFactory {
     return LazyDatabase(() async {
       final db = sqlite3.open(file.path);
       try {
+        MessagingDatabaseHealth.verifyCipherAvailable(db);
         _applyKey(db, hexKey);
         db.execute('SELECT count(*) FROM sqlite_master');
         return NativeDatabase.opened(db);

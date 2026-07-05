@@ -42,15 +42,22 @@ class MessagingOfflineCoordinator {
   OutboundMessageQueueProcessor? _queueProcessor;
 
   final List<StreamSubscription<dynamic>> _subscriptions = [];
+  Future<OfflineFirstConversationsRepository>? _ensureReadyFuture;
 
   bool get _testMode => Platform.environment.containsKey('FLUTTER_TEST');
 
   OfflineFirstConversationsRepository? get repository => _repository;
 
   Future<OfflineFirstConversationsRepository> ensureReady() async {
-    if (_repository != null) {
-      return _repository!;
+    final existing = _repository;
+    if (existing != null) {
+      return existing;
     }
+    _ensureReadyFuture ??= _ensureReadyOnce();
+    return _ensureReadyFuture!;
+  }
+
+  Future<OfflineFirstConversationsRepository> _ensureReadyOnce() async {
     _database = await _lifecycle.open();
     _syncEngine = MessagingSyncEngine(
       database: _database!,
@@ -161,6 +168,7 @@ class MessagingOfflineCoordinator {
     _syncEngine = null;
     _queueProcessor = null;
     _database = null;
+    _ensureReadyFuture = null;
     await _lifecycle.closeAndWipe();
   }
 

@@ -123,6 +123,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
     } on MessagingFailure catch (failure) {
       state = state.copyWith(errorKey: failure.messageKey);
       rethrow;
+    } on Object {
+      state = state.copyWith(errorKey: 'messagingUnavailable');
+      throw const MessagingFailure(code: 'SYNC_TEMPORARILY_UNAVAILABLE');
     }
   }
 

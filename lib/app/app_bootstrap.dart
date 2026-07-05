@@ -102,13 +102,13 @@ class AppBootstrap extends StateNotifier<BootstrapState> {
     }
 
     try {
+      await _ref
+          .read(messagingOfflineCoordinatorProvider)
+          .onAuthenticatedBootstrap();
       await Future.wait<void>([
         _ref.read(contactsRepositoryProvider).getContacts(),
         _ref.read(conversationsProvider.notifier).loadInitial(),
         _ref.read(socialGraphProvider.notifier).loadBlockedUsers(),
-        _ref
-            .read(messagingOfflineCoordinatorProvider)
-            .onAuthenticatedBootstrap(),
       ]).timeout(const Duration(seconds: 6));
       _ref.read(socialGraphProvider.notifier).syncBlockedToConversations();
     } on Object {

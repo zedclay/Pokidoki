@@ -11,6 +11,7 @@ class MessagingDatabaseLifecycle {
   final MessagingDatabaseFactory _factory;
   MessagingDatabase? _database;
   OutboundMessageQueueProcessor? _queueProcessor;
+  Future<MessagingDatabase>? _openFuture;
 
   MessagingDatabase? get database => _database;
 
@@ -21,17 +22,25 @@ class MessagingDatabaseLifecycle {
   }
 
   Future<MessagingDatabase> open() async {
-    if (_database != null) {
-      return _database!;
+    final existing = _database;
+    if (existing != null) {
+      return existing;
     }
-    _database = await _factory.openEncrypted();
-    return _database!;
+    _openFuture ??= _openOnce();
+    return _openFuture!;
+  }
+
+  Future<MessagingDatabase> _openOnce() async {
+    final db = await _factory.openEncrypted();
+    _database = db;
+    return db;
   }
 
   Future<void> closeAndWipe() async {
     _queueProcessor?.stop();
     final db = _database;
     _database = null;
+    _openFuture = null;
     _queueProcessor = null;
     if (db != null) {
       await db.close();
@@ -43,6 +52,7 @@ class MessagingDatabaseLifecycle {
     _queueProcessor?.stop();
     final db = _database;
     _database = null;
+    _openFuture = null;
     if (db != null) {
       await db.close();
     }
