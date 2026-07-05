@@ -6,6 +6,8 @@ import 'package:pokidoki/app/routing/route_names.dart';
 import 'package:pokidoki/design_system/themes/pokidoki_theme.dart';
 import 'package:pokidoki/data/mock/mock_development_credentials.dart';
 import 'package:pokidoki/features/authentication/presentation/controllers/auth_flow_controller.dart';
+import 'package:pokidoki/features/authentication/data/auth_providers.dart';
+import 'package:pokidoki/features/users/data/user_providers.dart';
 import 'package:pokidoki/features/authentication/presentation/screens/create_account_screen.dart';
 import 'package:pokidoki/features/authentication/presentation/screens/email_verification_screen.dart';
 import 'package:pokidoki/features/authentication/presentation/screens/profile_setup_screen.dart';
@@ -146,6 +148,27 @@ void main() {
     );
   });
 
+  test('verify after signup establishes session without profile', () async {
+    final container = ProviderContainer(overrides: pokidokiTestOverrides);
+    addTearDown(container.dispose);
+    final auth = container.read(authFlowProvider.notifier);
+    await auth.createAccount(
+      email: 'you@example.com',
+      password: 'Password1234!',
+    );
+    expect(
+      await auth.verifyEmailCode(
+        MockDevelopmentCredentials.emailVerificationCode,
+      ),
+      isTrue,
+    );
+    expect(container.read(authSessionManagerProvider).hasAccessToken, isTrue);
+    expect(
+      container.read(currentProfileProvider).status,
+      ProfileCompletionStatus.missing,
+    );
+  });
+
   test('app lock accepts configured PIN and rejects others', () {
     final container = ProviderContainer(overrides: pokidokiTestOverrides);
     addTearDown(container.dispose);
@@ -177,7 +200,8 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(WelcomeScreen), findsOneWidget);
 
     final container = ProviderScope.containerOf(
@@ -189,11 +213,11 @@ void main() {
       email: 'you@example.com',
       password: 'Password1234!',
     );
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 600));
     expect(await createFuture, isTrue);
 
     final verifyFuture = auth.verifyEmailCode('123456');
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 1200));
     expect(await verifyFuture, isTrue);
 
     auth
@@ -204,12 +228,14 @@ void main() {
     auth.setBiometricsEnabled(true);
 
     router.go(AppRoutes.appLock);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(AppLockScreen), findsOneWidget);
     expect(auth.unlockWithPin('654321'), isTrue);
 
     router.go(AppRoutes.appChats);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(ConversationsHomeScreen), findsOneWidget);
     expect(find.textContaining('Amira'), findsWidgets);
   });

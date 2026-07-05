@@ -247,7 +247,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
             ),
             const SizedBox(height: PokidokiSpacing.xl),
             PokidokiButton.primary(
-              label: profileComplete ? l10n.actionContinue : l10n.actionContinue,
+              label: profileComplete
+                  ? l10n.actionContinue
+                  : l10n.actionContinue,
               onPressed: _submitting
                   ? null
                   : () => _continue(skipOptional: false),

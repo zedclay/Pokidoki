@@ -12,7 +12,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../controllers/messaging_controller.dart';
+import '../../data/messaging_providers.dart';
 
 class ConversationInfoScreen extends ConsumerWidget {
   const ConversationInfoScreen({super.key, required this.conversationId});

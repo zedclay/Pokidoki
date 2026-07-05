@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +15,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../controllers/messaging_controller.dart';
+import '../../data/messaging_providers.dart';
 import '../widgets/chat_composer.dart';
 import '../widgets/chat_message_bubble.dart';
 
@@ -33,7 +35,30 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
   @override
   void initState() {
     super.initState();
-    _composer.addListener(() => setState(() {}));
+    _composer.addListener(_onComposerChanged);
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(messagingProvider.notifier)
+          .openConversation(widget.conversationId);
+    });
+  }
+
+  void _onComposerChanged() {
+    ref
+        .read(messagingProvider.notifier)
+        .onComposerChanged(widget.conversationId, _composer.text);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+    if (_scrollController.position.pixels <= 80) {
+      ref
+          .read(messagingProvider.notifier)
+          .loadOlderMessages(widget.conversationId);
+    }
   }
 
   @override
@@ -51,7 +76,6 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
   Future<void> _send() async {
     final text = _composer.text;
     _composer.clear();
-    setState(() {});
     await ref
         .read(messagingProvider.notifier)
         .sendTextMessage(widget.conversationId, text);
@@ -175,146 +199,176 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
     final displayName = conversation?.peerDisplayName ?? 'Chat';
     final blocked = conversation?.isBlocked ?? false;
     final reply = messaging.replyTo;
+    final isTyping = messaging.isPeerTyping;
 
-    return PokidokiScaffold(
-      body: Column(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: Padding(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          final notifier = ref.read(messagingProvider.notifier);
+          if (notifier.mounted) {
+            unawaited(notifier.closeConversation(widget.conversationId));
+          }
+        }
+      },
+      child: PokidokiScaffold(
+        body: Column(
+          children: [
+            SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: PokidokiSpacing.xs,
+                ),
+                child: Row(
+                  children: [
+                    PokidokiIconButton(
+                      icon: Icons.arrow_back_rounded,
+                      tooltip: l10n.semanticBack,
+                      onPressed: () => context.pop(),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => context.push(
+                          AppRoutes.conversationInfoPath(widget.conversationId),
+                        ),
+                        child: Row(
+                          children: [
+                            PokidokiAvatar(displayName: displayName, size: 36),
+                            const SizedBox(width: PokidokiSpacing.sm),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          displayName,
+                                          style: typography.cardTitle,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (verified) ...[
+                                        const SizedBox(
+                                          width: PokidokiSpacing.xxs,
+                                        ),
+                                        PokidokiVerifiedBadge(
+                                          semanticLabel: l10n.semanticVerified,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  Text(
+                                    verified
+                                        ? l10n.semanticVerified
+                                        : l10n.verifyNotVerified,
+                                    style: typography.caption,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: l10n.chatSearchInConversation,
+                      onPressed: () => context.push(
+                        AppRoutes.conversationSearchPath(widget.conversationId),
+                      ),
+                      icon: const Icon(Icons.search_rounded),
+                    ),
+                    IconButton(
+                      tooltip: l10n.chatConversationInfo,
+                      onPressed: () => context.push(
+                        AppRoutes.conversationInfoPath(widget.conversationId),
+                      ),
+                      icon: const Icon(Icons.info_outline_rounded),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: PokidokiSpacing.xs,
+                horizontal: PokidokiSpacing.lg,
               ),
               child: Row(
                 children: [
-                  PokidokiIconButton(
-                    icon: Icons.arrow_back_rounded,
-                    tooltip: l10n.semanticBack,
-                    onPressed: () => context.pop(),
-                  ),
+                  Icon(Icons.lock_rounded, size: 14, color: colors.secure),
+                  const SizedBox(width: PokidokiSpacing.xs),
                   Expanded(
-                    child: InkWell(
-                      onTap: () => context.push(
-                        AppRoutes.conversationInfoPath(widget.conversationId),
-                      ),
-                      child: Row(
-                        children: [
-                          PokidokiAvatar(displayName: displayName, size: 36),
-                          const SizedBox(width: PokidokiSpacing.sm),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        displayName,
-                                        style: typography.cardTitle,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    if (verified) ...[
-                                      const SizedBox(
-                                        width: PokidokiSpacing.xxs,
-                                      ),
-                                      PokidokiVerifiedBadge(
-                                        semanticLabel: l10n.semanticVerified,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                Text(
-                                  verified
-                                      ? l10n.semanticVerified
-                                      : l10n.verifyNotVerified,
-                                  style: typography.caption,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Text(
+                      l10n.chatProtectedBanner,
+                      style: typography.caption,
                     ),
-                  ),
-                  IconButton(
-                    tooltip: l10n.chatSearchInConversation,
-                    onPressed: () => context.push(
-                      AppRoutes.conversationSearchPath(widget.conversationId),
-                    ),
-                    icon: const Icon(Icons.search_rounded),
-                  ),
-                  IconButton(
-                    tooltip: l10n.chatConversationInfo,
-                    onPressed: () => context.push(
-                      AppRoutes.conversationInfoPath(widget.conversationId),
-                    ),
-                    icon: const Icon(Icons.info_outline_rounded),
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: PokidokiSpacing.lg),
-            child: Row(
-              children: [
-                Icon(Icons.lock_rounded, size: 14, color: colors.secure),
-                const SizedBox(width: PokidokiSpacing.xs),
-                Expanded(
-                  child: Text(
-                    l10n.chatProtectedBanner,
-                    style: typography.caption,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(PokidokiSpacing.lg),
-              itemCount: messages.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(PokidokiSpacing.lg),
+                itemCount: messages.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: PokidokiSpacing.md,
+                      ),
+                      child: Center(
+                        child: Text(l10n.chatToday, style: typography.caption),
+                      ),
+                    );
+                  }
+                  final message = messages[index - 1];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: PokidokiSpacing.md),
-                    child: Center(
-                      child: Text(l10n.chatToday, style: typography.caption),
+                    padding: const EdgeInsets.only(bottom: PokidokiSpacing.sm),
+                    child: ChatMessageBubble(
+                      message: message,
+                      timeLabel: _timeLabel(message.sentAt),
+                      onLongPress: () => _onMessageActions(message),
                     ),
                   );
-                }
-                final message = messages[index - 1];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: PokidokiSpacing.sm),
-                  child: ChatMessageBubble(
-                    message: message,
-                    timeLabel: _timeLabel(message.sentAt),
-                    onLongPress: () => _onMessageActions(message),
-                  ),
+                },
+              ),
+            ),
+            if (isTyping)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: PokidokiSpacing.lg,
+                  vertical: PokidokiSpacing.xs,
+                ),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(l10n.chatPeerTyping, style: typography.caption),
+                ),
+              ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _composer,
+              builder: (context, value, child) {
+                return ChatComposer(
+                  controller: _composer,
+                  enabled: !blocked,
+                  disabledNotice: blocked
+                      ? l10n.chatBlockedNotice(displayName.split(' ').first)
+                      : null,
+                  replyPreview: reply?.body,
+                  onCancelReply: () {
+                    ref.read(messagingProvider.notifier).setReplyTo(null);
+                  },
+                  onAttach: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l10n.chatAttachmentLater)),
+                    );
+                  },
+                  onSend: _send,
                 );
               },
             ),
-          ),
-          ChatComposer(
-            controller: _composer,
-            enabled: !blocked,
-            disabledNotice: blocked
-                ? l10n.chatBlockedNotice(displayName.split(' ').first)
-                : null,
-            replyPreview: reply?.body,
-            onCancelReply: () {
-              ref.read(messagingProvider.notifier).setReplyTo(null);
-              setState(() {});
-            },
-            onAttach: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(l10n.chatAttachmentLater)));
-            },
-            onSend: _send,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

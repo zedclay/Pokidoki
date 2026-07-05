@@ -25,15 +25,28 @@ class UsernameSetupScreen extends ConsumerStatefulWidget {
 }
 
 class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
-  final _controller = TextEditingController(text: 'zedclay');
+  final _controller = TextEditingController();
   Timer? _debounce;
   bool? _available;
+  bool _checkFailed = false;
   bool _checking = false;
+  bool _sessionReady = false;
 
   @override
   void initState() {
     super.initState();
-    _checkAvailability(_controller.text);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _prepareSession());
+  }
+
+  Future<void> _prepareSession() async {
+    await ref.read(authFlowProvider.notifier).ensureProfileSetupSession();
+    if (!mounted) {
+      return;
+    }
+    setState(() => _sessionReady = true);
+    if (_controller.text.isNotEmpty) {
+      await _checkAvailability(_controller.text);
+    }
   }
 
   @override
@@ -59,11 +72,15 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
     if (!_isValidFormat(value)) {
       setState(() {
         _available = null;
+        _checkFailed = false;
         _checking = false;
       });
       return;
     }
-    setState(() => _checking = true);
+    setState(() {
+      _checking = true;
+      _checkFailed = false;
+    });
     final available = await ref
         .read(authFlowProvider.notifier)
         .checkUsernameAvailable(value);
@@ -72,6 +89,7 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
     }
     setState(() {
       _available = available;
+      _checkFailed = available == null;
       _checking = false;
     });
   }
@@ -106,7 +124,10 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
     final typography = context.pokidokiTypography;
     final username = _controller.text;
     final canContinue =
-        _isValidFormat(username) && _available == true && !_checking;
+        _sessionReady &&
+        _isValidFormat(username) &&
+        _available == true &&
+        !_checking;
 
     return AuthScaffold(
       title: l10n.appName,
@@ -188,6 +209,11 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
               Text(
                 l10n.authUsernameUnavailable,
                 style: typography.supportingBody.copyWith(color: colors.error),
+              )
+            else if (_checkFailed)
+              Text(
+                l10n.userUnexpectedError,
+                style: typography.supportingBody.copyWith(color: colors.error),
               ),
             const SizedBox(height: PokidokiSpacing.xl),
             DecoratedBox(
@@ -229,6 +255,7 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
                     AuthRequirementRow(
                       label: l10n.authUsernameUnique,
                       met: _available == true,
+                      failed: _available == false,
                     ),
                   ],
                 ),

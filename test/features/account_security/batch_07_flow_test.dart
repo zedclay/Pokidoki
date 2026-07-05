@@ -10,7 +10,7 @@ import 'package:pokidoki/features/account_security/presentation/controllers/acco
 import 'package:pokidoki/features/account_security/presentation/screens/account_recovery_screen.dart';
 import 'package:pokidoki/features/account_security/presentation/screens/change_password_screen.dart';
 import 'package:pokidoki/features/account_security/presentation/screens/email_management_screen.dart';
-import 'package:pokidoki/features/messaging/presentation/controllers/messaging_controller.dart';
+import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/conversation_info_screen.dart';
 import 'package:pokidoki/features/safety/data/safety_reporting_repository.dart';
 import 'package:pokidoki/features/safety/presentation/controllers/safety_reporting_controller.dart';

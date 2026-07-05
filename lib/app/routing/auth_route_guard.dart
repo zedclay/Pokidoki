@@ -1,6 +1,5 @@
 import '../app_bootstrap.dart';
 import '../providers/app_providers.dart';
-import '../../features/users/data/user_providers.dart';
 import 'route_names.dart';
 
 /// Routes reachable without a backend-authenticated session.

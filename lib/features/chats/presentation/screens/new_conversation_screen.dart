@@ -12,6 +12,8 @@ import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/messaging/data/messaging_failure.dart';
+import '../../../../features/messaging/data/messaging_providers.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -174,13 +176,13 @@ class _ActionTile extends StatelessWidget {
   }
 }
 
-class _ContactTile extends StatelessWidget {
+class _ContactTile extends ConsumerWidget {
   const _ContactTile({required this.contact});
 
   final Contact contact;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final typography = context.pokidokiTypography;
     return ListTile(
@@ -201,9 +203,29 @@ class _ContactTile extends StatelessWidget {
         '@${contact.username}',
         style: typography.supportingBody,
       ),
-      onTap: () => context.push(
-        AppRoutes.chatPath('conv-${contact.id.replaceFirst('c-', '')}'),
-      ),
+      onTap: () async {
+        try {
+          final conversation = await ref
+              .read(conversationsProvider.notifier)
+              .createOrGet(contact.id);
+          if (context.mounted && conversation != null) {
+            context.push(AppRoutes.chatPath(conversation.id));
+          }
+        } on MessagingFailure catch (failure) {
+          if (!context.mounted) {
+            return;
+          }
+          final message = switch (failure.messageKey) {
+            'conversationContactRequired' => l10n.conversationContactRequired,
+            'conversationUnavailable' => l10n.conversationUnavailable,
+            'conversationSelfNotAllowed' => l10n.cannotMessageUser,
+            _ => l10n.messagingUnavailable,
+          };
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message)));
+        }
+      },
     );
   }
 }

@@ -69,7 +69,7 @@ class MockUserRepository implements UserRepository {
     bool? isDiscoverable,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
-    final current = MockSampleData.currentUser;
+    const current = MockSampleData.currentUser;
     return current.copyWith(
       displayName: displayName,
       bio: bio,
@@ -124,6 +124,9 @@ class MockUserRepository implements UserRepository {
         );
       }
     }
-    throw const UserFailure(messageKey: 'userNotFound', backendCode: 'USER_NOT_FOUND');
+    throw const UserFailure(
+      messageKey: 'userNotFound',
+      backendCode: 'USER_NOT_FOUND',
+    );
   }
 }

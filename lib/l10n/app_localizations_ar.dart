@@ -545,6 +545,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatSend => 'إرسال';
 
   @override
+  String get chatPeerTyping => 'يكتب…';
+
+  @override
   String get chatAttach => 'مرفق';
 
   @override
@@ -2000,4 +2003,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get contactsRelationshipUnavailable => 'معلومات العلاقة غير متاحة.';
+
+  @override
+  String get messagingUnavailable =>
+      'المراسلة غير متاحة مؤقتًا. حاول مرة أخرى.';
+
+  @override
+  String get conversationUnavailable => 'هذه المحادثة غير متاحة.';
+
+  @override
+  String get conversationContactRequired => 'يمكنك مراسلة جهات الاتصال فقط.';
+
+  @override
+  String get cannotMessageUser => 'لا يمكنك مراسلة هذا المستخدم.';
+
+  @override
+  String get messageInvalid => 'تعذر إرسال هذه الرسالة.';
+
+  @override
+  String get messageTooLong => 'هذه الرسالة طويلة جدًا.';
+
+  @override
+  String get messageFailed => 'فشل إرسال الرسالة.';
+
+  @override
+  String get messageTapToRetry => 'اضغط لإعادة المحاولة';
+
+  @override
+  String get messagingReconnecting => 'جارٍ إعادة الاتصال…';
+
+  @override
+  String get messagingConnectionLost => 'انقطع الاتصال. قد تتأخر الرسائل.';
+
+  @override
+  String get messageSearchQueryTooShort => 'أدخل حرفين على الأقل للبحث.';
 }

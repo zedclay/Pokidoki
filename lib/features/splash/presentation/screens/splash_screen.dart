@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/app_bootstrap.dart';
 import '../../../../app/providers/app_providers.dart';
-import '../../../../features/users/data/user_providers.dart';
 import '../../../../app/routing/auth_route_guard.dart';
 import '../../../../core/utilities/motion.dart';
 import '../../../../design_system/colors/pokidoki_colors.dart';

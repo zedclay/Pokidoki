@@ -9,7 +9,7 @@ import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../controllers/messaging_controller.dart';
+import '../../data/messaging_providers.dart';
 
 class ConversationSearchScreen extends ConsumerStatefulWidget {
   const ConversationSearchScreen({super.key, required this.conversationId});

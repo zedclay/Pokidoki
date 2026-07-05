@@ -556,6 +556,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatSend => 'Send';
 
   @override
+  String get chatPeerTyping => 'Typing…';
+
+  @override
   String get chatAttach => 'Attachment';
 
   @override
@@ -2034,4 +2037,41 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get contactsRelationshipUnavailable =>
       'Relationship information is unavailable.';
+
+  @override
+  String get messagingUnavailable =>
+      'Messaging is temporarily unavailable. Try again.';
+
+  @override
+  String get conversationUnavailable => 'This conversation is unavailable.';
+
+  @override
+  String get conversationContactRequired =>
+      'You can only message people in your contacts.';
+
+  @override
+  String get cannotMessageUser => 'You cannot message this user.';
+
+  @override
+  String get messageInvalid => 'This message could not be sent.';
+
+  @override
+  String get messageTooLong => 'This message is too long.';
+
+  @override
+  String get messageFailed => 'Message failed to send.';
+
+  @override
+  String get messageTapToRetry => 'Tap to retry';
+
+  @override
+  String get messagingReconnecting => 'Reconnecting…';
+
+  @override
+  String get messagingConnectionLost =>
+      'Connection lost. Messages may be delayed.';
+
+  @override
+  String get messageSearchQueryTooShort =>
+      'Enter at least 2 characters to search.';
 }

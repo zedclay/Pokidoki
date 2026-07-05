@@ -164,6 +164,7 @@
   "safetyDoNotCompareOnlyInChat": "لا تقارن هذا الرقم داخل المحادثة التي تتحقق منها فقط.",
   "chatTypeMessage": "اكتب رسالة",
   "chatSend": "إرسال",
+  "chatPeerTyping": "يكتب…",
   "chatAttach": "مرفق",
   "chatReply": "رد",
   "chatCopy": "نسخ",
@@ -617,5 +618,16 @@
   "contactsUserUnavailable": "هذا المستخدم غير متاح.",
   "contactsAlreadyBlocked": "هذا المستخدم محظور بالفعل.",
   "contactsNotBlocked": "هذا المستخدم غير محظور.",
-  "contactsRelationshipUnavailable": "معلومات العلاقة غير متاحة."
+  "contactsRelationshipUnavailable": "معلومات العلاقة غير متاحة.",
+  "messagingUnavailable": "المراسلة غير متاحة مؤقتًا. حاول مرة أخرى.",
+  "conversationUnavailable": "هذه المحادثة غير متاحة.",
+  "conversationContactRequired": "يمكنك مراسلة جهات الاتصال فقط.",
+  "cannotMessageUser": "لا يمكنك مراسلة هذا المستخدم.",
+  "messageInvalid": "تعذر إرسال هذه الرسالة.",
+  "messageTooLong": "هذه الرسالة طويلة جدًا.",
+  "messageFailed": "فشل إرسال الرسالة.",
+  "messageTapToRetry": "اضغط لإعادة المحاولة",
+  "messagingReconnecting": "جارٍ إعادة الاتصال…",
+  "messagingConnectionLost": "انقطع الاتصال. قد تتأخر الرسائل.",
+  "messageSearchQueryTooShort": "أدخل حرفين على الأقل للبحث."
 }

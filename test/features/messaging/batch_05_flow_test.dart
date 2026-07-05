@@ -7,7 +7,7 @@ import 'package:pokidoki/design_system/themes/pokidoki_theme.dart';
 import 'package:pokidoki/features/app_shell/presentation/screens/main_shell_screen.dart';
 import 'package:pokidoki/features/app_shell/presentation/widgets/main_bottom_nav.dart';
 import 'package:pokidoki/features/chats/presentation/screens/conversations_home_screen.dart';
-import 'package:pokidoki/features/messaging/presentation/controllers/messaging_controller.dart';
+import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/conversation_info_screen.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/conversation_search_screen.dart';
 import 'package:pokidoki/features/messaging/presentation/screens/disappearing_messages_screen.dart';

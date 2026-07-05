@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/providers/app_providers.dart';
 import '../../../../app/routing/route_names.dart';
 import '../../../../data/models/conversation.dart';
 import '../../../../design_system/colors/pokidoki_colors.dart';
@@ -10,7 +13,7 @@ import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
-import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
+import '../../../../features/messaging/data/messaging_providers.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/conversation_row.dart';
 
@@ -25,12 +28,36 @@ class ConversationsHomeScreen extends ConsumerStatefulWidget {
 class _ConversationsHomeScreenState
     extends ConsumerState<ConversationsHomeScreen> {
   final _searchController = TextEditingController();
+  final _scrollController = ScrollController();
   bool _searchOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(conversationsProvider.notifier).loadInitial();
+      unawaited(
+        ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
+      );
+    });
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 200) {
+      ref.read(conversationsProvider.notifier).loadMore();
+    }
   }
 
   String _timeLabel(BuildContext context, Conversation conversation) {
@@ -56,11 +83,11 @@ class _ConversationsHomeScreenState
     final l10n = AppLocalizations.of(context);
     final colors = context.pokidokiColors;
     final typography = context.pokidokiTypography;
-    ref.watch(socialGraphProvider);
+    final conversationsState = ref.watch(conversationsProvider);
     final query = _searchController.text;
     final conversations = ref
-        .read(socialGraphProvider.notifier)
-        .filterConversations(query);
+        .read(conversationsProvider.notifier)
+        .filter(query);
     final pinned = conversations.where((c) => c.isPinned).toList();
     final recent = conversations.where((c) => !c.isPinned).toList();
 
@@ -137,39 +164,86 @@ class _ConversationsHomeScreenState
                 ),
               ),
             ),
-            Expanded(
-              child: conversations.isEmpty
-                  ? _EmptyConversations(
-                      onNewConversation: () =>
-                          context.push(AppRoutes.newConversation),
-                    )
-                  : ListView(
+            if (conversationsState.isLoading && conversations.isEmpty)
+              const Expanded(child: Center(child: CircularProgressIndicator()))
+            else if (conversationsState.errorKey != null &&
+                conversations.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(PokidokiSpacing.xl),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (pinned.isNotEmpty) ...[
-                          _SectionLabel(label: l10n.chatsPinned),
-                          ...pinned.map(
-                            (c) => ConversationRow(
-                              conversation: c,
-                              timeLabel: _timeLabel(context, c),
-                              onTap: () =>
-                                  context.push(AppRoutes.chatPath(c.id)),
-                            ),
-                          ),
-                        ],
-                        if (recent.isNotEmpty) ...[
-                          _SectionLabel(label: l10n.chatsRecent),
-                          ...recent.map(
-                            (c) => ConversationRow(
-                              conversation: c,
-                              timeLabel: _timeLabel(context, c),
-                              onTap: () =>
-                                  context.push(AppRoutes.chatPath(c.id)),
-                            ),
-                          ),
-                        ],
+                        Text(
+                          _localizedError(l10n, conversationsState.errorKey!),
+                          style: typography.supportingBody,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: PokidokiSpacing.md),
+                        FilledButton(
+                          onPressed: () => ref
+                              .read(conversationsProvider.notifier)
+                              .refresh(),
+                          child: Text(l10n.actionRetry),
+                        ),
                       ],
                     ),
-            ),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () =>
+                      ref.read(conversationsProvider.notifier).refresh(),
+                  child: conversations.isEmpty
+                      ? ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            _EmptyConversations(
+                              onNewConversation: () =>
+                                  context.push(AppRoutes.newConversation),
+                            ),
+                          ],
+                        )
+                      : ListView(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            if (pinned.isNotEmpty) ...[
+                              _SectionLabel(label: l10n.chatsPinned),
+                              ...pinned.map(
+                                (c) => ConversationRow(
+                                  conversation: c,
+                                  timeLabel: _timeLabel(context, c),
+                                  onTap: () =>
+                                      context.push(AppRoutes.chatPath(c.id)),
+                                ),
+                              ),
+                            ],
+                            if (recent.isNotEmpty) ...[
+                              _SectionLabel(label: l10n.chatsRecent),
+                              ...recent.map(
+                                (c) => ConversationRow(
+                                  conversation: c,
+                                  timeLabel: _timeLabel(context, c),
+                                  onTap: () =>
+                                      context.push(AppRoutes.chatPath(c.id)),
+                                ),
+                              ),
+                            ],
+                            if (conversationsState.isLoadingMore)
+                              const Padding(
+                                padding: EdgeInsets.all(PokidokiSpacing.md),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                          ],
+                        ),
+                ),
+              ),
           ],
         ),
       ),
@@ -181,6 +255,16 @@ class _ConversationsHomeScreenState
         child: const Icon(Icons.edit_square),
       ),
     );
+  }
+
+  String _localizedError(AppLocalizations l10n, String key) {
+    return switch (key) {
+      'messagingUnavailable' => l10n.messagingUnavailable,
+      'conversationUnavailable' => l10n.conversationUnavailable,
+      'conversationContactRequired' => l10n.conversationContactRequired,
+      'cannotMessageUser' => l10n.cannotMessageUser,
+      _ => l10n.stateError,
+    };
   }
 }
 
@@ -224,7 +308,7 @@ class _EmptyConversations extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(l10n.chatsEmptyTitle, style: typography.sectionTitle),
-            const SizedBox(height: PokidokiSpacing.xs),
+            const SizedBox(height: PokidokiSpacing.xxs),
             Text(
               l10n.chatsEmptyBody,
               style: typography.supportingBody,
