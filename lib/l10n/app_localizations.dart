@@ -469,7 +469,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatsProtectedBanner.
   ///
   /// In en, this message translates to:
-  /// **'Your conversations are protected with end-to-end encryption.'**
+  /// **'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.'**
   String get chatsProtectedBanner;
 
   /// No description provided for @chatsPinned.
@@ -1159,7 +1159,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatProtectedBanner.
   ///
   /// In en, this message translates to:
-  /// **'Messages in this conversation are protected with end-to-end encryption.'**
+  /// **'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.'**
   String get chatProtectedBanner;
 
   /// No description provided for @chatToday.
@@ -3855,6 +3855,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter at least 2 characters to search.'**
   String get messageSearchQueryTooShort;
+
+  /// No description provided for @localDatabaseUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Local message storage is unavailable. Try again after signing in.'**
+  String get localDatabaseUnavailable;
+
+  /// No description provided for @localDatabaseKeyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure storage is unavailable. Local messages cannot be loaded.'**
+  String get localDatabaseKeyUnavailable;
+
+  /// No description provided for @localDatabaseCorrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'Local message storage was reset. Your conversations will resync.'**
+  String get localDatabaseCorrupt;
+
+  /// No description provided for @localDatabaseEncryptionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted storage is unavailable on this device.'**
+  String get localDatabaseEncryptionUnavailable;
+
+  /// No description provided for @syncTemporarilyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync is temporarily unavailable. Cached messages remain available.'**
+  String get syncTemporarilyUnavailable;
+
+  /// No description provided for @messageQueuedOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Message queued. It will send when you are back online.'**
+  String get messageQueuedOffline;
+
+  /// No description provided for @messageRetryScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Send failed. Retrying automatically.'**
+  String get messageRetryScheduled;
+
+  /// No description provided for @messageFailedPermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'This message could not be sent.'**
+  String get messageFailedPermanently;
+
+  /// No description provided for @messageDeliveryQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get messageDeliveryQueued;
+
+  /// No description provided for @messageDeliverySending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending'**
+  String get messageDeliverySending;
+
+  /// No description provided for @messageDeliveryRetrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying'**
+  String get messageDeliveryRetrying;
+
+  /// No description provided for @messageDeliveryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send'**
+  String get messageDeliveryFailed;
+
+  /// No description provided for @messageDeliverySent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get messageDeliverySent;
+
+  /// No description provided for @messageDeliveryDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get messageDeliveryDelivered;
+
+  /// No description provided for @messageDeliveryRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get messageDeliveryRead;
+
+  /// No description provided for @messageRetryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry send'**
+  String get messageRetryAction;
 }
 
 class _AppLocalizationsDelegate

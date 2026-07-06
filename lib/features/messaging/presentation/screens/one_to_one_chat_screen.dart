@@ -13,11 +13,13 @@ import '../../../../design_system/components/identity/pokidoki_identity.dart';
 import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/settings/presentation/controllers/settings_controller.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/messaging_providers.dart';
 import '../widgets/chat_composer.dart';
 import '../widgets/chat_message_bubble.dart';
+import '../widgets/typing_indicator.dart';
 
 class OneToOneChatScreen extends ConsumerStatefulWidget {
   const OneToOneChatScreen({super.key, required this.conversationId});
@@ -28,20 +30,35 @@ class OneToOneChatScreen extends ConsumerStatefulWidget {
   ConsumerState<OneToOneChatScreen> createState() => _OneToOneChatScreenState();
 }
 
-class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
+class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen>
+    with WidgetsBindingObserver {
   final _composer = TextEditingController();
   final _scrollController = ScrollController();
+  Timer? _queueRecoveryTimer;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _composer.addListener(_onComposerChanged);
     _scrollController.addListener(_onScroll);
+    _queueRecoveryTimer = Timer.periodic(const Duration(seconds: 8), (_) {
+      unawaited(
+        ref.read(messagingOfflineCoordinatorProvider).wakeOutboundQueue(),
+      );
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(messagingProvider.notifier)
           .openConversation(widget.conversationId);
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(ref.read(messagingOfflineCoordinatorProvider).onForeground());
+    }
   }
 
   void _onComposerChanged() {
@@ -63,6 +80,8 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _queueRecoveryTimer?.cancel();
     _composer.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -71,6 +90,29 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
   String _timeLabel(DateTime sentAt) {
     final local = sentAt.toLocal();
     return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+  }
+
+  String? _deliveryStatusLabel(AppLocalizations l10n, ChatMessage message) {
+    if (!message.isOutgoing) {
+      return null;
+    }
+    return switch (message.deliveryStatus) {
+      MessageDeliveryStatus.queued => l10n.messageDeliveryQueued,
+      MessageDeliveryStatus.retrying => l10n.messageDeliveryRetrying,
+      MessageDeliveryStatus.sending => l10n.messageDeliverySending,
+      MessageDeliveryStatus.failed => l10n.messageDeliveryFailed,
+      MessageDeliveryStatus.sent => l10n.messageDeliverySent,
+      MessageDeliveryStatus.delivered => l10n.messageDeliveryDelivered,
+      MessageDeliveryStatus.read => l10n.messageDeliveryRead,
+    };
+  }
+
+  bool _canRetryMessage(ChatMessage message) {
+    return message.isOutgoing &&
+        message.clientMessageId != null &&
+        (message.deliveryStatus == MessageDeliveryStatus.failed ||
+            message.deliveryStatus == MessageDeliveryStatus.queued ||
+            message.deliveryStatus == MessageDeliveryStatus.retrying);
   }
 
   Future<void> _send() async {
@@ -113,6 +155,12 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                 title: Text(l10n.chatDelete),
                 onTap: () => Navigator.pop(context, 'delete'),
               ),
+            if (_canRetryMessage(message))
+              ListTile(
+                leading: const Icon(Icons.refresh_rounded),
+                title: Text(l10n.messageRetryAction),
+                onTap: () => Navigator.pop(context, 'retry'),
+              ),
             ListTile(
               leading: const Icon(Icons.info_outline_rounded),
               title: Text(l10n.chatMessageInfo),
@@ -131,6 +179,8 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
       case 'reply':
         messaging.setReplyTo(message);
         setState(() {});
+      case 'retry':
+        await messaging.retrySend(widget.conversationId, message);
       case 'copy':
         await Clipboard.setData(ClipboardData(text: message.body));
         if (mounted) {
@@ -197,9 +247,33 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
               .read(socialGraphProvider.notifier)
               .isContactVerified(conversation.peerId);
     final displayName = conversation?.peerDisplayName ?? 'Chat';
-    final blocked = conversation?.isBlocked ?? false;
+    final blockedByMe = conversation == null
+        ? false
+        : ref
+              .read(socialGraphProvider.notifier)
+              .isUserBlocked(conversation.peerId);
+    final messagingDisabled = !(conversation?.canSend ?? true);
     final reply = messaging.replyTo;
-    final isTyping = messaging.isPeerTyping;
+    final typingEnabled = ref.watch(settingsProvider).typingIndicatorsEnabled;
+    final showTyping = typingEnabled && messaging.isPeerTyping;
+
+    ref.listen(messagingProvider, (previous, next) {
+      if (previous?.isPeerTyping == next.isPeerTyping || !next.isPeerTyping) {
+        return;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_scrollController.hasClients) {
+          return;
+        }
+        unawaited(
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          ),
+        );
+      });
+    });
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -259,10 +333,14 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                                     ],
                                   ),
                                   Text(
-                                    verified
+                                    showTyping
+                                        ? l10n.chatPeerTyping
+                                        : verified
                                         ? l10n.semanticVerified
                                         : l10n.verifyNotVerified,
-                                    style: typography.caption,
+                                    style: typography.caption.copyWith(
+                                      color: showTyping ? colors.primary : null,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -310,7 +388,7 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(PokidokiSpacing.lg),
-                itemCount: messages.length + 1,
+                itemCount: messages.length + 1 + (showTyping ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Padding(
@@ -322,37 +400,37 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                       ),
                     );
                   }
+                  if (showTyping && index == messages.length + 1) {
+                    return const Padding(
+                      padding: EdgeInsets.only(bottom: PokidokiSpacing.sm),
+                      child: TypingIndicator(),
+                    );
+                  }
                   final message = messages[index - 1];
                   return Padding(
                     padding: const EdgeInsets.only(bottom: PokidokiSpacing.sm),
                     child: ChatMessageBubble(
                       message: message,
                       timeLabel: _timeLabel(message.sentAt),
+                      deliveryStatusLabel: _deliveryStatusLabel(l10n, message),
                       onLongPress: () => _onMessageActions(message),
                     ),
                   );
                 },
               ),
             ),
-            if (isTyping)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: PokidokiSpacing.lg,
-                  vertical: PokidokiSpacing.xs,
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(l10n.chatPeerTyping, style: typography.caption),
-                ),
-              ),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _composer,
               builder: (context, value, child) {
                 return ChatComposer(
                   controller: _composer,
-                  enabled: !blocked,
-                  disabledNotice: blocked
-                      ? l10n.chatBlockedNotice(displayName.split(' ').first)
+                  enabled: !messagingDisabled,
+                  disabledNotice: messagingDisabled
+                      ? blockedByMe
+                            ? l10n.chatBlockedNotice(
+                                displayName.split(' ').first,
+                              )
+                            : l10n.cannotMessageUser
                       : null,
                   replyPreview: reply?.body,
                   onCancelReply: () {

@@ -10,6 +10,7 @@ import 'package:pokidoki/features/app_shell/presentation/widgets/main_bottom_nav
 import 'package:pokidoki/features/chats/presentation/screens/conversations_home_screen.dart';
 import 'package:pokidoki/features/chats/presentation/screens/new_conversation_screen.dart';
 import 'package:pokidoki/features/contacts/presentation/screens/contacts_screen.dart';
+import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/social/presentation/controllers/social_graph_controller.dart';
 import 'package:pokidoki/features/verification/presentation/screens/contact_verification_screen.dart';
 import 'package:pokidoki/features/verification/presentation/screens/my_qr_code_screen.dart';
@@ -160,11 +161,15 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
-
+    await tester.pump();
     final container = ProviderScope.containerOf(
       tester.element(find.byType(MaterialApp)),
     );
+    await container.read(conversationsProvider.notifier).loadInitial();
+    await tester.runAsync(
+      () => container.read(socialGraphProvider.notifier).refresh(),
+    );
+    await tester.pump(const Duration(milliseconds: 100));
     expect(
       container
           .read(socialGraphProvider.notifier)
@@ -174,8 +179,7 @@ void main() {
 
     router.go(AppRoutes.safetyNumberPath(MockSampleData.amiraUserId));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 150));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 200));
     expect(find.byType(SafetyNumberScreen), findsOneWidget);
     expect(find.text('28491'), findsOneWidget);
 
@@ -184,10 +188,10 @@ void main() {
     );
     await tester.ensureVisible(find.text(l10n.verifyMarkAction));
     await tester.tap(find.text(l10n.verifyMarkAction));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await tester.tap(find.text(l10n.verifyMarkAction).last);
-    await tester.pump(const Duration(milliseconds: 200));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(
       container

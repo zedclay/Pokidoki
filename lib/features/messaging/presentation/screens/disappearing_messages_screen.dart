@@ -10,15 +10,57 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/messaging_failure.dart';
 import '../../data/messaging_providers.dart';
 
-class DisappearingMessagesScreen extends ConsumerWidget {
+class DisappearingMessagesScreen extends ConsumerStatefulWidget {
   const DisappearingMessagesScreen({super.key, required this.conversationId});
 
   final String conversationId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DisappearingMessagesScreen> createState() =>
+      _DisappearingMessagesScreenState();
+}
+
+class _DisappearingMessagesScreenState
+    extends ConsumerState<DisappearingMessagesScreen> {
+  bool _isSaving = false;
+
+  Future<void> _selectDuration(int? hours) async {
+    if (_isSaving) {
+      return;
+    }
+    setState(() => _isSaving = true);
+    try {
+      await ref
+          .read(messagingProvider.notifier)
+          .setDisappearingHours(widget.conversationId, hours);
+    } on MessagingFailure {
+      if (!mounted) {
+        return;
+      }
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.messagingUnavailable)));
+    } on Object {
+      if (!mounted) {
+        return;
+      }
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.messagingUnavailable)));
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final colors = context.pokidokiColors;
     final typography = context.pokidokiTypography;
@@ -26,7 +68,7 @@ class DisappearingMessagesScreen extends ConsumerWidget {
     ref.watch(messagingProvider);
     final conversation = ref
         .read(messagingProvider.notifier)
-        .conversation(conversationId);
+        .conversation(widget.conversationId);
     final selected = conversation?.disappearingDurationHours;
     final displayName = conversation?.peerDisplayName ?? '';
     final verified = conversation == null
@@ -53,7 +95,7 @@ class DisappearingMessagesScreen extends ConsumerWidget {
                   PokidokiIconButton(
                     icon: Icons.arrow_back_rounded,
                     tooltip: l10n.semanticBack,
-                    onPressed: () => context.pop(),
+                    onPressed: _isSaving ? null : () => context.pop(),
                   ),
                   Expanded(
                     child: Text(
@@ -66,6 +108,7 @@ class DisappearingMessagesScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            if (_isSaving) const LinearProgressIndicator(minHeight: 2),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(PokidokiSpacing.lg),
@@ -96,6 +139,7 @@ class DisappearingMessagesScreen extends ConsumerWidget {
                     final hours = option.$1;
                     final selectedOption = selected == hours;
                     return ListTile(
+                      enabled: !_isSaving,
                       title: Text(option.$2),
                       subtitle: Text(option.$3),
                       trailing: Icon(
@@ -106,11 +150,7 @@ class DisappearingMessagesScreen extends ConsumerWidget {
                             ? colors.primary
                             : colors.textTertiary,
                       ),
-                      onTap: () {
-                        ref
-                            .read(messagingProvider.notifier)
-                            .setDisappearingHours(conversationId, hours);
-                      },
+                      onTap: () => _selectDuration(hours),
                     );
                   }),
                   const SizedBox(height: PokidokiSpacing.md),

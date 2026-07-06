@@ -289,6 +289,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
+    await container.read(conversationsProvider.notifier).loadInitial();
     container
         .read(socialGraphProvider.notifier)
         .blockUser(
@@ -297,6 +298,7 @@ void main() {
           username: 'amira',
           pokidokiId: 'PKD-AM84-2LX7',
         );
+    await container.read(conversationsProvider.notifier).loadInitial();
 
     final router = _settingsRouter(initial: AppRoutes.settingsBlockedUsers);
     await tester.pumpWidget(
@@ -335,7 +337,7 @@ void main() {
     );
     expect(
       container
-          .read(socialGraphProvider)
+          .read(conversationsProvider)
           .conversations
           .firstWhere((c) => c.id == 'conv-amira')
           .isBlocked,
@@ -565,10 +567,11 @@ void main() {
 
     await tester.tap(find.text('Contacts'));
     await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(ContactsScreen), findsOneWidget);
 
     await tester.tap(find.text('Settings'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(SettingsScreen), findsOneWidget);
   });
 }

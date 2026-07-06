@@ -13,6 +13,9 @@ import '../../../../design_system/components/layout/pokidoki_scaffold.dart';
 import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
+import '../../../../features/messaging/data/messaging_failure.dart';
+import '../../../../features/messaging/data/messaging_providers.dart';
+import '../../../../features/messaging/presentation/messaging_error_messages.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -29,6 +32,7 @@ class UserProfilePreviewScreen extends ConsumerStatefulWidget {
 class _UserProfilePreviewScreenState
     extends ConsumerState<UserProfilePreviewScreen> {
   bool _sending = false;
+  bool _openingMessage = false;
   bool _loading = true;
 
   @override
@@ -336,11 +340,37 @@ class _UserProfilePreviewScreenState
     };
   }
 
+  Future<void> _openMessage(UserProfilePreview profile) async {
+    setState(() => _openingMessage = true);
+    try {
+      final conversation = await ref
+          .read(conversationsProvider.notifier)
+          .createOrGet(profile.id);
+      if (!mounted || conversation == null) {
+        return;
+      }
+      context.push(AppRoutes.chatPath(conversation.id));
+    } on MessagingFailure catch (failure) {
+      if (!mounted) {
+        return;
+      }
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(messagingFailureMessage(l10n, failure))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _openingMessage = false);
+      }
+    }
+  }
+
   Widget _buildActions(AppLocalizations l10n, UserProfilePreview profile) {
     return switch (profile.relationship) {
       ProfileRelationship.contact => PokidokiButton.primary(
         label: l10n.usersMessage,
-        onPressed: () => context.push(AppRoutes.chatPath('conv-amira')),
+        isLoading: _openingMessage,
+        onPressed: !_openingMessage ? () => _openMessage(profile) : null,
       ),
       ProfileRelationship.pendingOutgoing => PokidokiButton.secondary(
         label: l10n.contactsCancelRequest,

@@ -17,6 +17,8 @@ import 'package:pokidoki/features/security_setup/presentation/screens/create_pin
 import 'package:pokidoki/features/security_setup/presentation/screens/enable_biometrics_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';
 
+import '../helpers/test_overrides.dart';
+
 const _viewport = Size(390, 844);
 const _outputDir = 'artifacts/ui_comparisons/batch_02';
 
@@ -45,6 +47,7 @@ Future<void> _pumpScreen(WidgetTester tester, Widget child) async {
 
   await tester.pumpWidget(
     ProviderScope(
+      overrides: pokidokiTestOverrides,
       child: MaterialApp(
         theme: PokidokiTheme.dark(),
         themeMode: ThemeMode.dark,

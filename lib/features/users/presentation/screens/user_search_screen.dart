@@ -33,6 +33,7 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
   }
 
   void _onChanged(String value) {
+    setState(() {});
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       ref.read(socialGraphProvider.notifier).searchUsers(value);
@@ -109,7 +110,7 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
                       ),
                     );
                   }
-                  if (graph.isSearching) {
+                  if (graph.isSearching && graph.searchResults.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (graph.searchResults.isEmpty) {
@@ -139,28 +140,49 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
                     itemCount: graph.searchResults.length,
                     itemBuilder: (context, index) {
                       final user = graph.searchResults[index];
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: PokidokiAvatar(displayName: user.displayName),
-                        title: Text(
-                          user.displayName,
-                          style: typography.cardTitle,
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            LtrText(
-                              '@${user.username}',
-                              style: typography.supportingBody,
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () =>
+                              context.push(AppRoutes.userProfilePath(user.id)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: PokidokiSpacing.sm,
                             ),
-                            LtrText(user.pokidokiId, style: typography.caption),
-                            if (user.bio != null)
-                              Text(user.bio!, style: typography.caption),
-                          ],
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PokidokiAvatar(displayName: user.displayName),
+                                const SizedBox(width: PokidokiSpacing.md),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        user.displayName,
+                                        style: typography.cardTitle,
+                                      ),
+                                      LtrText(
+                                        '@${user.username}',
+                                        style: typography.supportingBody,
+                                      ),
+                                      LtrText(
+                                        user.pokidokiId,
+                                        style: typography.caption,
+                                      ),
+                                      if (user.bio != null)
+                                        Text(
+                                          user.bio!,
+                                          style: typography.caption,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        isThreeLine: true,
-                        onTap: () =>
-                            context.push(AppRoutes.userProfilePath(user.id)),
                       );
                     },
                   );

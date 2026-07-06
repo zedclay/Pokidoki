@@ -1,5 +1,13 @@
 /// Message delivery presentation state.
-enum MessageDeliveryStatus { sending, sent, delivered, read, failed }
+enum MessageDeliveryStatus {
+  queued,
+  retrying,
+  sending,
+  sent,
+  delivered,
+  read,
+  failed,
+}
 
 /// Message content type for UI presentation.
 enum MessageContentType { text, image, file, link, system }
@@ -21,6 +29,7 @@ class ChatMessage {
     this.attachmentName,
     this.attachmentSizeBytes,
     this.clientMessageId,
+    this.expiresAt,
   });
 
   final String id;
@@ -37,11 +46,13 @@ class ChatMessage {
   final String? attachmentName;
   final int? attachmentSizeBytes;
   final String? clientMessageId;
+  final DateTime? expiresAt;
 
   ChatMessage copyWith({
     MessageDeliveryStatus? deliveryStatus,
     String? body,
     String? id,
+    DateTime? expiresAt,
   }) {
     return ChatMessage(
       id: id ?? this.id,
@@ -58,6 +69,7 @@ class ChatMessage {
       replyPreview: replyPreview,
       attachmentName: attachmentName,
       attachmentSizeBytes: attachmentSizeBytes,
+      expiresAt: expiresAt ?? this.expiresAt,
     );
   }
 }

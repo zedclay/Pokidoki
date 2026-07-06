@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,9 +28,25 @@ class AppLockScreen extends ConsumerStatefulWidget {
 class _AppLockScreenState extends ConsumerState<AppLockScreen> {
   String _pin = '';
   String? _error;
+  bool _pinReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_loadPersistedPin());
+    });
+  }
+
+  Future<void> _loadPersistedPin() async {
+    await ref.read(authFlowProvider.notifier).loadPersistedPin();
+    if (mounted) {
+      setState(() => _pinReady = true);
+    }
+  }
 
   void _onDigit(String digit) {
-    if (_pin.length >= 6) {
+    if (!_pinReady || _pin.length >= 6) {
       return;
     }
     final next = _pin + digit;

@@ -46,9 +46,14 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     });
   }
 
-  void _confirm() {
+  void _confirm() async {
     final l10n = AppLocalizations.of(context);
-    final ok = ref.read(authFlowProvider.notifier).confirmPinMatches(_pin);
+    final ok = await ref
+        .read(authFlowProvider.notifier)
+        .confirmPinMatches(_pin);
+    if (!mounted) {
+      return;
+    }
     if (!ok) {
       setState(() {
         _pin = '';
@@ -58,7 +63,13 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     }
     if (widget.fromSettings) {
       ref.read(authFlowProvider.notifier).setPendingPin('');
+      if (!mounted) {
+        return;
+      }
       context.go(AppRoutes.settingsAppLock);
+      return;
+    }
+    if (!mounted) {
       return;
     }
     context.push(AppRoutes.enableBiometrics);

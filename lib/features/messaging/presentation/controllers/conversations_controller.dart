@@ -1,10 +1,14 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/models/conversation.dart';
 import '../../../../data/repositories/conversations_repository.dart';
+import '../../data/messaging_failure.dart';
+import '../../data/messaging_stream_providers.dart';
 import '../../data/api/messaging_api_mapper.dart';
 import '../../data/api/messaging_api_models.dart';
-import '../../data/messaging_failure.dart';
 
 class ConversationsState {
   const ConversationsState({
@@ -44,14 +48,42 @@ class ConversationsState {
 }
 
 class ConversationsController extends StateNotifier<ConversationsState> {
-  ConversationsController(this._repository) : super(const ConversationsState());
+  ConversationsController(this._repository, {required Ref ref})
+    : _ref = ref,
+      super(const ConversationsState()) {
+    _bindLocalStream();
+  }
 
   final ConversationsRepository _repository;
+  final Ref _ref;
+
+  void _bindLocalStream() {
+    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      return;
+    }
+    _ref.listen<AsyncValue<List<Conversation>>>(conversationsWatchProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((conversations) {
+        if (!mounted) {
+          return;
+        }
+        state = state.copyWith(conversations: conversations);
+      });
+    }, fireImmediately: true);
+  }
 
   Future<void> loadInitial({String? currentUserId}) async {
+    if (!mounted) {
+      return;
+    }
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final page = await _repository.getConversations();
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         conversations: page.items,
         isLoading: false,
@@ -59,14 +91,22 @@ class ConversationsController extends StateNotifier<ConversationsState> {
         hasMore: page.hasMore,
       );
     } on MessagingFailure catch (failure) {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         isLoading: false,
-        errorKey: failure.messageKey ?? 'messagingUnavailable',
+        errorKey: state.conversations.isEmpty
+            ? failure.resolvedMessageKey
+            : null,
       );
     } on Object {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         isLoading: false,
-        errorKey: 'messagingUnavailable',
+        errorKey: state.conversations.isEmpty ? 'messagingUnavailable' : null,
       );
     }
   }
@@ -77,9 +117,15 @@ class ConversationsController extends StateNotifier<ConversationsState> {
     if (!state.hasMore || state.isLoadingMore || state.nextCursor == null) {
       return;
     }
+    if (!mounted) {
+      return;
+    }
     state = state.copyWith(isLoadingMore: true);
     try {
       final page = await _repository.getConversations(cursor: state.nextCursor);
+      if (!mounted) {
+        return;
+      }
       final merged = _mergeConversations(state.conversations, page.items);
       state = state.copyWith(
         conversations: merged,
@@ -88,6 +134,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
         hasMore: page.hasMore,
       );
     } on Object {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(isLoadingMore: false);
     }
   }
@@ -95,10 +144,16 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   Future<Conversation?> createOrGet(String userId) async {
     try {
       final conversation = await _repository.createOrGetConversation(userId);
+      if (!mounted) {
+        return conversation;
+      }
       upsertConversation(conversation);
       return conversation;
     } on MessagingFailure catch (failure) {
-      state = state.copyWith(errorKey: failure.messageKey);
+      if (!mounted) {
+        rethrow;
+      }
+      state = state.copyWith(errorKey: failure.resolvedMessageKey);
       rethrow;
     }
   }
@@ -113,6 +168,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   }
 
   void upsertConversation(Conversation conversation) {
+    if (!mounted) {
+      return;
+    }
     final items = List<Conversation>.of(state.conversations);
     final index = items.indexWhere((c) => c.id == conversation.id);
     if (index >= 0) {
@@ -130,6 +188,46 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   }) {
     final dto = ConversationDto.fromJson(raw);
     upsertConversation(mapConversationDto(dto, currentUserId: currentUserId));
+  }
+
+  Future<void> refreshConversation(String conversationId) async {
+    try {
+      final conversation = await _repository.getConversation(conversationId);
+      if (!mounted) {
+        return;
+      }
+      upsertConversation(conversation);
+    } on Object {
+      // Conversation may have been deleted locally.
+    }
+  }
+
+  Future<void> refreshConversationsForPeer(String peerId) async {
+    if (!mounted) {
+      return;
+    }
+    final matches = state.conversations
+        .where((conversation) => conversation.peerId == peerId)
+        .toList();
+    for (final conversation in matches) {
+      if (!mounted) {
+        return;
+      }
+      await refreshConversation(conversation.id);
+    }
+  }
+
+  void applyBlockedByMe(Set<String> blockedPeerIds) {
+    if (blockedPeerIds.isEmpty || !mounted) {
+      return;
+    }
+    final updated = state.conversations.map((conversation) {
+      if (!blockedPeerIds.contains(conversation.peerId)) {
+        return conversation;
+      }
+      return conversation.copyWith(isBlocked: true, canSend: false);
+    }).toList();
+    state = state.copyWith(conversations: updated);
   }
 
   void removeConversation(String conversationId) {

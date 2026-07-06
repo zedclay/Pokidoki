@@ -14,6 +14,7 @@ class Conversation {
     this.isMuted = false,
     this.isOutgoingPreview = false,
     this.isBlocked = false,
+    this.canSend = true,
     this.disappearingDurationHours,
   });
 
@@ -30,6 +31,7 @@ class Conversation {
   final bool isMuted;
   final bool isOutgoingPreview;
   final bool isBlocked;
+  final bool canSend;
 
   /// `null` means off. Common values: 1, 24, 168.
   final int? disappearingDurationHours;
@@ -40,6 +42,7 @@ class Conversation {
     bool? isPeerVerified,
     bool? isMuted,
     bool? isBlocked,
+    bool? canSend,
     bool? isOutgoingPreview,
     DateTime? updatedAt,
     bool? disappearingMessagesEnabled,
@@ -61,6 +64,7 @@ class Conversation {
       isMuted: isMuted ?? this.isMuted,
       isOutgoingPreview: isOutgoingPreview ?? this.isOutgoingPreview,
       isBlocked: isBlocked ?? this.isBlocked,
+      canSend: canSend ?? this.canSend,
       disappearingDurationHours: clearDisappearing
           ? null
           : (disappearingDurationHours ?? this.disappearingDurationHours),

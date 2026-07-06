@@ -12,6 +12,9 @@ abstract class MessagingSocketService {
   Stream<SocketMessageReceiptEvent> get messageDeliveredStream;
   Stream<SocketMessageReceiptEvent> get messageReadStream;
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream;
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream;
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream;
   Stream<SocketTypingEvent> get typingStartedStream;
   Stream<SocketTypingEvent> get typingStoppedStream;
 
@@ -59,6 +62,10 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
       StreamController<SocketMessageReceiptEvent>.broadcast();
   final _conversationUpdatedController =
       StreamController<SocketConversationUpdatedEvent>.broadcast();
+  final _conversationSettingsUpdatedController =
+      StreamController<SocketConversationSettingsUpdatedEvent>.broadcast();
+  final _messageDeletedController =
+      StreamController<SocketMessageDeletedEvent>.broadcast();
   final _typingStartedController =
       StreamController<SocketTypingEvent>.broadcast();
   final _typingStoppedController =
@@ -84,6 +91,15 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
   @override
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream =>
       _conversationUpdatedController.stream;
+
+  @override
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream =>
+      _conversationSettingsUpdatedController.stream;
+
+  @override
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream =>
+      _messageDeletedController.stream;
 
   @override
   Stream<SocketTypingEvent> get typingStartedStream =>
@@ -155,7 +171,6 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
     } on Object {
       _setStatus(MessagingSocketStatus.failed);
       await disconnect();
-      rethrow;
     } finally {
       socket.off('connect', onConnect);
       socket.off('connect_error', onError);
@@ -229,6 +244,45 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
       }
     });
 
+    socket.on(MessagingSocketEvents.conversationSettingsUpdated, (data) {
+      if (data is Map) {
+        final map = Map<String, dynamic>.from(data);
+        final conversationId = map['conversationId']?.toString();
+        if (conversationId == null) {
+          return;
+        }
+        final disappearingSeconds = map['disappearingSeconds'];
+        final systemMessage = map['systemMessage'];
+        _conversationSettingsUpdatedController.add(
+          SocketConversationSettingsUpdatedEvent(
+            conversationId: conversationId,
+            disappearingSeconds: disappearingSeconds is int
+                ? disappearingSeconds
+                : int.tryParse(disappearingSeconds?.toString() ?? ''),
+            rawSystemMessage: systemMessage is Map
+                ? Map<String, dynamic>.from(systemMessage)
+                : null,
+          ),
+        );
+      }
+    });
+
+    socket.on(MessagingSocketEvents.messageDeleted, (data) {
+      if (data is Map) {
+        final map = Map<String, dynamic>.from(data);
+        final messageId = map['messageId']?.toString();
+        final conversationId = map['conversationId']?.toString();
+        if (messageId != null && conversationId != null) {
+          _messageDeletedController.add(
+            SocketMessageDeletedEvent(
+              messageId: messageId,
+              conversationId: conversationId,
+            ),
+          );
+        }
+      }
+    });
+
     socket.on(MessagingSocketEvents.typingStarted, (data) {
       if (data is Map) {
         final map = Map<String, dynamic>.from(data);
@@ -279,14 +333,14 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
         if (response is Map) {
           completer.complete(Map<String, dynamic>.from(response));
         } else {
-          completer.complete({'ok': false, 'code': 'MESSAGE_INVALID'});
+          completer.complete({'ok': false, 'code': 'MESSAGING_UNAVAILABLE'});
         }
       },
     );
 
     return completer.future.timeout(
       const Duration(seconds: 10),
-      onTimeout: () => {'ok': false, 'code': 'WEBSOCKET_UNAUTHORIZED'},
+      onTimeout: () => {'ok': false, 'code': 'WEBSOCKET_TIMEOUT'},
     );
   }
 
@@ -366,6 +420,7 @@ class FakeMessagingSocketService implements MessagingSocketService {
   FakeMessagingSocketService();
 
   bool failNextSend = false;
+  bool transientFailNextSend = false;
   final Set<String> _seenEventIds = {};
 
   MessagingSocketStatus _status = MessagingSocketStatus.disconnected;
@@ -379,6 +434,10 @@ class FakeMessagingSocketService implements MessagingSocketService {
       StreamController<SocketMessageReceiptEvent>.broadcast();
   final _conversationUpdatedController =
       StreamController<SocketConversationUpdatedEvent>.broadcast();
+  final _conversationSettingsUpdatedController =
+      StreamController<SocketConversationSettingsUpdatedEvent>.broadcast();
+  final _messageDeletedController =
+      StreamController<SocketMessageDeletedEvent>.broadcast();
   final _typingStartedController =
       StreamController<SocketTypingEvent>.broadcast();
   final _typingStoppedController =
@@ -405,6 +464,15 @@ class FakeMessagingSocketService implements MessagingSocketService {
   @override
   Stream<SocketConversationUpdatedEvent> get conversationUpdatedStream =>
       _conversationUpdatedController.stream;
+
+  @override
+  Stream<SocketConversationSettingsUpdatedEvent>
+  get conversationSettingsUpdatedStream =>
+      _conversationSettingsUpdatedController.stream;
+
+  @override
+  Stream<SocketMessageDeletedEvent> get messageDeletedStream =>
+      _messageDeletedController.stream;
 
   @override
   Stream<SocketTypingEvent> get typingStartedStream =>
@@ -450,6 +518,10 @@ class FakeMessagingSocketService implements MessagingSocketService {
       failNextSend = false;
       return const SocketSendAck(ok: false, code: 'MESSAGE_SEND_NOT_ALLOWED');
     }
+    if (transientFailNextSend) {
+      transientFailNextSend = false;
+      return const SocketSendAck(ok: false, code: 'MESSAGING_UNAVAILABLE');
+    }
     return SocketSendAck(
       ok: true,
       rawMessage: {
@@ -463,6 +535,8 @@ class FakeMessagingSocketService implements MessagingSocketService {
           'userId': 'user-self',
           'displayName': 'Self',
           'username': 'self',
+          'publicId': 'PKD-TEST-TEST',
+          'avatarInitials': 'S',
         },
         'senderStatus': 'sent',
       },

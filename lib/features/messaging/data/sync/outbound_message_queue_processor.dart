@@ -1,0 +1,271 @@
+import 'dart:async';
+
+import 'package:drift/drift.dart';
+
+import '../../../../data/models/message.dart';
+import '../../domain/local_message_status.dart';
+import '../../domain/queue_retry_scheduler.dart';
+import '../messaging_failure.dart';
+import '../api/api_conversations_repository.dart';
+import '../api/messaging_api_mapper.dart';
+import '../api/messaging_api_models.dart';
+import '../local/database/messaging_database.dart';
+import '../realtime/messaging_socket_models.dart';
+import '../realtime/messaging_socket_service.dart';
+import 'messaging_sync_engine.dart';
+
+typedef QueueProcessorClock = DateTime Function();
+
+class OutboundMessageQueueProcessor {
+  OutboundMessageQueueProcessor({
+    required MessagingDatabase database,
+    required ApiConversationsRepository remote,
+    required MessagingSocketService socketService,
+    required MessagingSyncEngine syncEngine,
+    required String? Function() currentUserId,
+    QueueRetryScheduler? retryScheduler,
+    QueueProcessorClock? clock,
+  }) : _db = database,
+       _remote = remote,
+       _socket = socketService,
+       _sync = syncEngine,
+       _currentUserId = currentUserId,
+       _retry = retryScheduler ?? QueueRetryScheduler(),
+       _clock = clock ?? DateTime.now;
+
+  final MessagingDatabase _db;
+  final ApiConversationsRepository _remote;
+  final MessagingSocketService _socket;
+  final MessagingSyncEngine _sync;
+  final String? Function() _currentUserId;
+  final QueueRetryScheduler _retry;
+  final QueueProcessorClock _clock;
+
+  bool _draining = false;
+  bool _drainAgain = false;
+  bool _stopped = false;
+  Timer? _retryTimer;
+
+  void stop() {
+    _stopped = true;
+    _retryTimer?.cancel();
+    _retryTimer = null;
+  }
+
+  void resume() {
+    _stopped = false;
+  }
+
+  Future<void> recoverStaleJobs() async {
+    final now = _clock().toUtc();
+    await _db.outboundQueueDao.recoverStaleInFlight(
+      staleBefore: now.subtract(const Duration(minutes: 2)),
+      retryAt: now,
+    );
+  }
+
+  Future<void> releaseWaitingRetries({DateTime? now}) {
+    return _db.outboundQueueDao.releaseWaitingRetries(now: now);
+  }
+
+  Future<int> requeueRecoverableTransportFailures({DateTime? now}) async {
+    final retryAt = now ?? _clock().toUtc();
+    final requeuedIds = await _db.outboundQueueDao
+        .requeueRecoverableTransportFailures(
+          isRequeueable: _retry.shouldRequeueFailed,
+          hasPendingAck: (clientMessageId) async {
+            final row = await _db.messagesDao.getByClientId(clientMessageId);
+            if (row == null) {
+              return false;
+            }
+            return row.syncState == LocalSyncState.pendingAck.name ||
+                row.syncState == LocalSyncState.localOnly.name;
+          },
+          now: retryAt,
+        );
+    for (final clientMessageId in requeuedIds) {
+      await _db.messagesDao.updateByClientId(
+        clientMessageId: clientMessageId,
+        fields: LocalMessagesCompanion(
+          deliveryStatus: Value(LocalMessageStatus.queued.name),
+          errorCode: const Value(null),
+          lastUpdatedAt: Value(retryAt),
+        ),
+      );
+    }
+    return requeuedIds.length;
+  }
+
+  Future<void> prepareForDrain({DateTime? now}) async {
+    final effectiveNow = now ?? _clock().toUtc();
+    await recoverStaleJobs();
+    await releaseWaitingRetries(now: effectiveNow);
+    await requeueRecoverableTransportFailures(now: effectiveNow);
+  }
+
+  Future<void> wakeAndDrain() async {
+    if (_stopped) {
+      return;
+    }
+    await prepareForDrain();
+    await requestDrain();
+    await _scheduleFollowUpIfNeeded();
+  }
+
+  Future<void> requestDrain() async {
+    if (_stopped) {
+      return;
+    }
+    if (_draining) {
+      _drainAgain = true;
+      return;
+    }
+    _draining = true;
+    try {
+      await recoverStaleJobs();
+      while (!_stopped) {
+        final now = _clock().toUtc();
+        final item = await _db.outboundQueueDao.acquireNextEligible(now);
+        if (item == null) {
+          break;
+        }
+        await _processItem(item, now);
+      }
+    } finally {
+      _draining = false;
+      if (_drainAgain && !_stopped) {
+        _drainAgain = false;
+        unawaited(requestDrain());
+      }
+    }
+  }
+
+  Future<void> _processItem(OutboundMessageQueueData item, DateTime now) async {
+    await _db.outboundQueueDao.markInFlight(item.id, now);
+    await _db.messagesDao.updateByClientId(
+      clientMessageId: item.clientMessageId,
+      fields: LocalMessagesCompanion(
+        deliveryStatus: Value(LocalMessageStatus.sending.name),
+        lastUpdatedAt: Value(now),
+      ),
+    );
+
+    try {
+      ChatMessage? serverMessage;
+      if (_socket.status == MessagingSocketStatus.connected) {
+        serverMessage = await _trySendViaSocket(item);
+      }
+
+      serverMessage ??= await _remote.sendMessage(
+        conversationId: item.conversationId,
+        clientMessageId: item.clientMessageId,
+        text: item.textPayload,
+      );
+
+      await _sync.upsertRemoteChatMessage(serverMessage);
+      await _db.outboundQueueDao.markCompleted(item.id);
+      await _db.conversationsDao.updatePreview(
+        conversationId: item.conversationId,
+        preview: item.textPayload,
+        at: serverMessage.sentAt,
+        isOutgoing: true,
+        lastMessageId: serverMessage.id.startsWith('local-')
+            ? null
+            : serverMessage.id,
+        lastMessageClientId: item.clientMessageId,
+      );
+    } on MessagingFailure catch (failure) {
+      await _handleFailure(
+        item: item,
+        code: failure.code,
+        attemptCount: item.attemptCount + 1,
+      );
+    } on Object {
+      await _handleFailure(
+        item: item,
+        code: 'SYNC_TEMPORARILY_UNAVAILABLE',
+        attemptCount: item.attemptCount + 1,
+      );
+    }
+  }
+
+  Future<ChatMessage?> _trySendViaSocket(OutboundMessageQueueData item) async {
+    if (_socket.status != MessagingSocketStatus.connected) {
+      return null;
+    }
+    try {
+      final ack = await _socket.sendMessage(
+        conversationId: item.conversationId,
+        clientMessageId: item.clientMessageId,
+        text: item.textPayload,
+      );
+      if (ack.ok && ack.rawMessage != null) {
+        return mapMessageDto(
+          MessageDto.fromJson(ack.rawMessage!),
+          currentUserId: _currentUserId(),
+        );
+      }
+    } on Object {
+      // Fall through to REST delivery below.
+    }
+    return null;
+  }
+
+  Future<void> _handleFailure({
+    required OutboundMessageQueueData item,
+    required String code,
+    required int attemptCount,
+  }) async {
+    if (_retry.isPermanentError(code) && attemptCount >= 3) {
+      await _db.outboundQueueDao.markFailedPermanent(
+        queueId: item.id,
+        errorCode: code,
+      );
+      await _db.messagesDao.markClientMessageFailed(
+        clientMessageId: item.clientMessageId,
+        errorCode: code,
+        permanent: !_retry.shouldRequeueFailed(code),
+      );
+      return;
+    }
+
+    final nextAttempt = _retry.nextAttemptAt(attemptCount: attemptCount);
+    await _db.outboundQueueDao.markWaitingRetry(
+      queueId: item.id,
+      nextAttemptAt: nextAttempt,
+      attemptCount: attemptCount,
+      errorCode: code,
+    );
+    await _db.messagesDao.updateByClientId(
+      clientMessageId: item.clientMessageId,
+      fields: LocalMessagesCompanion(
+        deliveryStatus: Value(LocalMessageStatus.queued.name),
+        errorCode: Value(code),
+        lastUpdatedAt: Value(_clock().toUtc()),
+      ),
+    );
+    _scheduleRetryDrain(nextAttempt);
+  }
+
+  void _scheduleRetryDrain(DateTime nextAttempt) {
+    if (_stopped) {
+      return;
+    }
+    _retryTimer?.cancel();
+    final delay = nextAttempt.difference(_clock().toUtc());
+    final effectiveDelay = delay.isNegative ? Duration.zero : delay;
+    _retryTimer = Timer(effectiveDelay, () {
+      unawaited(wakeAndDrain());
+    });
+  }
+
+  Future<void> _scheduleFollowUpIfNeeded() async {
+    if (_stopped) {
+      return;
+    }
+    final nextAttempt = await _db.outboundQueueDao.earliestNextAttemptAt();
+    if (nextAttempt != null) {
+      _scheduleRetryDrain(nextAttempt);
+    }
+  }
+}

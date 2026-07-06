@@ -299,6 +299,8 @@ void main() {
       _router(initial: AppRoutes.conversationInfoPath('conv-amira')),
       container: container,
     );
+    await container.read(conversationsProvider.notifier).loadInitial();
+    await tester.pump();
 
     await tester.dragUntilVisible(
       find.text('Report'),

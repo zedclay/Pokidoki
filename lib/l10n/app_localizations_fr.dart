@@ -221,7 +221,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatsProtectedBanner =>
-      'Vos conversations sont protégées par un chiffrement de bout en bout.';
+      'Les messages sont stockés de manière sécurisée sur cet appareil. Les conversations secrètes chiffrées de bout en bout ne sont pas encore activées.';
 
   @override
   String get chatsPinned => 'Épinglées';
@@ -604,7 +604,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatProtectedBanner =>
-      'Les messages de cette conversation sont protégés par un chiffrement de bout en bout.';
+      'Les messages sont stockés de manière sécurisée sur cet appareil. Les conversations secrètes chiffrées de bout en bout ne sont pas encore activées.';
 
   @override
   String get chatToday => 'Aujourd’hui';
@@ -2119,4 +2119,59 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get messageSearchQueryTooShort =>
       'Saisissez au moins 2 caractères pour rechercher.';
+
+  @override
+  String get localDatabaseUnavailable =>
+      'Le stockage local des messages est indisponible. Réessayez après connexion.';
+
+  @override
+  String get localDatabaseKeyUnavailable =>
+      'Le stockage sécurisé est indisponible. Les messages locaux ne peuvent pas être chargés.';
+
+  @override
+  String get localDatabaseCorrupt =>
+      'Le stockage local a été réinitialisé. Vos conversations seront resynchronisées.';
+
+  @override
+  String get localDatabaseEncryptionUnavailable =>
+      'Le stockage chiffré est indisponible sur cet appareil.';
+
+  @override
+  String get syncTemporarilyUnavailable =>
+      'La synchronisation est temporairement indisponible. Les messages en cache restent accessibles.';
+
+  @override
+  String get messageQueuedOffline =>
+      'Message en file d\'attente. Il sera envoyé lorsque vous serez en ligne.';
+
+  @override
+  String get messageRetryScheduled =>
+      'Échec de l\'envoi. Nouvelle tentative automatique.';
+
+  @override
+  String get messageFailedPermanently => 'Ce message n\'a pas pu être envoyé.';
+
+  @override
+  String get messageDeliveryQueued => 'En file d\'attente';
+
+  @override
+  String get messageDeliverySending => 'Envoi en cours';
+
+  @override
+  String get messageDeliveryRetrying => 'Nouvelle tentative';
+
+  @override
+  String get messageDeliveryFailed => 'Échec de l\'envoi';
+
+  @override
+  String get messageDeliverySent => 'Envoyé';
+
+  @override
+  String get messageDeliveryDelivered => 'Distribué';
+
+  @override
+  String get messageDeliveryRead => 'Lu';
+
+  @override
+  String get messageRetryAction => 'Réessayer l\'envoi';
 }

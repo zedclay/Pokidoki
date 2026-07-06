@@ -14,6 +14,7 @@ import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/messaging/data/messaging_providers.dart';
+import '../../../../features/messaging/presentation/messaging_error_messages.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/conversation_row.dart';
 
@@ -26,7 +27,8 @@ class ConversationsHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _ConversationsHomeScreenState
-    extends ConsumerState<ConversationsHomeScreen> {
+    extends ConsumerState<ConversationsHomeScreen>
+    with WidgetsBindingObserver {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
   bool _searchOpen = false;
@@ -34,17 +36,34 @@ class _ConversationsHomeScreenState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(conversationsProvider.notifier).loadInitial();
-      unawaited(
-        ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
-      );
+      _refreshConversations();
     });
+  }
+
+  void _refreshConversations() {
+    ref.read(messagingProvider);
+    ref.read(conversationsProvider.notifier).loadInitial();
+    unawaited(
+      ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
+    );
+    unawaited(
+      ref.read(messagingOfflineCoordinatorProvider).wakeOutboundQueue(),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshConversations();
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -84,6 +103,7 @@ class _ConversationsHomeScreenState
     final colors = context.pokidokiColors;
     final typography = context.pokidokiTypography;
     final conversationsState = ref.watch(conversationsProvider);
+    ref.watch(messagingProvider);
     final query = _searchController.text;
     final conversations = ref
         .read(conversationsProvider.notifier)
@@ -176,7 +196,10 @@ class _ConversationsHomeScreenState
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _localizedError(l10n, conversationsState.errorKey!),
+                          messagingErrorMessage(
+                            l10n,
+                            conversationsState.errorKey,
+                          ),
                           style: typography.supportingBody,
                           textAlign: TextAlign.center,
                         ),
@@ -255,16 +278,6 @@ class _ConversationsHomeScreenState
         child: const Icon(Icons.edit_square),
       ),
     );
-  }
-
-  String _localizedError(AppLocalizations l10n, String key) {
-    return switch (key) {
-      'messagingUnavailable' => l10n.messagingUnavailable,
-      'conversationUnavailable' => l10n.conversationUnavailable,
-      'conversationContactRequired' => l10n.conversationContactRequired,
-      'cannotMessageUser' => l10n.cannotMessageUser,
-      _ => l10n.stateError,
-    };
   }
 }
 

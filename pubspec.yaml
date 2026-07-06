@@ -23,11 +23,27 @@ dependencies:
   flutter_secure_storage: ^10.3.1
   socket_io_client: ^3.1.6
   uuid: ^4.5.3
+  drift: ^2.34.0
+  sqlite3: ^3.3.4
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  connectivity_plus: ^6.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   flutter_lints: ^6.0.0
+  drift_dev: ^2.34.0
+  # 2.14+ AOT-compiles builders with `dart compile`, which fails when sqlite3mc
+  # hooks are enabled. Pin to JIT-capable 2.13.x until hooks support AOT.
+  build_runner: 2.13.1
+
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc
 
 flutter:
   uses-material-design: true
