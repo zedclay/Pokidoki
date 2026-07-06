@@ -36,7 +36,7 @@ extension LocalMessageMapper on LocalMessage {
 
   MessageDeliveryStatus _mapDelivery(LocalMessageStatus status) {
     return switch (status) {
-      LocalMessageStatus.queued => MessageDeliveryStatus.sending,
+      LocalMessageStatus.queued => MessageDeliveryStatus.queued,
       LocalMessageStatus.sending => MessageDeliveryStatus.sending,
       LocalMessageStatus.sent => MessageDeliveryStatus.sent,
       LocalMessageStatus.delivered => MessageDeliveryStatus.delivered,

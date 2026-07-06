@@ -8,6 +8,7 @@ import '../api/api_conversations_repository.dart';
 import '../local/database/messaging_database.dart';
 import '../local/database/messaging_database_lifecycle.dart';
 import '../realtime/messaging_socket_coordinator.dart';
+import '../realtime/messaging_socket_models.dart';
 import '../realtime/messaging_socket_service.dart';
 import '../repository/offline_first_conversations_repository.dart';
 import '../sync/messaging_sync_engine.dart';
@@ -53,8 +54,13 @@ class MessagingOfflineCoordinator {
     if (existing != null) {
       return existing;
     }
-    _ensureReadyFuture ??= _ensureReadyOnce();
-    return _ensureReadyFuture!;
+    try {
+      _ensureReadyFuture ??= _ensureReadyOnce();
+      return await _ensureReadyFuture!;
+    } on Object {
+      _ensureReadyFuture = null;
+      rethrow;
+    }
   }
 
   Future<OfflineFirstConversationsRepository> _ensureReadyOnce() async {
@@ -81,6 +87,7 @@ class MessagingOfflineCoordinator {
     );
     await _queueProcessor!.recoverStaleJobs();
     _bindSocketEvents();
+    _bindReconnectAndDrain();
     _bindConnectivity();
     unawaited(_queueProcessor!.requestDrain());
     return _repository!;
@@ -129,11 +136,38 @@ class MessagingOfflineCoordinator {
     );
   }
 
+  void _bindReconnectAndDrain() {
+    _subscriptions.add(
+      _socket.statusStream.listen((status) {
+        if (status == MessagingSocketStatus.reconnecting) {
+          _socketCoordinator.scheduleReconnect();
+        }
+        if (status == MessagingSocketStatus.connected) {
+          unawaited(_onTransportRestored());
+        }
+      }),
+    );
+  }
+
+  Future<void> _onTransportRestored() async {
+    final processor = _queueProcessor;
+    if (processor == null) {
+      return;
+    }
+    await processor.releaseWaitingRetries();
+    await processor.requestDrain();
+    await _syncEngine?.refreshConversations();
+  }
+
   void _bindConnectivity() {
     _subscriptions.add(
-      _connectivity.onConnectivityChanged.listen((_) {
-        unawaited(_queueProcessor?.requestDrain());
-        unawaited(_syncEngine?.refreshConversations());
+      _connectivity.onConnectivityChanged.listen((results) {
+        final offline = results.every(
+          (result) => result == ConnectivityResult.none,
+        );
+        if (!offline) {
+          unawaited(_onTransportRestored());
+        }
       }),
     );
   }
@@ -151,8 +185,10 @@ class MessagingOfflineCoordinator {
 
   Future<void> onForeground() async {
     await _queueProcessor?.recoverStaleJobs();
+    await _queueProcessor?.releaseWaitingRetries();
     await _syncEngine?.refreshConversations();
     await _syncEngine?.purgeExpiredMessages();
+    await _socketCoordinator.connectIfAuthenticated();
     await _queueProcessor?.requestDrain();
   }
 

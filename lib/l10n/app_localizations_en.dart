@@ -2104,4 +2104,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get messageFailedPermanently => 'This message could not be sent.';
+
+  @override
+  String get messageDeliveryQueued => 'Queued';
+
+  @override
+  String get messageDeliverySending => 'Sending';
+
+  @override
+  String get messageDeliveryRetrying => 'Retrying';
+
+  @override
+  String get messageDeliveryFailed => 'Failed to send';
+
+  @override
+  String get messageDeliverySent => 'Sent';
+
+  @override
+  String get messageDeliveryDelivered => 'Delivered';
+
+  @override
+  String get messageDeliveryRead => 'Read';
+
+  @override
+  String get messageRetryAction => 'Retry send';
 }

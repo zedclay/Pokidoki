@@ -239,6 +239,74 @@ void main() {
     expect(row?.displayName, 'Alex');
   });
 
+  test('conversation upsert preserves createdAt on update', () async {
+    final createdAt = DateTime.utc(2026, 1, 1, 8);
+    final updatedAt = DateTime.utc(2026, 7, 6, 10);
+
+    await db.conversationsDao.upsert(
+      conversationToUpsertCompanion(
+        Conversation(
+          id: 'c-update',
+          peerId: 'u2',
+          peerDisplayName: 'Alex',
+          peerUsername: 'alex',
+          updatedAt: createdAt,
+        ),
+      ),
+    );
+
+    final afterInsert = await db.conversationsDao.getById('c-update');
+    expect(afterInsert, isNot(null));
+
+    await db.conversationsDao.upsert(
+      conversationToUpsertCompanion(
+        Conversation(
+          id: 'c-update',
+          peerId: 'u2',
+          peerDisplayName: 'Alex Updated',
+          peerUsername: 'alex',
+          updatedAt: updatedAt,
+        ),
+      ),
+    );
+
+    final row = await db.conversationsDao.getById('c-update');
+    expect(row?.displayName, 'Alex Updated');
+    expect(row?.createdAt, afterInsert!.createdAt);
+    expect(row?.updatedAt, isNot(afterInsert.updatedAt));
+  });
+
+  test('upsertAll persists multiple conversations', () async {
+    final earlier = DateTime.utc(2026, 1, 1);
+    final later = DateTime.utc(2026, 1, 2);
+
+    await db.conversationsDao.upsertAll([
+      conversationToUpsertCompanion(
+        Conversation(
+          id: 'c-batch-1',
+          peerId: 'u2',
+          peerDisplayName: 'Alex',
+          peerUsername: 'alex',
+          updatedAt: earlier,
+        ),
+      ),
+      conversationToUpsertCompanion(
+        Conversation(
+          id: 'c-batch-2',
+          peerId: 'u3',
+          peerDisplayName: 'Sam',
+          peerUsername: 'sam',
+          updatedAt: later,
+          lastMessagePreview: 'Hey',
+        ),
+      ),
+    ]);
+
+    final rows = await db.conversationsDao.getAllOrdered();
+    expect(rows, hasLength(2));
+    expect(rows.first.conversationId, 'c-batch-2');
+  });
+
   test('clear all removes messaging data on logout wipe', () async {
     await db.conversationsDao.upsert(
       conversationToCompanion(

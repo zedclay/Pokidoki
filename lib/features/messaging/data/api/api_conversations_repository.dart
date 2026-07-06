@@ -9,6 +9,7 @@ import '../../../../data/models/message_page.dart';
 import '../../../../data/models/message_search_page.dart';
 import '../../../../data/models/shared_media_item.dart';
 import '../../../../data/repositories/conversations_repository.dart';
+import '../../domain/queue_retry_scheduler.dart';
 import '../messaging_failure.dart';
 import 'messaging_api.dart';
 import 'messaging_api_mapper.dart';
@@ -191,6 +192,11 @@ class ApiConversationsRepository implements ConversationsRepository {
         messageKey: _errorMapper.messageKeyForBackendCode(apiException.code),
       );
     }
-    return const MessagingFailure(code: 'REQUEST_ERROR');
+    final status = error.response?.statusCode;
+    if (status != null) {
+      final scheduler = QueueRetryScheduler();
+      return MessagingFailure(code: scheduler.codeForHttpStatus(status));
+    }
+    return const MessagingFailure(code: 'CONNECTION_ERROR');
   }
 }

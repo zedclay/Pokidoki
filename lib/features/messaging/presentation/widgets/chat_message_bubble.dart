@@ -13,11 +13,13 @@ class ChatMessageBubble extends StatelessWidget {
     required this.message,
     required this.timeLabel,
     required this.onLongPress,
+    this.deliveryStatusLabel,
   });
 
   final ChatMessage message;
   final String timeLabel;
   final VoidCallback onLongPress;
+  final String? deliveryStatusLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class ChatMessageBubble extends StatelessWidget {
     final outgoing = message.isOutgoing;
     final background = outgoing ? colors.primary : colors.surfaceElevated;
     final foreground = outgoing ? colors.onPrimary : colors.textPrimary;
+    final statusLabel = deliveryStatusLabel;
 
     return Align(
       alignment: outgoing
@@ -120,10 +123,13 @@ class ChatMessageBubble extends StatelessWidget {
                       ),
                       if (outgoing) ...[
                         const SizedBox(width: PokidokiSpacing.xxs),
-                        Icon(
-                          _deliveryIcon(message.deliveryStatus),
-                          size: 14,
-                          color: foreground.withValues(alpha: 0.8),
+                        Semantics(
+                          label: statusLabel,
+                          child: Icon(
+                            _deliveryIcon(message.deliveryStatus),
+                            size: 14,
+                            color: foreground.withValues(alpha: 0.8),
+                          ),
                         ),
                       ],
                     ],
@@ -139,6 +145,7 @@ class ChatMessageBubble extends StatelessWidget {
 
   IconData _deliveryIcon(MessageDeliveryStatus status) {
     return switch (status) {
+      MessageDeliveryStatus.queued => Icons.cloud_queue_rounded,
       MessageDeliveryStatus.sending => Icons.schedule_rounded,
       MessageDeliveryStatus.sent => Icons.done_rounded,
       MessageDeliveryStatus.delivered ||

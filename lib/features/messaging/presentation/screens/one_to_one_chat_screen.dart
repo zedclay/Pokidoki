@@ -75,6 +75,27 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
     return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   }
 
+  String? _deliveryStatusLabel(AppLocalizations l10n, ChatMessage message) {
+    if (!message.isOutgoing) {
+      return null;
+    }
+    return switch (message.deliveryStatus) {
+      MessageDeliveryStatus.queued => l10n.messageDeliveryQueued,
+      MessageDeliveryStatus.sending => l10n.messageDeliverySending,
+      MessageDeliveryStatus.failed => l10n.messageDeliveryFailed,
+      MessageDeliveryStatus.sent => l10n.messageDeliverySent,
+      MessageDeliveryStatus.delivered => l10n.messageDeliveryDelivered,
+      MessageDeliveryStatus.read => l10n.messageDeliveryRead,
+    };
+  }
+
+  bool _canRetryMessage(ChatMessage message) {
+    return message.isOutgoing &&
+        message.clientMessageId != null &&
+        (message.deliveryStatus == MessageDeliveryStatus.failed ||
+            message.deliveryStatus == MessageDeliveryStatus.queued);
+  }
+
   Future<void> _send() async {
     final text = _composer.text;
     _composer.clear();
@@ -115,6 +136,12 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                 title: Text(l10n.chatDelete),
                 onTap: () => Navigator.pop(context, 'delete'),
               ),
+            if (_canRetryMessage(message))
+              ListTile(
+                leading: const Icon(Icons.refresh_rounded),
+                title: Text(l10n.messageRetryAction),
+                onTap: () => Navigator.pop(context, 'retry'),
+              ),
             ListTile(
               leading: const Icon(Icons.info_outline_rounded),
               title: Text(l10n.chatMessageInfo),
@@ -133,6 +160,8 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
       case 'reply':
         messaging.setReplyTo(message);
         setState(() {});
+      case 'retry':
+        await messaging.retrySend(widget.conversationId, message);
       case 'copy':
         await Clipboard.setData(ClipboardData(text: message.body));
         if (mounted) {
@@ -364,6 +393,7 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
                     child: ChatMessageBubble(
                       message: message,
                       timeLabel: _timeLabel(message.sentAt),
+                      deliveryStatusLabel: _deliveryStatusLabel(l10n, message),
                       onLongPress: () => _onMessageActions(message),
                     ),
                   );

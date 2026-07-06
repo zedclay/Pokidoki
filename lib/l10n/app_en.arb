@@ -959,5 +959,13 @@
   "syncTemporarilyUnavailable": "Sync is temporarily unavailable. Cached messages remain available.",
   "messageQueuedOffline": "Message queued. It will send when you are back online.",
   "messageRetryScheduled": "Send failed. Retrying automatically.",
-  "messageFailedPermanently": "This message could not be sent."
+  "messageFailedPermanently": "This message could not be sent.",
+  "messageDeliveryQueued": "Queued",
+  "messageDeliverySending": "Sending",
+  "messageDeliveryRetrying": "Retrying",
+  "messageDeliveryFailed": "Failed to send",
+  "messageDeliverySent": "Sent",
+  "messageDeliveryDelivered": "Delivered",
+  "messageDeliveryRead": "Read",
+  "messageRetryAction": "Retry send"
 }

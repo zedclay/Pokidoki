@@ -3903,6 +3903,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This message could not be sent.'**
   String get messageFailedPermanently;
+
+  /// No description provided for @messageDeliveryQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get messageDeliveryQueued;
+
+  /// No description provided for @messageDeliverySending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending'**
+  String get messageDeliverySending;
+
+  /// No description provided for @messageDeliveryRetrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying'**
+  String get messageDeliveryRetrying;
+
+  /// No description provided for @messageDeliveryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send'**
+  String get messageDeliveryFailed;
+
+  /// No description provided for @messageDeliverySent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get messageDeliverySent;
+
+  /// No description provided for @messageDeliveryDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get messageDeliveryDelivered;
+
+  /// No description provided for @messageDeliveryRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get messageDeliveryRead;
+
+  /// No description provided for @messageRetryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry send'**
+  String get messageRetryAction;
 }
 
 class _AppLocalizationsDelegate

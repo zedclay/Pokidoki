@@ -40,14 +40,37 @@ class ConversationsDao extends DatabaseAccessor<MessagingDatabase>
     )..where((t) => t.conversationId.equals(conversationId))).getSingleOrNull();
   }
 
-  Future<void> upsert(LocalConversationsCompanion companion) {
-    return into(localConversations).insertOnConflictUpdate(companion);
+  Future<void> upsert(LocalConversationsCompanion companion) async {
+    if (!companion.conversationId.present) {
+      await into(localConversations).insertOnConflictUpdate(companion);
+      return;
+    }
+
+    final conversationId = companion.conversationId.value;
+    final existing = await getById(conversationId);
+    if (existing == null) {
+      final insertCompanion = companion.createdAt.present
+          ? companion
+          : companion.copyWith(
+              createdAt: Value(
+                companion.updatedAt.present
+                    ? companion.updatedAt.value
+                    : DateTime.now().toUtc(),
+              ),
+            );
+      await into(localConversations).insert(insertCompanion);
+      return;
+    }
+
+    await (update(localConversations)
+          ..where((t) => t.conversationId.equals(conversationId)))
+        .write(companion.copyWith(createdAt: const Value.absent()));
   }
 
   Future<void> upsertAll(List<LocalConversationsCompanion> companions) async {
-    await batch((batch) {
-      batch.insertAllOnConflictUpdate(localConversations, companions);
-    });
+    for (final companion in companions) {
+      await upsert(companion);
+    }
   }
 
   Future<void> updatePreview({

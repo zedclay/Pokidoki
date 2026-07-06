@@ -62,9 +62,13 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
   @override
   Future<Conversation> createOrGetConversation(String userId) async {
     final conversation = await _remote.createOrGetConversation(userId);
-    await _db.conversationsDao.upsert(
-      conversationToUpsertCompanion(conversation),
-    );
+    try {
+      await _db.conversationsDao.upsert(
+        conversationToUpsertCompanion(conversation),
+      );
+    } on Object {
+      // Server conversation exists; do not block opening chat when local cache fails.
+    }
     return conversation;
   }
 
@@ -73,18 +77,31 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
     String? cursor,
     int limit = 20,
   }) async {
-    await _sync.refreshConversations(cursor: cursor);
+    try {
+      await _sync.refreshConversations(cursor: cursor);
+    } on Object {
+      // Fall back to cached or remote data below.
+    }
+
     final rows = await _db.conversationsDao.getAllOrdered();
-    return ConversationPage(
-      items: rows.map((row) => row.toDomain()).toList(),
-      nextCursor: null,
-      hasMore: false,
-    );
+    if (rows.isNotEmpty) {
+      return ConversationPage(
+        items: rows.map((row) => row.toDomain()).toList(),
+        nextCursor: null,
+        hasMore: false,
+      );
+    }
+
+    return _remote.getConversations(cursor: cursor, limit: limit);
   }
 
   @override
   Future<Conversation> getConversation(String conversationId) async {
-    await _sync.syncConversation(conversationId);
+    try {
+      await _sync.syncConversation(conversationId);
+    } on Object {
+      // Use cached or remote conversation below.
+    }
     final row = await _db.conversationsDao.getById(conversationId);
     if (row != null) {
       return row.toDomain();
@@ -101,14 +118,31 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
     if (before == null) {
       _messagesCursor = null;
     }
-    await _sync.syncMessages(conversationId: conversationId, before: before);
+
+    final localBeforeSync = await _db.messagesDao.getConversationMessages(
+      conversationId,
+    );
+
+    try {
+      await _sync.syncMessages(conversationId: conversationId, before: before);
+    } on Object {
+      // Fall back to cached messages below.
+    }
+
     final rows = await _db.messagesDao.getConversationMessages(conversationId);
-    return MessagePage(
-      items: rows
-          .map((row) => row.toDomain(currentUserId: _currentUserId()))
-          .toList(),
-      nextCursor: _messagesCursor,
-      hasMore: false,
+    if (rows.isNotEmpty || localBeforeSync.isNotEmpty) {
+      return MessagePage(
+        items: rows
+            .map((row) => row.toDomain(currentUserId: _currentUserId()))
+            .toList(),
+        nextCursor: _messagesCursor,
+        hasMore: false,
+      );
+    }
+    return _remote.getMessages(
+      conversationId: conversationId,
+      before: before,
+      limit: limit,
     );
   }
 
@@ -131,7 +165,7 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
     );
 
     await _db.transaction(() async {
-      await _db.messagesDao.insertMessage(
+      await _db.messagesDao.upsertPendingMessage(
         messageToInsertCompanion(
           clientMessageId: clientMessageId,
           conversationId: conversationId,
@@ -172,9 +206,28 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
       body: text,
       sentAt: now,
       isOutgoing: true,
-      deliveryStatus: MessageDeliveryStatus.sending,
+      deliveryStatus: MessageDeliveryStatus.queued,
       expiresAt: expiresAt,
     );
+  }
+
+  Future<List<ChatMessage>> getPendingLocalMessages(
+    String conversationId,
+  ) async {
+    final rows = await _db.messagesDao.getConversationMessages(conversationId);
+    final userId = _currentUserId();
+    return rows
+        .where((row) {
+          final status = MessageStatusRank.fromStorage(row.deliveryStatus);
+          final sync = row.syncState;
+          return status == LocalMessageStatus.queued ||
+              status == LocalMessageStatus.sending ||
+              status == LocalMessageStatus.failedPermanent ||
+              sync == LocalSyncState.pendingAck.name ||
+              sync == LocalSyncState.localOnly.name;
+        })
+        .map((row) => row.toDomain(currentUserId: userId))
+        .toList();
   }
 
   Future<void> retrySend({

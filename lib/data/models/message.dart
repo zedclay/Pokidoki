@@ -1,5 +1,5 @@
 /// Message delivery presentation state.
-enum MessageDeliveryStatus { sending, sent, delivered, read, failed }
+enum MessageDeliveryStatus { queued, sending, sent, delivered, read, failed }
 
 /// Message content type for UI presentation.
 enum MessageContentType { text, image, file, link, system }

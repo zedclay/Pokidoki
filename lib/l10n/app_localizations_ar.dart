@@ -2068,4 +2068,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get messageFailedPermanently => 'تعذر إرسال هذه الرسالة.';
+
+  @override
+  String get messageDeliveryQueued => 'في قائمة الانتظار';
+
+  @override
+  String get messageDeliverySending => 'جارٍ الإرسال';
+
+  @override
+  String get messageDeliveryRetrying => 'إعادة المحاولة';
+
+  @override
+  String get messageDeliveryFailed => 'فشل الإرسال';
+
+  @override
+  String get messageDeliverySent => 'تم الإرسال';
+
+  @override
+  String get messageDeliveryDelivered => 'تم التسليم';
+
+  @override
+  String get messageDeliveryRead => 'مقروءة';
+
+  @override
+  String get messageRetryAction => 'إعادة الإرسال';
 }

@@ -90,11 +90,7 @@ class MessagingController extends StateNotifier<MessagingState> {
        _socketCoordinator = socketCoordinator,
        _sessionManager = sessionManager,
        super(_initialState()) {
-    if (_offlineMode) {
-      _subscribeTypingEvents();
-    } else {
-      _subscribeSocketEvents();
-    }
+    _subscribeSocketEvents();
     if (_sessionManager.hasAccessToken) {
       unawaited(_socketCoordinator.connectIfAuthenticated());
     }
@@ -185,12 +181,14 @@ class MessagingController extends StateNotifier<MessagingState> {
           if (!mounted) {
             return;
           }
+          final current = state.messagesFor(conversationId);
+          final merged = _dedupeMessages([...current, ...messages]);
           final map = Map<String, List<ChatMessage>>.of(
             state.messagesByConversation,
           );
-          map[conversationId] = messages;
+          map[conversationId] = merged;
           state = state.copyWith(messagesByConversation: map);
-          _maybeMarkIncomingRead(conversationId, messages);
+          _maybeMarkIncomingRead(conversationId, merged);
         });
       },
       fireImmediately: true,
@@ -246,7 +244,9 @@ class MessagingController extends StateNotifier<MessagingState> {
         _historyCursors[conversationId] = page.nextCursor;
       }
       final existing = state.messagesFor(conversationId);
-      final merged = before == null ? page.items : [...page.items, ...existing];
+      final merged = before == null
+          ? _dedupeMessages([...page.items, ...existing])
+          : [...page.items, ...existing];
       final map = Map<String, List<ChatMessage>>.of(
         state.messagesByConversation,
       );
@@ -328,19 +328,13 @@ class MessagingController extends StateNotifier<MessagingState> {
     final reply = state.replyTo;
 
     if (_offlineMode) {
-      try {
-        await _repository.sendMessage(
-          conversationId: conversationId,
-          clientMessageId: clientMessageId,
-          text: trimmed,
-        );
-        state = state.copyWith(clearReply: true);
-      } on MessagingFailure {
-        // Drift stream reflects failedPermanent status from the queue processor.
-        state = state.copyWith(clearReply: true);
-      } on Object {
-        state = state.copyWith(clearReply: true);
-      }
+      await _sendTextMessageOffline(
+        conversationId: conversationId,
+        trimmed: trimmed,
+        clientMessageId: clientMessageId,
+        reply: reply,
+        conv: conv,
+      );
       return;
     }
 
@@ -395,11 +389,75 @@ class MessagingController extends StateNotifier<MessagingState> {
       );
 
       _reconcileOptimistic(conversationId, clientMessageId, serverMessage);
+
+      if (_offlineMode) {
+        unawaited(_drainOutboundQueue());
+      }
     } on Object {
       _replaceMessage(
         conversationId,
         optimistic.copyWith(deliveryStatus: MessageDeliveryStatus.failed),
       );
+    }
+  }
+
+  Future<void> _sendTextMessageOffline({
+    required String conversationId,
+    required String trimmed,
+    required String clientMessageId,
+    required ChatMessage? reply,
+    required Conversation? conv,
+  }) async {
+    final sentAt = DateTime.now().toUtc();
+    final optimistic = ChatMessage(
+      id: 'local-$clientMessageId',
+      conversationId: conversationId,
+      clientMessageId: clientMessageId,
+      senderId: _currentUserId ?? '',
+      body: trimmed,
+      sentAt: sentAt,
+      isOutgoing: true,
+      deliveryStatus: MessageDeliveryStatus.queued,
+      replyToMessageId: reply?.id,
+      replyPreview: reply?.body,
+      expiresAt: DisappearingDurationMapper.expiresAtForSend(
+        conv?.disappearingDurationHours,
+        sentAt,
+      ),
+    );
+
+    _appendMessage(conversationId, optimistic);
+    _updateConversationPreview(
+      conversationId,
+      preview: trimmed,
+      outgoing: true,
+    );
+    state = state.copyWith(clearReply: true);
+
+    try {
+      final queued = await _repository.sendMessage(
+        conversationId: conversationId,
+        clientMessageId: clientMessageId,
+        text: trimmed,
+      );
+      _reconcileOptimistic(conversationId, clientMessageId, queued);
+      unawaited(_drainOutboundQueue());
+    } on Object {
+      _replaceMessage(
+        conversationId,
+        optimistic.copyWith(deliveryStatus: MessageDeliveryStatus.failed),
+      );
+    }
+  }
+
+  Future<void> _drainOutboundQueue() async {
+    try {
+      final offline = await _ref.read(
+        offlineConversationsRepositoryProvider.future,
+      );
+      await offline.queueProcessor.requestDrain();
+    } on Object {
+      // Queue will retry on connectivity or foreground.
     }
   }
 
@@ -417,14 +475,27 @@ class MessagingController extends StateNotifier<MessagingState> {
     }
 
     if (_offlineMode) {
+      _replaceMessage(
+        conversationId,
+        failedMessage.copyWith(deliveryStatus: MessageDeliveryStatus.queued),
+      );
       try {
         final offline = await _ref.read(
           offlineConversationsRepositoryProvider.future,
         );
-        await offline.retrySend(
-          conversationId: conversationId,
-          clientMessageId: clientMessageId,
-        );
+        try {
+          await offline.retrySend(
+            conversationId: conversationId,
+            clientMessageId: clientMessageId,
+          );
+        } on Object {
+          await offline.sendMessage(
+            conversationId: conversationId,
+            clientMessageId: clientMessageId,
+            text: failedMessage.body,
+          );
+        }
+        unawaited(_drainOutboundQueue());
       } on Object {
         _replaceMessage(
           conversationId,
@@ -865,11 +936,41 @@ class MessagingController extends StateNotifier<MessagingState> {
     final byKey = <String, ChatMessage>{};
     for (final message in messages) {
       final key = message.clientMessageId ?? message.id;
-      byKey[key] = message;
+      final existing = byKey[key];
+      byKey[key] = existing == null
+          ? message
+          : _mergeDuplicateMessages(existing, message);
     }
     final list = byKey.values.toList()
       ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return list;
+  }
+
+  ChatMessage _mergeDuplicateMessages(ChatMessage a, ChatMessage b) {
+    final preferred =
+        _deliveryRank(a.deliveryStatus) >= _deliveryRank(b.deliveryStatus)
+        ? a
+        : b;
+    final other = identical(preferred, a) ? b : a;
+    final serverId = !preferred.id.startsWith('local-')
+        ? preferred.id
+        : (!other.id.startsWith('local-') ? other.id : preferred.id);
+    final status =
+        _deliveryRank(a.deliveryStatus) >= _deliveryRank(b.deliveryStatus)
+        ? a.deliveryStatus
+        : b.deliveryStatus;
+    return preferred.copyWith(id: serverId, deliveryStatus: status);
+  }
+
+  int _deliveryRank(MessageDeliveryStatus status) {
+    return switch (status) {
+      MessageDeliveryStatus.failed => 0,
+      MessageDeliveryStatus.queued => 1,
+      MessageDeliveryStatus.sending => 2,
+      MessageDeliveryStatus.sent => 3,
+      MessageDeliveryStatus.delivered => 4,
+      MessageDeliveryStatus.read => 5,
+    };
   }
 
   List<ChatMessage> _filterExpired(List<ChatMessage> messages) {

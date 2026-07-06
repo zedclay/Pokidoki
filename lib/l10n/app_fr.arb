@@ -637,5 +637,13 @@
   "syncTemporarilyUnavailable": "La synchronisation est temporairement indisponible. Les messages en cache restent accessibles.",
   "messageQueuedOffline": "Message en file d'attente. Il sera envoyé lorsque vous serez en ligne.",
   "messageRetryScheduled": "Échec de l'envoi. Nouvelle tentative automatique.",
-  "messageFailedPermanently": "Ce message n'a pas pu être envoyé."
+  "messageFailedPermanently": "Ce message n'a pas pu être envoyé.",
+  "messageDeliveryQueued": "En file d'attente",
+  "messageDeliverySending": "Envoi en cours",
+  "messageDeliveryRetrying": "Nouvelle tentative",
+  "messageDeliveryFailed": "Échec de l'envoi",
+  "messageDeliverySent": "Envoyé",
+  "messageDeliveryDelivered": "Distribué",
+  "messageDeliveryRead": "Lu",
+  "messageRetryAction": "Réessayer l'envoi"
 }

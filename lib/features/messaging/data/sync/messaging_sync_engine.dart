@@ -24,8 +24,15 @@ class MessagingSyncEngine {
 
   Future<void> refreshConversations({String? cursor}) async {
     final page = await _remote.getConversations(cursor: cursor);
-    final companions = page.items.map(conversationToUpsertCompanion).toList();
-    await _db.conversationsDao.upsertAll(companions);
+    for (final conversation in page.items) {
+      try {
+        await _db.conversationsDao.upsert(
+          conversationToUpsertCompanion(conversation),
+        );
+      } on Object {
+        // Keep syncing remaining conversations when one row fails validation.
+      }
+    }
   }
 
   Future<void> syncConversation(String conversationId) async {
@@ -117,6 +124,7 @@ class MessagingSyncEngine {
 
   LocalMessageStatus _mapUiStatus(MessageDeliveryStatus status) {
     return switch (status) {
+      MessageDeliveryStatus.queued => LocalMessageStatus.queued,
       MessageDeliveryStatus.sending => LocalMessageStatus.sending,
       MessageDeliveryStatus.sent => LocalMessageStatus.sent,
       MessageDeliveryStatus.delivered => LocalMessageStatus.delivered,

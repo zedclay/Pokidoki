@@ -58,7 +58,7 @@ class DeliveryStatusMapper {
 
   static String toUiStatus(LocalMessageStatus status) {
     return switch (status) {
-      LocalMessageStatus.queued => 'sending',
+      LocalMessageStatus.queued => 'queued',
       LocalMessageStatus.sending => 'sending',
       LocalMessageStatus.sent => 'sent',
       LocalMessageStatus.delivered => 'delivered',
@@ -69,6 +69,7 @@ class DeliveryStatusMapper {
 
   static LocalMessageStatus fromUiStatus(String status) {
     return switch (status) {
+      'queued' => LocalMessageStatus.queued,
       'sending' => LocalMessageStatus.sending,
       'sent' => LocalMessageStatus.sent,
       'delivered' => LocalMessageStatus.delivered,

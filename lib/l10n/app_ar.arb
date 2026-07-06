@@ -637,5 +637,13 @@
   "syncTemporarilyUnavailable": "المزامنة غير متاحة مؤقتًا. تظل الرسائل المخزنة محليًا متاحة.",
   "messageQueuedOffline": "تمت إضافة الرسالة إلى قائمة الانتظار. سيتم إرسالها عند عودة الاتصال.",
   "messageRetryScheduled": "فشل الإرسال. سيتم إعادة المحاولة تلقائيًا.",
-  "messageFailedPermanently": "تعذر إرسال هذه الرسالة."
+  "messageFailedPermanently": "تعذر إرسال هذه الرسالة.",
+  "messageDeliveryQueued": "في قائمة الانتظار",
+  "messageDeliverySending": "جارٍ الإرسال",
+  "messageDeliveryRetrying": "إعادة المحاولة",
+  "messageDeliveryFailed": "فشل الإرسال",
+  "messageDeliverySent": "تم الإرسال",
+  "messageDeliveryDelivered": "تم التسليم",
+  "messageDeliveryRead": "مقروءة",
+  "messageRetryAction": "إعادة الإرسال"
 }

@@ -33,6 +33,7 @@ class MessagingDatabaseLifecycle {
   Future<MessagingDatabase> _openOnce() async {
     final db = await _factory.openEncrypted();
     _database = db;
+    _queueProcessor?.resume();
     return db;
   }
 

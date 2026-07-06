@@ -43,9 +43,12 @@ class OutboundMessageQueueProcessor {
 
   bool _draining = false;
   bool _stopped = false;
+  Timer? _retryTimer;
 
   void stop() {
     _stopped = true;
+    _retryTimer?.cancel();
+    _retryTimer = null;
   }
 
   void resume() {
@@ -58,6 +61,10 @@ class OutboundMessageQueueProcessor {
       staleBefore: now.subtract(const Duration(minutes: 2)),
       retryAt: now,
     );
+  }
+
+  Future<void> releaseWaitingRetries({DateTime? now}) {
+    return _db.outboundQueueDao.releaseWaitingRetries(now: now);
   }
 
   Future<void> requestDrain() async {
@@ -173,5 +180,18 @@ class OutboundMessageQueueProcessor {
         lastUpdatedAt: Value(_clock().toUtc()),
       ),
     );
+    _scheduleRetryDrain(nextAttempt);
+  }
+
+  void _scheduleRetryDrain(DateTime nextAttempt) {
+    if (_stopped) {
+      return;
+    }
+    _retryTimer?.cancel();
+    final delay = nextAttempt.difference(_clock().toUtc());
+    final effectiveDelay = delay.isNegative ? Duration.zero : delay;
+    _retryTimer = Timer(effectiveDelay, () {
+      unawaited(requestDrain());
+    });
   }
 }

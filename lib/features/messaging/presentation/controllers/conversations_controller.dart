@@ -84,7 +84,7 @@ class ConversationsController extends StateNotifier<ConversationsState> {
     } on MessagingFailure catch (failure) {
       state = state.copyWith(
         isLoading: false,
-        errorKey: failure.messageKey ?? 'messagingUnavailable',
+        errorKey: failure.resolvedMessageKey,
       );
     } on Object {
       state = state.copyWith(
@@ -121,11 +121,8 @@ class ConversationsController extends StateNotifier<ConversationsState> {
       upsertConversation(conversation);
       return conversation;
     } on MessagingFailure catch (failure) {
-      state = state.copyWith(errorKey: failure.messageKey);
+      state = state.copyWith(errorKey: failure.resolvedMessageKey);
       rethrow;
-    } on Object {
-      state = state.copyWith(errorKey: 'messagingUnavailable');
-      throw const MessagingFailure(code: 'SYNC_TEMPORARILY_UNAVAILABLE');
     }
   }
 

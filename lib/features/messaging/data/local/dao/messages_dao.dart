@@ -67,6 +67,16 @@ class MessagesDao extends DatabaseAccessor<MessagingDatabase>
     return into(localMessages).insert(companion);
   }
 
+  Future<void> upsertPendingMessage(LocalMessagesCompanion companion) {
+    return into(localMessages).insert(
+      companion,
+      onConflict: DoUpdate(
+        (old) => companion,
+        target: [localMessages.clientMessageId],
+      ),
+    );
+  }
+
   Future<void> upsertRemoteMessage(LocalMessagesCompanion companion) {
     return into(localMessages).insertOnConflictUpdate(companion);
   }

@@ -114,6 +114,18 @@ class OutboundQueueDao extends DatabaseAccessor<MessagingDatabase>
         );
   }
 
+  Future<void> releaseWaitingRetries({DateTime? now}) {
+    final retryAt = now ?? DateTime.now().toUtc();
+    return (update(
+      outboundMessageQueue,
+    )..where((t) => t.queueState.equals(QueueState.waitingRetry.name))).write(
+      OutboundMessageQueueCompanion(
+        nextAttemptAt: Value(retryAt),
+        updatedAt: Value(retryAt),
+      ),
+    );
+  }
+
   Future<int> countPending() async {
     final rows =
         await (select(outboundMessageQueue)..where(

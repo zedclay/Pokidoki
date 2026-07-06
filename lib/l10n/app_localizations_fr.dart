@@ -2150,4 +2150,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get messageFailedPermanently => 'Ce message n\'a pas pu être envoyé.';
+
+  @override
+  String get messageDeliveryQueued => 'En file d\'attente';
+
+  @override
+  String get messageDeliverySending => 'Envoi en cours';
+
+  @override
+  String get messageDeliveryRetrying => 'Nouvelle tentative';
+
+  @override
+  String get messageDeliveryFailed => 'Échec de l\'envoi';
+
+  @override
+  String get messageDeliverySent => 'Envoyé';
+
+  @override
+  String get messageDeliveryDelivered => 'Distribué';
+
+  @override
+  String get messageDeliveryRead => 'Lu';
+
+  @override
+  String get messageRetryAction => 'Réessayer l\'envoi';
 }
