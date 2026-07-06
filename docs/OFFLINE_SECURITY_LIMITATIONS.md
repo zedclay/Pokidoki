@@ -38,3 +38,12 @@ Never log: message text, search queries, queue payloads, encryption keys, tokens
 ## Next phases
 
 Push notifications, attachments, and true E2EE would require separate design and are out of scope here.
+
+## Platform validation status
+
+| Platform | sqlite3mc runtime | Offline workflow |
+|----------|-------------------|------------------|
+| iOS Simulator (×2) | Pass — see [IOS_OFFLINE_VALIDATION.md](./IOS_OFFLINE_VALIDATION.md) | Manual two-simulator workflow (operator) |
+| Android | **Deferred** — APK build only; runtime test required on physical device before Play Store beta | N/A in this phase |
+
+Do not report Android sqlite3mc runtime validation as complete until the integration test passes on a physical Android device.
