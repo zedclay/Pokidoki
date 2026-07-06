@@ -66,15 +66,24 @@ class ConversationsController extends StateNotifier<ConversationsState> {
       next,
     ) {
       next.whenData((conversations) {
+        if (!mounted) {
+          return;
+        }
         state = state.copyWith(conversations: conversations);
       });
     }, fireImmediately: true);
   }
 
   Future<void> loadInitial({String? currentUserId}) async {
+    if (!mounted) {
+      return;
+    }
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final page = await _repository.getConversations();
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         conversations: page.items,
         isLoading: false,
@@ -82,6 +91,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
         hasMore: page.hasMore,
       );
     } on MessagingFailure catch (failure) {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         isLoading: false,
         errorKey: state.conversations.isEmpty
@@ -89,6 +101,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
             : null,
       );
     } on Object {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(
         isLoading: false,
         errorKey: state.conversations.isEmpty ? 'messagingUnavailable' : null,
@@ -102,9 +117,15 @@ class ConversationsController extends StateNotifier<ConversationsState> {
     if (!state.hasMore || state.isLoadingMore || state.nextCursor == null) {
       return;
     }
+    if (!mounted) {
+      return;
+    }
     state = state.copyWith(isLoadingMore: true);
     try {
       final page = await _repository.getConversations(cursor: state.nextCursor);
+      if (!mounted) {
+        return;
+      }
       final merged = _mergeConversations(state.conversations, page.items);
       state = state.copyWith(
         conversations: merged,
@@ -113,6 +134,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
         hasMore: page.hasMore,
       );
     } on Object {
+      if (!mounted) {
+        return;
+      }
       state = state.copyWith(isLoadingMore: false);
     }
   }
@@ -120,9 +144,15 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   Future<Conversation?> createOrGet(String userId) async {
     try {
       final conversation = await _repository.createOrGetConversation(userId);
+      if (!mounted) {
+        return conversation;
+      }
       upsertConversation(conversation);
       return conversation;
     } on MessagingFailure catch (failure) {
+      if (!mounted) {
+        rethrow;
+      }
       state = state.copyWith(errorKey: failure.resolvedMessageKey);
       rethrow;
     }
@@ -138,6 +168,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   }
 
   void upsertConversation(Conversation conversation) {
+    if (!mounted) {
+      return;
+    }
     final items = List<Conversation>.of(state.conversations);
     final index = items.indexWhere((c) => c.id == conversation.id);
     if (index >= 0) {
@@ -160,6 +193,9 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   Future<void> refreshConversation(String conversationId) async {
     try {
       final conversation = await _repository.getConversation(conversationId);
+      if (!mounted) {
+        return;
+      }
       upsertConversation(conversation);
     } on Object {
       // Conversation may have been deleted locally.
@@ -167,16 +203,22 @@ class ConversationsController extends StateNotifier<ConversationsState> {
   }
 
   Future<void> refreshConversationsForPeer(String peerId) async {
+    if (!mounted) {
+      return;
+    }
     final matches = state.conversations
         .where((conversation) => conversation.peerId == peerId)
         .toList();
     for (final conversation in matches) {
+      if (!mounted) {
+        return;
+      }
       await refreshConversation(conversation.id);
     }
   }
 
   void applyBlockedByMe(Set<String> blockedPeerIds) {
-    if (blockedPeerIds.isEmpty) {
+    if (blockedPeerIds.isEmpty || !mounted) {
       return;
     }
     final updated = state.conversations.map((conversation) {
