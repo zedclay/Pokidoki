@@ -85,6 +85,7 @@ LocalConversationsCompanion conversationToUpsertCompanion(
     canSend: Value(conversation.canSend),
     isUnavailable: Value(!conversation.canSend),
     isOutgoingPreview: Value(conversation.isOutgoingPreview),
+    createdAt: Value(conversation.updatedAt),
     updatedAt: Value(conversation.updatedAt),
     lastSyncedAt: Value(now),
   );

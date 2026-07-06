@@ -49,7 +49,7 @@ class MessagingDatabaseFactory {
         db.execute('SELECT count(*) FROM sqlite_master');
         return NativeDatabase.opened(db);
       } on Object {
-        db.dispose();
+        db.close();
         if (directory.existsSync()) {
           await directory.delete(recursive: true);
         }
@@ -129,7 +129,7 @@ class MessagingDatabaseFactory {
         db.execute('SELECT count(*) FROM sqlite_master');
         return NativeDatabase.opened(db);
       } on Object {
-        db.dispose();
+        db.close();
         await _handleCorruptDatabase(file, hexKey);
         rethrow;
       }

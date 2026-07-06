@@ -217,6 +217,28 @@ void main() {
     expect(pending, 1);
   });
 
+  test('conversation upsert companion includes required createdAt', () async {
+    final now = DateTime.utc(2026, 7, 5, 10);
+
+    await expectLater(
+      db.conversationsDao.upsert(
+        conversationToUpsertCompanion(
+          Conversation(
+            id: 'c-upsert',
+            peerId: 'u2',
+            peerDisplayName: 'Alex',
+            peerUsername: 'alex',
+            updatedAt: now,
+          ),
+        ),
+      ),
+      completes,
+    );
+
+    final row = await db.conversationsDao.getById('c-upsert');
+    expect(row?.displayName, 'Alex');
+  });
+
   test('clear all removes messaging data on logout wipe', () async {
     await db.conversationsDao.upsert(
       conversationToCompanion(

@@ -66,7 +66,7 @@ Future<String?> _readCipherFromFreshConnection() async {
     }
     return null;
   } finally {
-    db.dispose();
+    db.close();
   }
 }
 
@@ -160,7 +160,7 @@ void main() {
         throwsA(isA<SqliteException>()),
       );
     } finally {
-      wrongKeyDb.dispose();
+      wrongKeyDb.close();
     }
 
     expect(await dbFile.exists(), isTrue);

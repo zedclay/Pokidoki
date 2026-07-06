@@ -49,3 +49,22 @@ Schema version starts at **1**. Future versions use Drift `onUpgrade` without de
 
 - End-to-end encryption (local encryption ≠ E2EE)
 - Attachments, groups, push, background execution
+
+## Code generation (Drift)
+
+Regenerate Drift/DAO code after schema changes:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+**Important:** `build_runner` **2.14+** AOT-compiles builders with `dart compile`, which fails when the `sqlite3mc` hook is enabled (`pubspec.yaml` → `hooks.user_defines.sqlite3.source`). This project pins **`build_runner: 2.13.1`** (JIT builders). Do not upgrade to 2.14+ until Dart hooks support AOT builder compilation.
+
+Expected failure if unpinned:
+
+```
+E 'dart compile' does not support build hooks, use 'dart build' instead.
+E Failed to compile build script.
+```
+
+`flutter pub run build_runner` uses the same pinned version and is equivalent when `pubspec.lock` is resolved.

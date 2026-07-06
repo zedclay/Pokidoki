@@ -14,7 +14,6 @@ import '../../../../data/models/user_search_result.dart';
 import '../../../../data/repositories/contacts_repository.dart';
 import '../../../../data/repositories/user_repository.dart';
 import '../../../contacts/data/contacts_failure.dart';
-import '../../../messaging/data/messaging_providers.dart';
 import '../../../users/domain/user_failure.dart';
 
 class SocialGraphState {
@@ -101,12 +100,12 @@ class SocialGraphController extends StateNotifier<SocialGraphState> {
     this._contactsRepository,
     this._ref,
   ) : super(
-        SocialGraphState(
-          conversations: const [],
-          contacts: const [],
-          requests: const [],
-          profiles: const {},
-          blockedUsers: const [],
+        const SocialGraphState(
+          conversations: [],
+          contacts: [],
+          requests: [],
+          profiles: {},
+          blockedUsers: [],
         ),
       );
 

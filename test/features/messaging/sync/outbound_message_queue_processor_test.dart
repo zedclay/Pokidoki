@@ -94,7 +94,7 @@ void main() {
     );
     remote = TestApiRemote(
       messagingApi: MessagingApi(Dio(BaseOptions(baseUrl: 'http://test'))),
-      errorMapper: ApiErrorMapper(),
+      errorMapper: const ApiErrorMapper(),
       sessionManager: AuthSessionManager(),
     );
     sync = MessagingSyncEngine(

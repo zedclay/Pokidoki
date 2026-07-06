@@ -51,6 +51,9 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     final ok = await ref
         .read(authFlowProvider.notifier)
         .confirmPinMatches(_pin);
+    if (!mounted) {
+      return;
+    }
     if (!ok) {
       setState(() {
         _pin = '';
@@ -60,7 +63,13 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     }
     if (widget.fromSettings) {
       ref.read(authFlowProvider.notifier).setPendingPin('');
+      if (!mounted) {
+        return;
+      }
       context.go(AppRoutes.settingsAppLock);
+      return;
+    }
+    if (!mounted) {
       return;
     }
     context.push(AppRoutes.enableBiometrics);

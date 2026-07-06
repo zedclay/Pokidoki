@@ -25,7 +25,6 @@ import 'package:pokidoki/features/settings/presentation/screens/linked_devices_s
 import 'package:pokidoki/features/settings/presentation/screens/security_activity_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/settings_screen.dart';
 import 'package:pokidoki/features/settings/presentation/screens/storage_usage_screen.dart';
-import 'package:pokidoki/features/messaging/data/messaging_providers.dart';
 import 'package:pokidoki/features/social/presentation/controllers/social_graph_controller.dart';
 import 'package:pokidoki/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pokidoki/l10n/app_localizations.dart';

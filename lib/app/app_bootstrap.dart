@@ -9,7 +9,6 @@ import '../data/models/account_settings.dart';
 import '../data/repositories/user_repository.dart';
 import '../features/authentication/data/auth_providers.dart';
 import '../features/authentication/presentation/controllers/auth_flow_controller.dart';
-import '../features/messaging/data/messaging_providers.dart';
 import '../features/social/presentation/controllers/social_graph_controller.dart';
 import 'providers/app_providers.dart';
 
