@@ -74,19 +74,9 @@ class MessagingDatabaseFactory {
   }
 
   Future<String> _resolveKey({required bool createIfMissing}) async {
-    var key = await _keyStore.readKey();
-    if (key == null) {
-      // Secure storage can be briefly unavailable during hot restart.
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-      key = await _keyStore.readKey();
-    }
     final file = await _databaseFile();
     final fileExists = await file.exists();
-
-    if (key == null && fileExists) {
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-      key = await _keyStore.readKey();
-    }
+    var key = await _readKeyWithRetry();
 
     if (key == null && fileExists) {
       await _deleteOrphanDatabase(file);
@@ -104,6 +94,20 @@ class MessagingDatabaseFactory {
     }
 
     return key;
+  }
+
+  Future<String?> _readKeyWithRetry({int maxAttempts = 12}) async {
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      final key = await _keyStore.readKey();
+      if (key != null) {
+        return key;
+      }
+      if (attempt < maxAttempts - 1) {
+        final delayMs = 50 * (1 << attempt.clamp(0, 5));
+        await Future<void>.delayed(Duration(milliseconds: delayMs));
+      }
+    }
+    return null;
   }
 
   Future<void> _deleteOrphanDatabase(File file) async {

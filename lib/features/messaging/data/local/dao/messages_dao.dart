@@ -162,12 +162,17 @@ class MessagesDao extends DatabaseAccessor<MessagingDatabase>
   Future<void> markClientMessageFailed({
     required String clientMessageId,
     required String errorCode,
+    bool permanent = true,
   }) {
     return updateByClientId(
       clientMessageId: clientMessageId,
       fields: LocalMessagesCompanion(
         deliveryStatus: Value(LocalMessageStatus.failedPermanent.name),
-        syncState: Value(LocalSyncState.localOnly.name),
+        syncState: Value(
+          permanent
+              ? LocalSyncState.localOnly.name
+              : LocalSyncState.pendingAck.name,
+        ),
         errorCode: Value(errorCode),
         lastUpdatedAt: Value(DateTime.now().toUtc()),
       ),

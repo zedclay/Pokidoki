@@ -21,6 +21,13 @@ class OutboundQueueDao extends DatabaseAccessor<MessagingDatabase>
     );
   }
 
+  Future<OutboundMessageQueueData?> getByClientId(String clientMessageId) {
+    return (select(outboundMessageQueue)
+          ..where((t) => t.clientMessageId.equals(clientMessageId))
+          ..limit(1))
+        .getSingleOrNull();
+  }
+
   Future<OutboundMessageQueueData?> acquireNextEligible(DateTime now) async {
     return (select(outboundMessageQueue)
           ..where(
@@ -189,6 +196,19 @@ class OutboundQueueDao extends DatabaseAccessor<MessagingDatabase>
                   t.queueState.equals(QueueState.pending.name) |
                   t.queueState.equals(QueueState.waitingRetry.name) |
                   t.queueState.equals(QueueState.inFlight.name),
+            ))
+            .get();
+    return rows.length;
+  }
+
+  Future<int> countOutstanding() async {
+    final rows =
+        await (select(outboundMessageQueue)..where(
+              (t) =>
+                  t.queueState.equals(QueueState.pending.name) |
+                  t.queueState.equals(QueueState.waitingRetry.name) |
+                  t.queueState.equals(QueueState.inFlight.name) |
+                  t.queueState.equals(QueueState.failedPermanent.name),
             ))
             .get();
     return rows.length;

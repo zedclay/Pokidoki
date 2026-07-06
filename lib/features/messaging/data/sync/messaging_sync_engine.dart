@@ -23,36 +23,48 @@ class MessagingSyncEngine {
   final String? Function() _currentUserId;
 
   Future<void> refreshConversations({String? cursor}) async {
-    final page = await _remote.getConversations(cursor: cursor);
-    for (final conversation in page.items) {
-      try {
-        await _db.conversationsDao.upsert(
-          conversationToUpsertCompanion(conversation),
-        );
-      } on Object {
-        // Keep syncing remaining conversations when one row fails validation.
+    try {
+      final page = await _remote.getConversations(cursor: cursor);
+      for (final conversation in page.items) {
+        try {
+          await _db.conversationsDao.upsert(
+            conversationToUpsertCompanion(conversation),
+          );
+        } on Object {
+          // Keep syncing remaining conversations when one row fails validation.
+        }
       }
+    } on Object {
+      // Background sync; cached conversations remain available when offline.
     }
   }
 
   Future<void> syncConversation(String conversationId) async {
-    final conversation = await _remote.getConversation(conversationId);
-    await _db.conversationsDao.upsert(
-      conversationToUpsertCompanion(conversation),
-    );
+    try {
+      final conversation = await _remote.getConversation(conversationId);
+      await _db.conversationsDao.upsert(
+        conversationToUpsertCompanion(conversation),
+      );
+    } on Object {
+      // Fall back to cached conversation metadata when offline.
+    }
   }
 
   Future<void> syncMessages({
     required String conversationId,
     String? before,
   }) async {
-    final page = await _remote.getMessages(
-      conversationId: conversationId,
-      before: before,
-    );
-    final userId = _currentUserId();
-    for (final message in page.items) {
-      await _upsertRemoteMessage(message, userId: userId);
+    try {
+      final page = await _remote.getMessages(
+        conversationId: conversationId,
+        before: before,
+      );
+      final userId = _currentUserId();
+      for (final message in page.items) {
+        await _upsertRemoteMessage(message, userId: userId);
+      }
+    } on Object {
+      // Fall back to cached messages when offline.
     }
   }
 

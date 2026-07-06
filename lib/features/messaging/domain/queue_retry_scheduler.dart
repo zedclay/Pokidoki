@@ -48,7 +48,6 @@ class QueueRetryScheduler {
     'HTTP_502',
     'HTTP_503',
     'HTTP_504',
-    'MESSAGE_INVALID',
   };
 
   static const delays = [
@@ -102,5 +101,23 @@ class QueueRetryScheduler {
       return false;
     }
     return transportRequeueableCodes.contains(code);
+  }
+
+  static const nonRequeueableFailureCodes = {
+    'MESSAGE_TOO_LONG',
+    'MESSAGE_SEND_NOT_ALLOWED',
+    'CONVERSATION_CONTACT_REQUIRED',
+    'CONVERSATION_UNAVAILABLE',
+    'CONVERSATION_FORBIDDEN',
+    'CONVERSATION_NOT_FOUND',
+    'CONVERSATION_ARCHIVED',
+    'CONVERSATION_BLOCKED',
+  };
+
+  bool shouldRequeueFailed(String? code) {
+    if (code == null || code.isEmpty) {
+      return true;
+    }
+    return !nonRequeueableFailureCodes.contains(code);
   }
 }

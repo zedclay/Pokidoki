@@ -469,7 +469,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatsProtectedBanner.
   ///
   /// In en, this message translates to:
-  /// **'Your conversations are protected with end-to-end encryption.'**
+  /// **'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.'**
   String get chatsProtectedBanner;
 
   /// No description provided for @chatsPinned.
@@ -1159,7 +1159,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatProtectedBanner.
   ///
   /// In en, this message translates to:
-  /// **'Messages in this conversation are protected with end-to-end encryption.'**
+  /// **'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.'**
   String get chatProtectedBanner;
 
   /// No description provided for @chatToday.

@@ -109,6 +109,10 @@ class _DeferredOfflineRepository implements ConversationsRepository {
     }
   }
 
+  Future<ConversationPage> _emptyConversationsPage() async {
+    return const ConversationPage(items: [], nextCursor: null, hasMore: false);
+  }
+
   @override
   Future<Conversation> createOrGetConversation(String userId) =>
       _withOfflineFallback(
@@ -120,7 +124,7 @@ class _DeferredOfflineRepository implements ConversationsRepository {
   Future<ConversationPage> getConversations({String? cursor, int limit = 20}) =>
       _withOfflineFallback(
         (repo) => repo.getConversations(cursor: cursor, limit: limit),
-        () => _remote.getConversations(cursor: cursor, limit: limit),
+        _emptyConversationsPage,
       );
 
   @override

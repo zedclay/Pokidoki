@@ -148,19 +148,26 @@ void main() {
     expect(await db.outboundQueueDao.countPending(), 1);
   });
 
-  test('permanent socket errors stop retries', () async {
-    await _enqueueItem(db: db, clientMessageId: 'client-perm', createdAt: now);
-    socket.failNextSend = true;
+  test(
+    'socket failure falls through to REST before stopping retries',
+    () async {
+      await _enqueueItem(
+        db: db,
+        clientMessageId: 'client-perm',
+        createdAt: now,
+      );
+      socket.failNextSend = true;
 
-    await processor.requestDrain();
-    await processor.requestDrain();
+      await processor.requestDrain();
 
-    expect(await db.outboundQueueDao.countPending(), 0);
-    final queueRow = await (db.select(
-      db.outboundMessageQueue,
-    )..where((t) => t.clientMessageId.equals('client-perm'))).getSingleOrNull();
-    expect(queueRow?.queueState, QueueState.failedPermanent.name);
-  });
+      expect(remote.sendCount, 1);
+      final queueRow =
+          await (db.select(db.outboundMessageQueue)
+                ..where((t) => t.clientMessageId.equals('client-perm')))
+              .getSingleOrNull();
+      expect(queueRow?.queueState, QueueState.waitingRetry.name);
+    },
+  );
 
   test('stale inFlight item returns to eligible retry state', () async {
     await db.outboundQueueDao.enqueue(

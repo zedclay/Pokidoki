@@ -92,7 +92,15 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
       );
     }
 
-    return _remote.getConversations(cursor: cursor, limit: limit);
+    try {
+      return await _remote.getConversations(cursor: cursor, limit: limit);
+    } on Object {
+      return const ConversationPage(
+        items: [],
+        nextCursor: null,
+        hasMore: false,
+      );
+    }
   }
 
   @override
@@ -131,23 +139,54 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
 
     final rows = await _db.messagesDao.getConversationMessages(conversationId);
     if (rows.isNotEmpty || localBeforeSync.isNotEmpty) {
+      final localItems = rows
+          .map((row) => row.toDomain(currentUserId: _currentUserId()))
+          .toList();
+      if (before == null) {
+        try {
+          final remotePage = await _remote.getMessages(
+            conversationId: conversationId,
+            before: before,
+            limit: limit,
+          );
+          for (final message in remotePage.items) {
+            try {
+              await _sync.upsertRemoteChatMessage(message);
+            } on Object {
+              // Continue merging remote history even if one row fails.
+            }
+          }
+          return MessagePage(
+            items: _mergeMessagePages(remotePage.items, localItems),
+            nextCursor: remotePage.nextCursor,
+            hasMore: remotePage.hasMore,
+          );
+        } on Object {
+          // Fall back to local cache below.
+        }
+      }
       return MessagePage(
-        items: rows
-            .map((row) => row.toDomain(currentUserId: _currentUserId()))
-            .toList(),
+        items: localItems,
         nextCursor: _messagesCursor,
         hasMore: false,
       );
     }
-    return _remote.getMessages(
+    final remotePage = await _remote.getMessages(
       conversationId: conversationId,
       before: before,
       limit: limit,
     );
+    for (final message in remotePage.items) {
+      try {
+        await _sync.upsertRemoteChatMessage(message);
+      } on Object {
+        // Keep returning remote history even when local cache write fails.
+      }
+    }
+    return remotePage;
   }
 
-  @override
-  Future<ChatMessage> sendMessage({
+  Future<ChatMessage> enqueueOutboundMessage({
     required String conversationId,
     required String clientMessageId,
     required String text,
@@ -196,8 +235,6 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
       );
     });
 
-    unawaited(_queue.wakeAndDrain());
-
     return ChatMessage(
       id: 'local-$clientMessageId',
       conversationId: conversationId,
@@ -209,6 +246,21 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
       deliveryStatus: MessageDeliveryStatus.queued,
       expiresAt: expiresAt,
     );
+  }
+
+  @override
+  Future<ChatMessage> sendMessage({
+    required String conversationId,
+    required String clientMessageId,
+    required String text,
+  }) async {
+    final queued = await enqueueOutboundMessage(
+      conversationId: conversationId,
+      clientMessageId: clientMessageId,
+      text: text,
+    );
+    unawaited(_queue.wakeAndDrain());
+    return queued;
   }
 
   Future<List<ChatMessage>> getPendingLocalMessages(
@@ -228,6 +280,36 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
         })
         .map((row) => row.toDomain(currentUserId: userId))
         .toList();
+  }
+
+  Future<void> finalizeOutboundDelivery({
+    required String clientMessageId,
+    required ChatMessage serverMessage,
+    required String preview,
+  }) async {
+    await _sync.upsertRemoteChatMessage(serverMessage);
+    final queueRow = await _db.outboundQueueDao.getByClientId(clientMessageId);
+    if (queueRow != null) {
+      await _db.outboundQueueDao.markCompleted(queueRow.id);
+    }
+    await _db.conversationsDao.updatePreview(
+      conversationId: serverMessage.conversationId,
+      preview: preview,
+      at: serverMessage.sentAt,
+      isOutgoing: true,
+      lastMessageId: serverMessage.id.startsWith('local-')
+          ? null
+          : serverMessage.id,
+      lastMessageClientId: clientMessageId,
+    );
+  }
+
+  Future<ChatMessage?> getLocalMessageByClientId(String clientMessageId) async {
+    final row = await _db.messagesDao.getByClientId(clientMessageId);
+    if (row == null) {
+      return null;
+    }
+    return row.toDomain(currentUserId: _currentUserId());
   }
 
   Future<void> retrySend({
@@ -321,5 +403,19 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
   @override
   Future<List<SharedMediaItem>> getSharedMedia(String conversationId) {
     return _remote.getSharedMedia(conversationId);
+  }
+
+  List<ChatMessage> _mergeMessagePages(
+    List<ChatMessage> remote,
+    List<ChatMessage> local,
+  ) {
+    final byKey = <String, ChatMessage>{};
+    for (final message in [...remote, ...local]) {
+      final key = message.clientMessageId ?? message.id;
+      byKey[key] = message;
+    }
+    final merged = byKey.values.toList()
+      ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+    return merged;
   }
 }

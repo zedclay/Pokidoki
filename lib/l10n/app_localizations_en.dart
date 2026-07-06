@@ -216,7 +216,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatsProtectedBanner =>
-      'Your conversations are protected with end-to-end encryption.';
+      'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.';
 
   @override
   String get chatsPinned => 'Pinned';
@@ -593,7 +593,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatProtectedBanner =>
-      'Messages in this conversation are protected with end-to-end encryption.';
+      'Messages are stored securely on this device. End-to-end encrypted Secret Conversations are not enabled yet.';
 
   @override
   String get chatToday => 'Today';

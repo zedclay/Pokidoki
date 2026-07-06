@@ -44,6 +44,9 @@ class MessagingOfflineCoordinator {
 
   final List<StreamSubscription<dynamic>> _subscriptions = [];
   Future<OfflineFirstConversationsRepository>? _ensureReadyFuture;
+  DateTime? _lastConversationRefreshAt;
+
+  static const Duration _conversationRefreshCooldown = Duration(seconds: 20);
 
   bool get _testMode => Platform.environment.containsKey('FLUTTER_TEST');
 
@@ -159,8 +162,12 @@ class MessagingOfflineCoordinator {
     if (processor == null) {
       return;
     }
-    await processor.wakeAndDrain();
-    await _syncEngine?.refreshConversations();
+    try {
+      await processor.wakeAndDrain();
+      await _safeRefreshConversations();
+    } on Object {
+      // Transport may be up while REST is still unavailable; queue drain is retried later.
+    }
   }
 
   Future<void> wakeOutboundQueue() async {
@@ -185,7 +192,7 @@ class MessagingOfflineCoordinator {
       return;
     }
     await ensureReady();
-    await _syncEngine?.refreshConversations();
+    await _safeRefreshConversations(force: true);
     await _syncEngine?.purgeExpiredMessages();
     await _socketCoordinator.connectIfAuthenticated();
     await _queueProcessor?.wakeAndDrain();
@@ -193,10 +200,26 @@ class MessagingOfflineCoordinator {
 
   Future<void> onForeground() async {
     await _queueProcessor?.wakeAndDrain();
-    await _syncEngine?.refreshConversations();
+    await _safeRefreshConversations();
     await _syncEngine?.purgeExpiredMessages();
     await _socketCoordinator.connectIfAuthenticated();
     await _queueProcessor?.wakeAndDrain();
+  }
+
+  Future<void> _safeRefreshConversations({bool force = false}) async {
+    final now = DateTime.now();
+    if (!force &&
+        _lastConversationRefreshAt != null &&
+        now.difference(_lastConversationRefreshAt!) <
+            _conversationRefreshCooldown) {
+      return;
+    }
+    _lastConversationRefreshAt = now;
+    try {
+      await _syncEngine?.refreshConversations();
+    } on Object {
+      // Cached inbox remains visible when the network request fails.
+    }
   }
 
   Future<void> wipeOnLogout() async {

@@ -42,6 +42,7 @@ class OutboundMessageQueueProcessor {
   final QueueProcessorClock _clock;
 
   bool _draining = false;
+  bool _drainAgain = false;
   bool _stopped = false;
   Timer? _retryTimer;
 
@@ -71,10 +72,14 @@ class OutboundMessageQueueProcessor {
     final retryAt = now ?? _clock().toUtc();
     final requeuedIds = await _db.outboundQueueDao
         .requeueRecoverableTransportFailures(
-          isRequeueable: _retry.isTransportRequeueable,
+          isRequeueable: _retry.shouldRequeueFailed,
           hasPendingAck: (clientMessageId) async {
             final row = await _db.messagesDao.getByClientId(clientMessageId);
-            return row?.syncState == LocalSyncState.pendingAck.name;
+            if (row == null) {
+              return false;
+            }
+            return row.syncState == LocalSyncState.pendingAck.name ||
+                row.syncState == LocalSyncState.localOnly.name;
           },
           now: retryAt,
         );
@@ -108,7 +113,11 @@ class OutboundMessageQueueProcessor {
   }
 
   Future<void> requestDrain() async {
-    if (_stopped || _draining) {
+    if (_stopped) {
+      return;
+    }
+    if (_draining) {
+      _drainAgain = true;
       return;
     }
     _draining = true;
@@ -124,6 +133,10 @@ class OutboundMessageQueueProcessor {
       }
     } finally {
       _draining = false;
+      if (_drainAgain && !_stopped) {
+        _drainAgain = false;
+        unawaited(requestDrain());
+      }
     }
   }
 
@@ -140,21 +153,7 @@ class OutboundMessageQueueProcessor {
     try {
       ChatMessage? serverMessage;
       if (_socket.status == MessagingSocketStatus.connected) {
-        final ack = await _socket.sendMessage(
-          conversationId: item.conversationId,
-          clientMessageId: item.clientMessageId,
-          text: item.textPayload,
-        );
-        if (ack.ok && ack.rawMessage != null) {
-          serverMessage = mapMessageDto(
-            MessageDto.fromJson(ack.rawMessage!),
-            currentUserId: _currentUserId(),
-          );
-        } else if (ack.code != null) {
-          throw MessagingFailure(code: ack.code!);
-        } else {
-          throw const MessagingFailure(code: 'MESSAGING_UNAVAILABLE');
-        }
+        serverMessage = await _trySendViaSocket(item);
       }
 
       serverMessage ??= await _remote.sendMessage(
@@ -190,12 +189,34 @@ class OutboundMessageQueueProcessor {
     }
   }
 
+  Future<ChatMessage?> _trySendViaSocket(OutboundMessageQueueData item) async {
+    if (_socket.status != MessagingSocketStatus.connected) {
+      return null;
+    }
+    try {
+      final ack = await _socket.sendMessage(
+        conversationId: item.conversationId,
+        clientMessageId: item.clientMessageId,
+        text: item.textPayload,
+      );
+      if (ack.ok && ack.rawMessage != null) {
+        return mapMessageDto(
+          MessageDto.fromJson(ack.rawMessage!),
+          currentUserId: _currentUserId(),
+        );
+      }
+    } on Object {
+      // Fall through to REST delivery below.
+    }
+    return null;
+  }
+
   Future<void> _handleFailure({
     required OutboundMessageQueueData item,
     required String code,
     required int attemptCount,
   }) async {
-    if (_retry.isPermanentError(code)) {
+    if (_retry.isPermanentError(code) && attemptCount >= 3) {
       await _db.outboundQueueDao.markFailedPermanent(
         queueId: item.id,
         errorCode: code,
@@ -203,6 +224,7 @@ class OutboundMessageQueueProcessor {
       await _db.messagesDao.markClientMessageFailed(
         clientMessageId: item.clientMessageId,
         errorCode: code,
+        permanent: !_retry.shouldRequeueFailed(code),
       );
       return;
     }

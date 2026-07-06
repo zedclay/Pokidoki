@@ -210,7 +210,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatsSearchHint => 'البحث في المحادثات';
 
   @override
-  String get chatsProtectedBanner => 'محادثاتك محمية بالتشفير من طرف إلى طرف.';
+  String get chatsProtectedBanner =>
+      'يتم حفظ الرسائل محليًا بشكل آمن على هذا الجهاز. المحادثات السرية المشفرة من الطرف إلى الطرف غير مفعّلة بعد.';
 
   @override
   String get chatsPinned => 'مثبّتة';
@@ -582,7 +583,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chatProtectedBanner =>
-      'الرسائل في هذه المحادثة محمية بالتشفير من طرف إلى طرف.';
+      'يتم حفظ الرسائل محليًا بشكل آمن على هذا الجهاز. المحادثات السرية المشفرة من الطرف إلى الطرف غير مفعّلة بعد.';
 
   @override
   String get chatToday => 'اليوم';

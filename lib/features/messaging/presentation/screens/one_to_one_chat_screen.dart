@@ -30,20 +30,35 @@ class OneToOneChatScreen extends ConsumerStatefulWidget {
   ConsumerState<OneToOneChatScreen> createState() => _OneToOneChatScreenState();
 }
 
-class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
+class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen>
+    with WidgetsBindingObserver {
   final _composer = TextEditingController();
   final _scrollController = ScrollController();
+  Timer? _queueRecoveryTimer;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _composer.addListener(_onComposerChanged);
     _scrollController.addListener(_onScroll);
+    _queueRecoveryTimer = Timer.periodic(const Duration(seconds: 8), (_) {
+      unawaited(
+        ref.read(messagingOfflineCoordinatorProvider).wakeOutboundQueue(),
+      );
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(messagingProvider.notifier)
           .openConversation(widget.conversationId);
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(ref.read(messagingOfflineCoordinatorProvider).onForeground());
+    }
   }
 
   void _onComposerChanged() {
@@ -65,6 +80,8 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _queueRecoveryTimer?.cancel();
     _composer.dispose();
     _scrollController.dispose();
     super.dispose();

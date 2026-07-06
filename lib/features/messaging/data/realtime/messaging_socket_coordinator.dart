@@ -39,8 +39,19 @@ class MessagingSocketCoordinator {
     if (token == null || token.isEmpty) {
       return;
     }
-    await _socketService.connect(accessToken: token, apiBaseUrl: _apiBaseUrl());
-    _reconnectAttempt = 0;
+    try {
+      await _socketService.connect(
+        accessToken: token,
+        apiBaseUrl: _apiBaseUrl(),
+      );
+    } on Object {
+      // Connect is best-effort; reconnect is scheduled below.
+    }
+    if (_socketService.status == MessagingSocketStatus.connected) {
+      _reconnectAttempt = 0;
+      return;
+    }
+    scheduleReconnect();
   }
 
   Future<void> reconnect() async {
@@ -49,6 +60,9 @@ class MessagingSocketCoordinator {
     }
     await _socketService.disconnect();
     await connectIfAuthenticated();
+    if (_socketService.status != MessagingSocketStatus.connected) {
+      return;
+    }
     final active = _activeConversationId;
     if (active != null) {
       await _socketService.joinConversation(active);

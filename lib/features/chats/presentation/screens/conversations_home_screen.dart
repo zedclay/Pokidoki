@@ -49,7 +49,9 @@ class _ConversationsHomeScreenState
     unawaited(
       ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
     );
-    unawaited(ref.read(messagingOfflineCoordinatorProvider).onForeground());
+    unawaited(
+      ref.read(messagingOfflineCoordinatorProvider).wakeOutboundQueue(),
+    );
   }
 
   @override

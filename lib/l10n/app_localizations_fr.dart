@@ -221,7 +221,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatsProtectedBanner =>
-      'Vos conversations sont protégées par un chiffrement de bout en bout.';
+      'Les messages sont stockés de manière sécurisée sur cet appareil. Les conversations secrètes chiffrées de bout en bout ne sont pas encore activées.';
 
   @override
   String get chatsPinned => 'Épinglées';
@@ -604,7 +604,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatProtectedBanner =>
-      'Les messages de cette conversation sont protégés par un chiffrement de bout en bout.';
+      'Les messages sont stockés de manière sécurisée sur cet appareil. Les conversations secrètes chiffrées de bout en bout ne sont pas encore activées.';
 
   @override
   String get chatToday => 'Aujourd’hui';

@@ -26,6 +26,32 @@ class FakeMessagingDatabaseKeyStore implements MessagingDatabaseKeyStore {
   }
 }
 
+class _DelayedKeyStore implements MessagingDatabaseKeyStore {
+  _DelayedKeyStore({
+    required this.resolvedKey,
+    required this.nullReadsBeforeResolve,
+  });
+
+  final String? resolvedKey;
+  final int nullReadsBeforeResolve;
+  int _reads = 0;
+
+  @override
+  Future<void> deleteKey() async {}
+
+  @override
+  Future<String?> readKey() async {
+    _reads += 1;
+    if (_reads <= nullReadsBeforeResolve) {
+      return null;
+    }
+    return resolvedKey;
+  }
+
+  @override
+  Future<void> writeKey(String hexKey) async {}
+}
+
 Future<bool> _cipherAvailable(MessagingDatabase db) async {
   final rows = await db.customSelect('PRAGMA cipher;').get();
   return rows.isNotEmpty &&
@@ -111,6 +137,44 @@ void main() {
       wrongFactory.openEncrypted(),
       throwsA(isA<MessagingFailure>()),
     );
+  });
+
+  test('transient key miss does not wipe existing database', () async {
+    final probe = factory.openInMemoryForTests();
+    if (!await _cipherAvailable(probe)) {
+      await probe.close();
+      markTestSkipped('Transient key recovery requires sqlite3mc runtime.');
+      return;
+    }
+    await probe.close();
+
+    final db = await factory.openEncrypted();
+    await db.conversationsDao.upsert(
+      conversationToCompanion(
+        Conversation(
+          id: 'c1',
+          peerId: 'u2',
+          peerDisplayName: 'Alex',
+          peerUsername: 'alex',
+          updatedAt: DateTime.utc(2026, 1, 1),
+        ),
+      ),
+    );
+    await db.close();
+
+    final delayedKeyStore = _DelayedKeyStore(
+      resolvedKey: await keyStore.readKey(),
+      nullReadsBeforeResolve: 2,
+    );
+    final delayedFactory = MessagingDatabaseFactory(
+      keyStore: delayedKeyStore,
+      databaseDirectory: tempDir,
+    );
+    final reopened = await delayedFactory.openEncrypted();
+    final conversations = await reopened.conversationsDao.getAllOrdered();
+    expect(conversations, hasLength(1));
+    expect(conversations.first.conversationId, 'c1');
+    await reopened.close();
   });
 
   test('missing key with existing database wipes local cache only', () async {

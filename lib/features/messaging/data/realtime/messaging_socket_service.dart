@@ -171,7 +171,6 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
     } on Object {
       _setStatus(MessagingSocketStatus.failed);
       await disconnect();
-      rethrow;
     } finally {
       socket.off('connect', onConnect);
       socket.off('connect_error', onError);
@@ -421,6 +420,7 @@ class FakeMessagingSocketService implements MessagingSocketService {
   FakeMessagingSocketService();
 
   bool failNextSend = false;
+  bool transientFailNextSend = false;
   final Set<String> _seenEventIds = {};
 
   MessagingSocketStatus _status = MessagingSocketStatus.disconnected;
@@ -517,6 +517,10 @@ class FakeMessagingSocketService implements MessagingSocketService {
     if (failNextSend) {
       failNextSend = false;
       return const SocketSendAck(ok: false, code: 'MESSAGE_SEND_NOT_ALLOWED');
+    }
+    if (transientFailNextSend) {
+      transientFailNextSend = false;
+      return const SocketSendAck(ok: false, code: 'MESSAGING_UNAVAILABLE');
     }
     return SocketSendAck(
       ok: true,

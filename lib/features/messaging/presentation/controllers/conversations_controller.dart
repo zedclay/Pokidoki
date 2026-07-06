@@ -84,12 +84,14 @@ class ConversationsController extends StateNotifier<ConversationsState> {
     } on MessagingFailure catch (failure) {
       state = state.copyWith(
         isLoading: false,
-        errorKey: failure.resolvedMessageKey,
+        errorKey: state.conversations.isEmpty
+            ? failure.resolvedMessageKey
+            : null,
       );
     } on Object {
       state = state.copyWith(
         isLoading: false,
-        errorKey: 'messagingUnavailable',
+        errorKey: state.conversations.isEmpty ? 'messagingUnavailable' : null,
       );
     }
   }
