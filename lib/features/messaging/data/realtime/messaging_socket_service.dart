@@ -334,14 +334,14 @@ class SocketIoMessagingSocketService implements MessagingSocketService {
         if (response is Map) {
           completer.complete(Map<String, dynamic>.from(response));
         } else {
-          completer.complete({'ok': false, 'code': 'MESSAGE_INVALID'});
+          completer.complete({'ok': false, 'code': 'MESSAGING_UNAVAILABLE'});
         }
       },
     );
 
     return completer.future.timeout(
       const Duration(seconds: 10),
-      onTimeout: () => {'ok': false, 'code': 'WEBSOCKET_UNAUTHORIZED'},
+      onTimeout: () => {'ok': false, 'code': 'WEBSOCKET_TIMEOUT'},
     );
   }
 

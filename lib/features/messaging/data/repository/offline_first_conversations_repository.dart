@@ -196,7 +196,7 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
       );
     });
 
-    unawaited(_queue.requestDrain());
+    unawaited(_queue.wakeAndDrain());
 
     return ChatMessage(
       id: 'local-$clientMessageId',
@@ -255,7 +255,7 @@ class OfflineFirstConversationsRepository implements ConversationsRepository {
         lastUpdatedAt: Value(now),
       ),
     );
-    unawaited(_queue.requestDrain());
+    unawaited(_queue.wakeAndDrain());
   }
 
   @override

@@ -35,6 +35,11 @@ extension LocalMessageMapper on LocalMessage {
   }
 
   MessageDeliveryStatus _mapDelivery(LocalMessageStatus status) {
+    if (status == LocalMessageStatus.queued &&
+        errorCode != null &&
+        errorCode!.isNotEmpty) {
+      return MessageDeliveryStatus.retrying;
+    }
     return switch (status) {
       LocalMessageStatus.queued => MessageDeliveryStatus.queued,
       LocalMessageStatus.sending => MessageDeliveryStatus.sending,

@@ -126,6 +126,62 @@ class OutboundQueueDao extends DatabaseAccessor<MessagingDatabase>
     );
   }
 
+  Future<List<String>> requeueRecoverableTransportFailures({
+    required bool Function(String? errorCode) isRequeueable,
+    required Future<bool> Function(String clientMessageId) hasPendingAck,
+    DateTime? now,
+  }) async {
+    final retryAt = now ?? DateTime.now().toUtc();
+    final failed =
+        await (select(outboundMessageQueue)..where(
+              (t) => t.queueState.equals(QueueState.failedPermanent.name),
+            ))
+            .get();
+    final requeuedIds = <String>[];
+    for (final row in failed) {
+      if (!isRequeueable(row.errorCode)) {
+        continue;
+      }
+      if (!await hasPendingAck(row.clientMessageId)) {
+        continue;
+      }
+      await (update(
+        outboundMessageQueue,
+      )..where((t) => t.id.equals(row.id))).write(
+        OutboundMessageQueueCompanion(
+          queueState: Value(QueueState.pending.name),
+          nextAttemptAt: Value(retryAt),
+          inFlightSince: const Value(null),
+          updatedAt: Value(retryAt),
+        ),
+      );
+      requeuedIds.add(row.clientMessageId);
+    }
+    return requeuedIds;
+  }
+
+  Future<int> countEligible(DateTime now) async {
+    final rows =
+        await (select(outboundMessageQueue)..where(
+              (t) =>
+                  t.queueState.equals(QueueState.pending.name) |
+                  (t.queueState.equals(QueueState.waitingRetry.name) &
+                      t.nextAttemptAt.isSmallerOrEqualValue(now)),
+            ))
+            .get();
+    return rows.length;
+  }
+
+  Future<DateTime?> earliestNextAttemptAt() async {
+    final row =
+        await (select(outboundMessageQueue)
+              ..where((t) => t.queueState.equals(QueueState.waitingRetry.name))
+              ..orderBy([(t) => OrderingTerm.asc(t.nextAttemptAt)])
+              ..limit(1))
+            .getSingleOrNull();
+    return row?.nextAttemptAt;
+  }
+
   Future<int> countPending() async {
     final rows =
         await (select(outboundMessageQueue)..where(

@@ -21,6 +21,7 @@ class QueueRetryScheduler {
   static const _transientCodes = {
     'WEBSOCKET_UNAUTHORIZED',
     'WEBSOCKET_SESSION_EXPIRED',
+    'WEBSOCKET_TIMEOUT',
     'MESSAGING_UNAVAILABLE',
     'SYNC_TEMPORARILY_UNAVAILABLE',
     'REQUEST_ERROR',
@@ -31,6 +32,23 @@ class QueueRetryScheduler {
     'HTTP_502',
     'HTTP_503',
     'HTTP_504',
+  };
+
+  static const transportRequeueableCodes = {
+    'WEBSOCKET_UNAUTHORIZED',
+    'WEBSOCKET_SESSION_EXPIRED',
+    'WEBSOCKET_TIMEOUT',
+    'MESSAGING_UNAVAILABLE',
+    'SYNC_TEMPORARILY_UNAVAILABLE',
+    'REQUEST_ERROR',
+    'CONNECTION_ERROR',
+    'HTTP_408',
+    'HTTP_429',
+    'HTTP_500',
+    'HTTP_502',
+    'HTTP_503',
+    'HTTP_504',
+    'MESSAGE_INVALID',
   };
 
   static const delays = [
@@ -77,5 +95,12 @@ class QueueRetryScheduler {
       504 => 'HTTP_504',
       _ => 'REQUEST_ERROR',
     };
+  }
+
+  bool isTransportRequeueable(String? code) {
+    if (code == null || code.isEmpty) {
+      return false;
+    }
+    return transportRequeueableCodes.contains(code);
   }
 }

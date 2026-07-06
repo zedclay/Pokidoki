@@ -164,6 +164,7 @@ class MessagingController extends StateNotifier<MessagingState> {
     await _socketCoordinator.setActiveConversation(conversationId);
     if (_offlineMode) {
       _bindMessagesStream(conversationId);
+      unawaited(_drainOutboundQueue());
     }
     await loadMessages(conversationId);
   }
@@ -455,7 +456,7 @@ class MessagingController extends StateNotifier<MessagingState> {
       final offline = await _ref.read(
         offlineConversationsRepositoryProvider.future,
       );
-      await offline.queueProcessor.requestDrain();
+      await offline.queueProcessor.wakeAndDrain();
     } on Object {
       // Queue will retry on connectivity or foreground.
     }
@@ -966,10 +967,11 @@ class MessagingController extends StateNotifier<MessagingState> {
     return switch (status) {
       MessageDeliveryStatus.failed => 0,
       MessageDeliveryStatus.queued => 1,
-      MessageDeliveryStatus.sending => 2,
-      MessageDeliveryStatus.sent => 3,
-      MessageDeliveryStatus.delivered => 4,
-      MessageDeliveryStatus.read => 5,
+      MessageDeliveryStatus.retrying => 2,
+      MessageDeliveryStatus.sending => 3,
+      MessageDeliveryStatus.sent => 4,
+      MessageDeliveryStatus.delivered => 5,
+      MessageDeliveryStatus.read => 6,
     };
   }
 

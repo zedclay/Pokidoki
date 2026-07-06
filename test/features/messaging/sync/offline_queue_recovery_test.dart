@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pokidoki/core/network/api_error_mapper.dart';
 import 'package:pokidoki/core/network/auth_session_manager.dart';
@@ -172,25 +173,42 @@ void main() {
           errorMapper: const ApiErrorMapper(),
           sessionManager: AuthSessionManager(),
         );
-      final repo1 = _buildRepo(db: db1, remote: remote, now: now);
-      final processor1 = repo1.queueProcessor;
+        final repo1 = _buildRepo(db: db1, remote: remote, now: now);
+        final processor1 = repo1.queueProcessor;
+        processor1.stop();
 
-      for (var i = 1; i <= 3; i++) {
-        await repo1.sendMessage(
-          conversationId: 'conv-offline',
-          clientMessageId: 'client-offline-$i',
-          text: 'offline $i',
+        for (var i = 1; i <= 3; i++) {
+          await db1.transaction(() async {
+            await db1.messagesDao.upsertPendingMessage(
+              messageToInsertCompanion(
+                clientMessageId: 'client-offline-$i',
+                conversationId: 'conv-offline',
+                senderId: 'u-me',
+                text: 'offline $i',
+                status: LocalMessageStatus.queued,
+                syncState: LocalSyncState.pendingAck,
+              ),
+            );
+            await db1.outboundQueueDao.enqueue(
+              OutboundMessageQueueCompanion.insert(
+                conversationId: 'conv-offline',
+                clientMessageId: 'client-offline-$i',
+                textPayload: 'offline $i',
+                queueState: QueueState.pending.name,
+                nextAttemptAt: now,
+                createdAt: now,
+                updatedAt: now,
+              ),
+            );
+          });
+        }
+
+        expect(
+          (await db1.messagesDao.getConversationMessages('conv-offline')),
+          hasLength(3),
         );
-      }
-      await processor1.requestDrain();
-      processor1.stop();
-
-      expect(
-        (await db1.messagesDao.getConversationMessages('conv-offline')),
-        hasLength(3),
-      );
-      expect(await db1.outboundQueueDao.countPending(), 3);
-      await db1.close();
+        expect(await db1.outboundQueueDao.countPending(), 3);
+        await db1.close();
 
         final db2 = await fileFactory.openEncrypted();
         final messages = await db2.messagesDao.getConversationMessages(
@@ -402,5 +420,229 @@ void main() {
         await db.close();
       },
     );
+
+    test(
+      'recovery without connectivity event drains on socket connected',
+      () async {
+        final db = fileFactory.openInMemoryForTests();
+        final socket = FakeMessagingSocketService();
+        await socket.disconnect();
+        final remote = FailingThenRecoveringRemote(
+          messagingApi: MessagingApi(Dio(BaseOptions(baseUrl: 'http://test'))),
+          errorMapper: const ApiErrorMapper(),
+          sessionManager: AuthSessionManager(),
+        );
+        remote.failSync = true;
+        final sync = MessagingSyncEngine(
+          database: db,
+          remote: remote,
+          currentUserId: () => 'u-me',
+        );
+        final processor = OutboundMessageQueueProcessor(
+          database: db,
+          remote: remote,
+          socketService: socket,
+          syncEngine: sync,
+          currentUserId: () => 'u-me',
+          retryScheduler: QueueRetryScheduler(random: Random(0)),
+          clock: () => now,
+        );
+
+        for (var i = 1; i <= 3; i++) {
+          await db.outboundQueueDao.enqueue(
+            OutboundMessageQueueCompanion.insert(
+              conversationId: 'conv-wake',
+              clientMessageId: 'client-wake-$i',
+              textPayload: 'payload $i',
+              queueState: QueueState.waitingRetry.name,
+              nextAttemptAt: now.add(const Duration(minutes: 5)),
+              createdAt: now.add(Duration(seconds: i)),
+              updatedAt: now,
+            ),
+          );
+          await db.messagesDao.upsertPendingMessage(
+            messageToInsertCompanion(
+              clientMessageId: 'client-wake-$i',
+              conversationId: 'conv-wake',
+              senderId: 'u-me',
+              text: 'payload $i',
+              status: LocalMessageStatus.queued,
+              syncState: LocalSyncState.pendingAck,
+            ),
+          );
+        }
+
+        await socket.connect(
+          accessToken: 'access-only',
+          apiBaseUrl: 'http://127.0.0.1:3000/api/v1',
+        );
+        await socket.disconnect();
+        remote.failSync = false;
+        await processor.wakeAndDrain();
+
+        final completed = await (db.select(
+          db.outboundMessageQueue,
+        )..where((t) => t.queueState.equals(QueueState.completed.name))).get();
+        expect(completed, hasLength(3));
+        expect(completed.first.clientMessageId, 'client-wake-1');
+        await db.close();
+      },
+    );
+
+    test(
+      'new successful send wakes older waitingRetry rows in FIFO order',
+      () async {
+        final db = fileFactory.openInMemoryForTests();
+        final socket = FakeMessagingSocketService();
+        await socket.disconnect();
+        final remote = FailingThenRecoveringRemote(
+          messagingApi: MessagingApi(Dio(BaseOptions(baseUrl: 'http://test'))),
+          errorMapper: const ApiErrorMapper(),
+          sessionManager: AuthSessionManager(),
+        );
+        final sync = MessagingSyncEngine(
+          database: db,
+          remote: remote,
+          currentUserId: () => 'u-me',
+        );
+        final processor = OutboundMessageQueueProcessor(
+          database: db,
+          remote: remote,
+          socketService: socket,
+          syncEngine: sync,
+          currentUserId: () => 'u-me',
+          retryScheduler: QueueRetryScheduler(random: Random(0)),
+          clock: () => now,
+        );
+
+        for (var i = 1; i <= 3; i++) {
+          await db.outboundQueueDao.enqueue(
+            OutboundMessageQueueCompanion.insert(
+              conversationId: 'conv-fifo-wake',
+              clientMessageId: 'client-old-$i',
+              textPayload: 'old $i',
+              queueState: QueueState.waitingRetry.name,
+              nextAttemptAt: now.add(const Duration(minutes: 5)),
+              createdAt: now.add(Duration(seconds: i)),
+              updatedAt: now,
+            ),
+          );
+          await db.messagesDao.upsertPendingMessage(
+            messageToInsertCompanion(
+              clientMessageId: 'client-old-$i',
+              conversationId: 'conv-fifo-wake',
+              senderId: 'u-me',
+              text: 'old $i',
+              status: LocalMessageStatus.queued,
+              syncState: LocalSyncState.pendingAck,
+            ),
+          );
+        }
+
+        remote.failSync = false;
+        await db.outboundQueueDao.enqueue(
+          OutboundMessageQueueCompanion.insert(
+            conversationId: 'conv-fifo-wake',
+            clientMessageId: 'client-new',
+            textPayload: 'newest',
+            queueState: QueueState.pending.name,
+            nextAttemptAt: now.add(const Duration(seconds: 4)),
+            createdAt: now.add(const Duration(seconds: 4)),
+            updatedAt: now,
+          ),
+        );
+        await db.messagesDao.upsertPendingMessage(
+          messageToInsertCompanion(
+            clientMessageId: 'client-new',
+            conversationId: 'conv-fifo-wake',
+            senderId: 'u-me',
+            text: 'newest',
+            status: LocalMessageStatus.queued,
+            syncState: LocalSyncState.pendingAck,
+          ),
+        );
+        await processor.wakeAndDrain();
+
+        final completed = await (db.select(
+          db.outboundMessageQueue,
+        )..where((t) => t.queueState.equals(QueueState.completed.name))).get();
+        expect(completed, hasLength(4));
+        expect(completed.first.clientMessageId, 'client-old-1');
+        await db.close();
+      },
+    );
+
+    test('requeues failedPermanent transport rows with pending ack', () async {
+      final db = fileFactory.openInMemoryForTests();
+      await db.outboundQueueDao.enqueue(
+        OutboundMessageQueueCompanion.insert(
+          conversationId: 'conv-req',
+          clientMessageId: 'client-req',
+          textPayload: 'stuck',
+          queueState: QueueState.failedPermanent.name,
+          nextAttemptAt: now,
+          createdAt: now,
+          updatedAt: now,
+          errorCode: const Value('MESSAGE_INVALID'),
+        ),
+      );
+      await db.messagesDao.upsertPendingMessage(
+        messageToInsertCompanion(
+          clientMessageId: 'client-req',
+          conversationId: 'conv-req',
+          senderId: 'u-me',
+          text: 'stuck',
+          status: LocalMessageStatus.failedPermanent,
+          syncState: LocalSyncState.pendingAck,
+        ),
+      );
+
+      final socket = FakeMessagingSocketService();
+      await socket.disconnect();
+      final remote = FailingThenRecoveringRemote(
+        messagingApi: MessagingApi(Dio(BaseOptions(baseUrl: 'http://test'))),
+        errorMapper: const ApiErrorMapper(),
+        sessionManager: AuthSessionManager(),
+      );
+      remote.failSync = false;
+      final sync = MessagingSyncEngine(
+        database: db,
+        remote: remote,
+        currentUserId: () => 'u-me',
+      );
+      final processor = OutboundMessageQueueProcessor(
+        database: db,
+        remote: remote,
+        socketService: socket,
+        syncEngine: sync,
+        currentUserId: () => 'u-me',
+        clock: () => now,
+      );
+
+      final requeued = await processor.requeueRecoverableTransportFailures();
+      expect(requeued, 1);
+      await processor.wakeAndDrain();
+      expect(remote.sendAttempts, 1);
+      await db.close();
+    });
+
+    test('UI maps queued with error to retrying delivery status', () async {
+      final db = fileFactory.openInMemoryForTests();
+      await db.messagesDao.upsertPendingMessage(
+        messageToInsertCompanion(
+          clientMessageId: 'client-ui',
+          conversationId: 'conv-ui',
+          senderId: 'u-me',
+          text: 'retry soon',
+          status: LocalMessageStatus.queued,
+          syncState: LocalSyncState.pendingAck,
+          errorCode: 'CONNECTION_ERROR',
+        ),
+      );
+      final row = await db.messagesDao.getByClientId('client-ui');
+      final message = row!.toDomain(currentUserId: 'u-me');
+      expect(message.deliveryStatus, MessageDeliveryStatus.retrying);
+      await db.close();
+    });
   });
 }

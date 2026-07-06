@@ -146,6 +146,7 @@ class ChatMessageBubble extends StatelessWidget {
   IconData _deliveryIcon(MessageDeliveryStatus status) {
     return switch (status) {
       MessageDeliveryStatus.queued => Icons.cloud_queue_rounded,
+      MessageDeliveryStatus.retrying => Icons.refresh_rounded,
       MessageDeliveryStatus.sending => Icons.schedule_rounded,
       MessageDeliveryStatus.sent => Icons.done_rounded,
       MessageDeliveryStatus.delivered ||

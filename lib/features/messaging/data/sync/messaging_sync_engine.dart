@@ -125,6 +125,7 @@ class MessagingSyncEngine {
   LocalMessageStatus _mapUiStatus(MessageDeliveryStatus status) {
     return switch (status) {
       MessageDeliveryStatus.queued => LocalMessageStatus.queued,
+      MessageDeliveryStatus.retrying => LocalMessageStatus.queued,
       MessageDeliveryStatus.sending => LocalMessageStatus.sending,
       MessageDeliveryStatus.sent => LocalMessageStatus.sent,
       MessageDeliveryStatus.delivered => LocalMessageStatus.delivered,

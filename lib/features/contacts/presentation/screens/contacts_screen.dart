@@ -13,6 +13,7 @@ import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/messaging/data/messaging_failure.dart';
 import '../../../../features/messaging/data/messaging_providers.dart';
+import '../../../../features/messaging/presentation/messaging_error_messages.dart';
 import '../../../../features/social/presentation/controllers/social_graph_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -215,15 +216,9 @@ class _ContactRow extends ConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      final message = switch (failure.messageKey) {
-        'conversationContactRequired' => l10n.conversationContactRequired,
-        'conversationUnavailable' => l10n.conversationUnavailable,
-        'conversationSelfNotAllowed' => l10n.cannotMessageUser,
-        _ => l10n.messagingUnavailable,
-      };
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(messagingFailureMessage(l10n, failure))),
+      );
     }
   }
 

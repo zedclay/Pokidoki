@@ -70,6 +70,7 @@ class DeliveryStatusMapper {
   static LocalMessageStatus fromUiStatus(String status) {
     return switch (status) {
       'queued' => LocalMessageStatus.queued,
+      'retrying' => LocalMessageStatus.queued,
       'sending' => LocalMessageStatus.sending,
       'sent' => LocalMessageStatus.sent,
       'delivered' => LocalMessageStatus.delivered,

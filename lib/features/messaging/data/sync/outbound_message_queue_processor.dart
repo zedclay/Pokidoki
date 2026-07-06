@@ -67,6 +67,46 @@ class OutboundMessageQueueProcessor {
     return _db.outboundQueueDao.releaseWaitingRetries(now: now);
   }
 
+  Future<int> requeueRecoverableTransportFailures({DateTime? now}) async {
+    final retryAt = now ?? _clock().toUtc();
+    final requeuedIds = await _db.outboundQueueDao
+        .requeueRecoverableTransportFailures(
+          isRequeueable: _retry.isTransportRequeueable,
+          hasPendingAck: (clientMessageId) async {
+            final row = await _db.messagesDao.getByClientId(clientMessageId);
+            return row?.syncState == LocalSyncState.pendingAck.name;
+          },
+          now: retryAt,
+        );
+    for (final clientMessageId in requeuedIds) {
+      await _db.messagesDao.updateByClientId(
+        clientMessageId: clientMessageId,
+        fields: LocalMessagesCompanion(
+          deliveryStatus: Value(LocalMessageStatus.queued.name),
+          errorCode: const Value(null),
+          lastUpdatedAt: Value(retryAt),
+        ),
+      );
+    }
+    return requeuedIds.length;
+  }
+
+  Future<void> prepareForDrain({DateTime? now}) async {
+    final effectiveNow = now ?? _clock().toUtc();
+    await recoverStaleJobs();
+    await releaseWaitingRetries(now: effectiveNow);
+    await requeueRecoverableTransportFailures(now: effectiveNow);
+  }
+
+  Future<void> wakeAndDrain() async {
+    if (_stopped) {
+      return;
+    }
+    await prepareForDrain();
+    await requestDrain();
+    await _scheduleFollowUpIfNeeded();
+  }
+
   Future<void> requestDrain() async {
     if (_stopped || _draining) {
       return;
@@ -112,6 +152,8 @@ class OutboundMessageQueueProcessor {
           );
         } else if (ack.code != null) {
           throw MessagingFailure(code: ack.code!);
+        } else {
+          throw const MessagingFailure(code: 'MESSAGING_UNAVAILABLE');
         }
       }
 
@@ -191,7 +233,17 @@ class OutboundMessageQueueProcessor {
     final delay = nextAttempt.difference(_clock().toUtc());
     final effectiveDelay = delay.isNegative ? Duration.zero : delay;
     _retryTimer = Timer(effectiveDelay, () {
-      unawaited(requestDrain());
+      unawaited(wakeAndDrain());
     });
+  }
+
+  Future<void> _scheduleFollowUpIfNeeded() async {
+    if (_stopped) {
+      return;
+    }
+    final nextAttempt = await _db.outboundQueueDao.earliestNextAttemptAt();
+    if (nextAttempt != null) {
+      _scheduleRetryDrain(nextAttempt);
+    }
   }
 }

@@ -81,6 +81,7 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
     }
     return switch (message.deliveryStatus) {
       MessageDeliveryStatus.queued => l10n.messageDeliveryQueued,
+      MessageDeliveryStatus.retrying => l10n.messageDeliveryRetrying,
       MessageDeliveryStatus.sending => l10n.messageDeliverySending,
       MessageDeliveryStatus.failed => l10n.messageDeliveryFailed,
       MessageDeliveryStatus.sent => l10n.messageDeliverySent,
@@ -93,7 +94,8 @@ class _OneToOneChatScreenState extends ConsumerState<OneToOneChatScreen> {
     return message.isOutgoing &&
         message.clientMessageId != null &&
         (message.deliveryStatus == MessageDeliveryStatus.failed ||
-            message.deliveryStatus == MessageDeliveryStatus.queued);
+            message.deliveryStatus == MessageDeliveryStatus.queued ||
+            message.deliveryStatus == MessageDeliveryStatus.retrying);
   }
 
   Future<void> _send() async {

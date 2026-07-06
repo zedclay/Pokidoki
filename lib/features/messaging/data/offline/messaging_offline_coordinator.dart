@@ -89,7 +89,11 @@ class MessagingOfflineCoordinator {
     _bindSocketEvents();
     _bindReconnectAndDrain();
     _bindConnectivity();
-    unawaited(_queueProcessor!.requestDrain());
+    if (_socket.status == MessagingSocketStatus.connected) {
+      unawaited(_onTransportRestored());
+    } else {
+      unawaited(_queueProcessor!.wakeAndDrain());
+    }
     return _repository!;
   }
 
@@ -139,7 +143,8 @@ class MessagingOfflineCoordinator {
   void _bindReconnectAndDrain() {
     _subscriptions.add(
       _socket.statusStream.listen((status) {
-        if (status == MessagingSocketStatus.reconnecting) {
+        if (status == MessagingSocketStatus.reconnecting ||
+            status == MessagingSocketStatus.failed) {
           _socketCoordinator.scheduleReconnect();
         }
         if (status == MessagingSocketStatus.connected) {
@@ -154,9 +159,12 @@ class MessagingOfflineCoordinator {
     if (processor == null) {
       return;
     }
-    await processor.releaseWaitingRetries();
-    await processor.requestDrain();
+    await processor.wakeAndDrain();
     await _syncEngine?.refreshConversations();
+  }
+
+  Future<void> wakeOutboundQueue() async {
+    await _queueProcessor?.wakeAndDrain();
   }
 
   void _bindConnectivity() {
@@ -180,16 +188,15 @@ class MessagingOfflineCoordinator {
     await _syncEngine?.refreshConversations();
     await _syncEngine?.purgeExpiredMessages();
     await _socketCoordinator.connectIfAuthenticated();
-    await _queueProcessor?.requestDrain();
+    await _queueProcessor?.wakeAndDrain();
   }
 
   Future<void> onForeground() async {
-    await _queueProcessor?.recoverStaleJobs();
-    await _queueProcessor?.releaseWaitingRetries();
+    await _queueProcessor?.wakeAndDrain();
     await _syncEngine?.refreshConversations();
     await _syncEngine?.purgeExpiredMessages();
     await _socketCoordinator.connectIfAuthenticated();
-    await _queueProcessor?.requestDrain();
+    await _queueProcessor?.wakeAndDrain();
   }
 
   Future<void> wipeOnLogout() async {

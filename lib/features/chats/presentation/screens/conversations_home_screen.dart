@@ -14,6 +14,7 @@ import '../../../../design_system/radii/pokidoki_radii.dart';
 import '../../../../design_system/spacing/pokidoki_spacing.dart';
 import '../../../../design_system/typography/pokidoki_typography.dart';
 import '../../../../features/messaging/data/messaging_providers.dart';
+import '../../../../features/messaging/presentation/messaging_error_messages.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/conversation_row.dart';
 
@@ -48,6 +49,7 @@ class _ConversationsHomeScreenState
     unawaited(
       ref.read(messagingSocketCoordinatorProvider).connectIfAuthenticated(),
     );
+    unawaited(ref.read(messagingOfflineCoordinatorProvider).onForeground());
   }
 
   @override
@@ -192,7 +194,10 @@ class _ConversationsHomeScreenState
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _localizedError(l10n, conversationsState.errorKey!),
+                          messagingErrorMessage(
+                            l10n,
+                            conversationsState.errorKey,
+                          ),
                           style: typography.supportingBody,
                           textAlign: TextAlign.center,
                         ),
@@ -271,16 +276,6 @@ class _ConversationsHomeScreenState
         child: const Icon(Icons.edit_square),
       ),
     );
-  }
-
-  String _localizedError(AppLocalizations l10n, String key) {
-    return switch (key) {
-      'messagingUnavailable' => l10n.messagingUnavailable,
-      'conversationUnavailable' => l10n.conversationUnavailable,
-      'conversationContactRequired' => l10n.conversationContactRequired,
-      'cannotMessageUser' => l10n.cannotMessageUser,
-      _ => l10n.stateError,
-    };
   }
 }
 
